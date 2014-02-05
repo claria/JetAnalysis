@@ -9,7 +9,6 @@ class JetEvent
 {
 
 public:
-	KDataPFJets* PF_jets; // = fi.Get<KDataPFJets>(names[0]);
 	KGenEventMetadata* m_geneventmetadata;
 	KEventMetadata* m_eventmetadata;
 	KLumiMetadata* m_lumimetadata;
@@ -18,6 +17,9 @@ public:
 	KVertexSummary* m_vertexsummary;
 	KFilterSummary* m_filter;
 
+
+	//KDataPFJets* AK5PFJets;
+	//KDataPFJets* AK7PFJets;
 
 	KGenLumiMetadata* GetGenLumiMetadata() const
 	{

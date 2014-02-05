@@ -8,11 +8,7 @@
 #pragma once
 
 
-class JetLocalProduct {
-
-};
-
-struct JetGlobalProduct {
+struct JetProduct {
 
 	float m_floatPtSim_corrected;
 };

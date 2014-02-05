@@ -11,8 +11,9 @@
 #include <TFile.h>
 
 #include "Artus/Configuration/interface/ArtusConfig.h"
-#include "Artus/JetAnalysis/interface/JetEventProvider.h"
-#include "Artus/JetAnalysis/interface/JetPipelineInitializer.h"
+#include "JetAnalysis/DijetAna/interface/JetTypes.h"
+#include "JetAnalysis/DijetAna/interface/JetEventProvider.h"
+#include "JetAnalysis/DijetAna/interface/JetPipelineInitializer.h"
 
 /*
 	This example implements a simple dummy anaylsis which
@@ -26,16 +27,16 @@ int main(int argc, char** argv) {
 	// parse the command line and load the
 	ArtusConfig myConfig(argc, argv);
 
+	// load the global settings from the config file
+	JetGlobalSettings global_settings = myConfig.GetGlobalSettings<JetGlobalSettings>();
 	// create the output root file
-	boost::scoped_ptr < TFile
-			> rootOutputFile(
-					new TFile(myConfig.GetOutputPath().c_str(), "RECREATE"));
+	boost::scoped_ptr < TFile > rootOutputFile(new TFile(myConfig.GetOutputPath().c_str(), "RECREATE"));
 
 	// will load the Ntuples from the root file
 	// this must be modified if you want to load more/new quantities
 	
 	FileInterface2 finterface(myConfig.GetInputFiles());
-	JetEventProvider evtProvider(finterface, McInput);
+	JetEventProvider evtProvider(finterface, (McInput));
 
 	// the pipeline initializer will setup the pipeline, with
 	// all the attached Producer, Filer and Consumer
@@ -49,9 +50,6 @@ int main(int argc, char** argv) {
 	// load the pipeline with their configuration from the config file
 	myConfig.LoadPipelines(pInit, runner, rootOutputFile.get());
 
-	// load the global settings from the config file
-	JetGlobalSettings global_settings = myConfig.GetGlobalSettings<
-			JetGlobalSettings>();
 
 	// run all the configured pipelines and all their attached
 	// consumers

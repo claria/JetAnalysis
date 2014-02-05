@@ -14,7 +14,7 @@ class PtCorrectionProducer: public JetGlobalProducerBase {
 public:
 
 	virtual bool ProduceGlobal(JetEvent const& event,
-			JetGlobalProduct & product,
+			JetProduct & product,
 			JetGlobalSettings const& globalSettings) const
 					ARTUS_CPP11_OVERRIDE {
 

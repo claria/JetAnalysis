@@ -8,7 +8,7 @@
 
 #include "Artus/Core/interface/Cpp11Support.h"
 #include "Artus/Provider/interface/KappaEventProvider.h"
-#include "Artus/JetAnalysis/interface/JetEvent.h"
+#include "JetAnalysis/DijetAna/interface/JetEvent.h"
 #include "KappaTools/Toolbox/ProgressMonitor.h"
 
 /*

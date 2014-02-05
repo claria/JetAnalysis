@@ -24,8 +24,8 @@ public:
 	}
 
 	virtual void ProcessFilteredEvent(JetEvent const& event,
-			JetGlobalProduct const& globalProduct,
-			JetLocalProduct const& localProduct) ARTUS_CPP11_OVERRIDE {
+			JetProduct const& globalProduct,
+			JetProduct const& localProduct) ARTUS_CPP11_OVERRIDE {
 
 		m_mean = ((m_mean * m_itemCount) + event.m_floatPtSim)
 				/ (m_itemCount + 1);

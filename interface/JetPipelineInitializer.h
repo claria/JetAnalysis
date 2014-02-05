@@ -34,11 +34,11 @@ public:
 
 		// define how to extract Pt and the range
 		auto extractNPV =
-				[]( JetEvent const& ev, JetGlobalProduct const & gm, JetLocalProduct const & lm )
+				[]( JetEvent const& ev, JetProduct const & prod )
 				-> std::vector<float> {return {(float)ev.m_vertexsummary->nVertices};};
-		auto extractPT =
-				[]( JetEvent const& ev, JetGlobalProduct const & gm, JetLocalProduct const & lm )
-				-> std::vector<float> {return {(float)ev.m_vertexsummary->nVertices};};
+		//auto extractPT =
+				//[]( JetEvent const& ev, JetGlobalProduct const & gm, JetLocalProduct const & lm )
+				//-> std::vector<float> {return {(float)ev.m_vertexsummary->nVertices};};
 
 		auto NPVValue = std::make_pair(extractNPV,
 				DefaultModifiers::getGenericModifier(0., 50., 50));

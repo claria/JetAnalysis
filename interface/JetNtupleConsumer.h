@@ -17,13 +17,12 @@ class JetNtupleConsumer: public NtupleConsumerBase<JetTypes> {
 private:
 	
 	float returnvalue(std::string string, JetEvent const& event,
-			JetGlobalProduct const& globalProduct,
-			JetLocalProduct const& localProduct) ARTUS_CPP11_OVERRIDE
+			JetProduct const& product) ARTUS_CPP11_OVERRIDE
 	{
 		if (string == "pt")
 			return event.m_floatPtSim;
 		else if (string == "pt_corr")
-			return globalProduct.m_floatPtSim_corrected;
+			return product.m_floatPtSim_corrected;
 		else if (string == "theta")
 			return event.m_floatTheSim;
 		else

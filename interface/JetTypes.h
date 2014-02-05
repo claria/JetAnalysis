@@ -18,8 +18,7 @@
 // all data types which are used for this analysis
 struct JetTypes {
 	typedef JetEvent event_type;
-	typedef JetLocalProduct local_product_type;
-	typedef JetGlobalProduct global_product_type;
+	typedef JetProduct product_type;
 	typedef JetPipelineSettings setting_type;
 	typedef JetGlobalSettings global_setting_type;
 };
