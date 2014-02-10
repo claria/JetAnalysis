@@ -10,5 +10,6 @@
 
 struct JetProduct {
 
-	float m_floatPtSim_corrected;
+	float m_leadingJetPt;
+	float m_leadingJetEta;
 };

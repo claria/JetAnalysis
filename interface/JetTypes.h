@@ -10,10 +10,9 @@
 #include "Artus/Core/interface/GlobalProducerBase.h"
 #include "Artus/Core/interface/PipelineRunner.h"
 
-#include "JetProduct.h"
+#include "JetEvent.h"
 #include "JetProduct.h"
 #include "JetPipelineSettings.h"
-#include "JetEvent.h"
 
 // all data types which are used for this analysis
 struct JetTypes {

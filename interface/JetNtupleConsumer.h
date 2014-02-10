@@ -14,19 +14,25 @@
 
 
 class JetNtupleConsumer: public NtupleConsumerBase<JetTypes> {
+
+public:
+	virtual std::string GetConsumerId() {
+		return "ntuple";
+	}
+
 private:
 	
 	float returnvalue(std::string string, JetEvent const& event,
 			JetProduct const& product) ARTUS_CPP11_OVERRIDE
 	{
-		if (string == "pt")
-			return event.m_floatPtSim;
-		else if (string == "pt_corr")
-			return product.m_floatPtSim_corrected;
-		else if (string == "theta")
-			return event.m_floatTheSim;
+		if (string == "LeadingJetPt")
+			return product.m_leadingJetPt;
+		if (string == "LeadingJetEta")
+			return product.m_leadingJetEta;
 		else
 			LOG_FATAL("The quantity " << string << " could not be added to the Ntuple")
+
+		return -999.0;
 	}
 
 

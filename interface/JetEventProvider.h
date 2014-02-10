@@ -8,25 +8,28 @@
 
 #include "Artus/Core/interface/Cpp11Support.h"
 #include "Artus/Provider/interface/KappaEventProvider.h"
-#include "JetAnalysis/DijetAna/interface/JetEvent.h"
 #include "KappaTools/Toolbox/ProgressMonitor.h"
 
+#include "JetTypes.h"
 /*
  * Will load the corresponding ntuple from a root file
  * The memory locations are passed to ROOT one time, in the
  * WireEvent() method call.
  */
-class JetEventProvider: public KappaEventProvider<JetEvent> {
+class JetEventProvider: public KappaEventProvider<JetTypes> {
 public:
 	JetEventProvider(FileInterface2& fi, InputTypeEnum inpType) :
-			KappaEventProvider<JetEvent>(fi,inpType) {
+			KappaEventProvider<JetTypes>(fi,inpType) {
 
-		WireEvent();
-
+	//virtual void WireEvent(global_setting_type const&);
 	}
 
-	void WireEvent() {
+	virtual void WireEvent(global_setting_type const& globalSettings)
+		ARTUS_CPP11_OVERRIDE
+	{
 		m_event.m_vertexsummary = m_fi.Get<KVertexSummary> ("offlinePrimaryVerticesSummary", false);
+		m_event.m_ak5pfJets = m_fi.Get<KDataPFJets>("AK5PFJets");
+		m_event.m_ak7pfJets = m_fi.Get<KDataPFJets>("AK7PFJets");
 	}
 
 

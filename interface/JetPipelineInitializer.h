@@ -22,8 +22,9 @@
 //#include "PtFilter.h"
 
 // consumer
-//#include "MeanPtConsumer.h"
-//#include "JetNtupleConsumer.h"
+#include "JetObservableProducer.h"
+#include "JetNtupleConsumer.h"
+#include "PreselectionFilter.h"
 
 class JetPipelineInitializer: public PipelineInitilizerBase<JetTypes> {
 public:
@@ -36,73 +37,58 @@ public:
 		auto extractNPV =
 				[]( JetEvent const& ev, JetProduct const & prod )
 				-> std::vector<float> {return {(float)ev.m_vertexsummary->nVertices};};
-		//auto extractPT =
-				//[]( JetEvent const& ev, JetGlobalProduct const & gm, JetLocalProduct const & lm )
-				//-> std::vector<float> {return {(float)ev.m_vertexsummary->nVertices};};
+		auto extractNJet =
+				[]( JetEvent const& ev, JetProduct const & prod )
+				-> std::vector<float> {return {(float) ev.m_ak5pfJets->size()};};
+		auto extractPt =
+				[]( JetEvent const& ev, JetProduct const & prod )
+				-> std::vector<float> {
+					std::vector<float> ptjets(ev.m_ak5pfJets->size());
+					transform(ev.m_ak5pfJets->begin(),ev.m_ak5pfJets->end(), ptjets.begin(),
+							[](KDataPFJet pfjet){ return (float)pfjet.p4.Pt(); });
+					return ptjets;
+				};
 
 		auto NPVValue = std::make_pair(extractNPV,
 				DefaultModifiers::getGenericModifier(0., 50., 50));
+		auto NJetValue = std::make_pair(extractNJet,
+				DefaultModifiers::getGenericModifier(-0.5, 20.5, 21));
+		auto PtValue = std::make_pair(extractPt,
+				DefaultModifiers::getGenericModifier(0., 1000., 50));
 
-		pLine->AddConsumer(
-						new DrawHist1dConsumerBase<JetTypes>("npv", NPVValue));
 
-/*
-		//pLine->AddFilter(new PtFilter());
-		//pLine->AddConsumer(new MeanPtConsumer());
+		BOOST_FOREACH(std::string filterId, pset.GetFilters())
+		{
+			if(filterId == PreselectionFilter().GetFilterId()) {
+				pLine->AddFilter(new PreselectionFilter());
+			}
+			else {
+				LOG_FATAL("Filter \"" << filterId << "\" not found.");
+			}
+		}
 
-		//typedef std::function<
-				//std::vector<float>(event_type const&, global_product_type const&,
-						//local_product_type const&)> ValueExtractLambda;
-		//typedef std::pair<ValueExtractLambda, ValueModifiers> ValueDesc;
 
-		// define how to extract Pt and the range
-		auto extractPtSim =
-				[]( JetEvent const& ev, JetGlobalProduct const & gm, JetLocalProduct const & lm )
-				-> std::vector<float> {return {ev.m_floatPtSim};};
-		auto PtSimValue = std::make_pair(extractPtSim,
-				DefaultModifiers::getPtModifier(0.7, 1.3f));
-
-		// extracts the value which has been corrected by a globalProducer
-		auto extractPtSimCorrected =
-				[]( JetEvent const& ev, JetGlobalProduct const & gm, JetLocalProduct const & lm )
-				-> std::vector<float> {return {gm.m_floatPtSim_corrected};};
-		auto PtSimCorrectedValue = std::make_pair(extractPtSimCorrected,
-				DefaultModifiers::getPtModifier(0.7, 1.3f));
-
-		// define how to extract Theta and the range
-		auto extractThetaSim =
-				[]( JetEvent const& ev, JetGlobalProduct const & gm, JetLocalProduct const & lm )
-				-> std::vector<float> {return {ev.m_floatTheSim};};
-
-		auto ThetaSimValue = std::make_pair(extractThetaSim,
-				DefaultModifiers::getThetaModifier());
-
+		BOOST_FOREACH(std::string producerId, pset.GetLocalProducers())
+		{
+			if(producerId == JetObservableProducer().GetProducerId()) {
+				pLine->AddProducer(new JetObservableProducer());
+			}
+			else {
+				LOG_FATAL("Producer \"" << producerId << "\" not found.");
+			}
+		}
 
 		BOOST_FOREACH(std::string id, pset.GetConsumer())
 		{
 			if (id == "quantities_all")
 			{
-				// plot Pt
-				pLine->AddConsumer(
-						new DrawHist1dConsumerBase<JetTypes>("pt", PtSimValue));
-
-				// plot Pt - corrected, from the global product
-				pLine->AddConsumer(
-						new DrawHist1dConsumerBase<JetTypes>("pt_corr", PtSimCorrectedValue));
-
-
-				// plot Theta
-				pLine->AddConsumer(
-						new DrawHist1dConsumerBase<JetTypes>("theta", ThetaSimValue));
-
-				// profile Pt over Theta
-				pLine->AddConsumer(
-						new ProfileConsumerBase<JetTypes>("pt_over_theta",
-							ThetaSimValue, PtSimValue));
+				pLine->AddConsumer(new DrawHist1dConsumerBase<JetTypes>("npv", NPVValue));
+				pLine->AddConsumer(new DrawHist1dConsumerBase<JetTypes>("pT", PtValue));
+				pLine->AddConsumer(new DrawHist1dConsumerBase<JetTypes>("nJet", NJetValue));
 			}
 			else if (id == "ntuple")
 				pLine->AddConsumer(new JetNtupleConsumer);
-		}*/
+		}
 
 	}
 };

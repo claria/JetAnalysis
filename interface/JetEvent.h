@@ -5,10 +5,14 @@
 #include <KappaTools/RootTools/FileInterface2.h>
 #include <Kappa/DataFormats/interface/KDebug.h>
 
-class JetEvent
+#include "Artus/Provider/interface/KappaEvent.h"
+
+class JetEvent : public KappaEvent
 {
 
 public:
+	JetEvent() : KappaEvent() {};
+
 	KGenEventMetadata* m_geneventmetadata;
 	KEventMetadata* m_eventmetadata;
 	KLumiMetadata* m_lumimetadata;
@@ -18,8 +22,8 @@ public:
 	KFilterSummary* m_filter;
 
 
-	//KDataPFJets* AK5PFJets;
-	//KDataPFJets* AK7PFJets;
+	KDataPFJets* m_ak5pfJets;
+	KDataPFJets* m_ak7pfJets;
 
 	KGenLumiMetadata* GetGenLumiMetadata() const
 	{
