@@ -7,8 +7,7 @@
 #pragma once
 
 #include "Artus/Core/interface/Cpp11Support.h"
-#include "Artus/Provider/interface/KappaEventProvider.h"
-#include "KappaTools/Toolbox/ProgressMonitor.h"
+#include "Artus/KappaAnalysis/interface/KappaEventProvider.h"
 
 #include "JetTypes.h"
 /*
@@ -18,18 +17,20 @@
  */
 class JetEventProvider: public KappaEventProvider<JetTypes> {
 public:
+
+	typedef typename JetTypes::global_setting_type global_setting_type;
 	JetEventProvider(FileInterface2& fi, InputTypeEnum inpType) :
 			KappaEventProvider<JetTypes>(fi,inpType) {
 
-	//virtual void WireEvent(global_setting_type const&);
 	}
 
 	virtual void WireEvent(global_setting_type const& globalSettings)
 		ARTUS_CPP11_OVERRIDE
 	{
-		m_event.m_vertexsummary = m_fi.Get<KVertexSummary> ("offlinePrimaryVerticesSummary", false);
-		m_event.m_ak5pfJets = m_fi.Get<KDataPFJets>("AK5PFJets");
-		m_event.m_ak7pfJets = m_fi.Get<KDataPFJets>("AK7PFJets");
+		KappaEventProvider::WireEvent(globalSettings);
+		//m_event.m_vertexsummary = m_fi.Get<KVertexSummary> ("offlinePrimaryVerticesSummary", false);
+		//m_event.m_ak5pfJets = m_fi.Get<KDataPFJets>("AK5PFJets");
+		//m_event.m_ak7pfJets = m_fi.Get<KDataPFJets>("AK7PFJets");
 	}
 
 

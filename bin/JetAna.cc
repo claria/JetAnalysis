@@ -44,10 +44,11 @@ int main(int argc, char** argv) {
 	// all the attached Producer, Filer and Consumer
 	JetPipelineInitializer pInit;
 
-	JetPipelineRunner runner;
+	JetPipelineRunner runner(global_settings);
+	runner.AddGlobalProducersById();
 
 	// add global producers
-	//runner.AddGlobalProducer(new PtCorrectionProducer());
+	//runner.AddGlobalProducer(new ValidJetsProducer());
 
 	// load the pipeline with their configuration from the config file
 	myConfig.LoadPipelines(pInit, runner, rootOutputFile.get());

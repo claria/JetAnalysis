@@ -10,6 +10,9 @@
 #include "Artus/Core/interface/GlobalProducerBase.h"
 #include "Artus/Core/interface/PipelineRunner.h"
 
+#include "Artus/KappaAnalysis/interface/KappaPipelineRunner.h"
+
+
 #include "JetEvent.h"
 #include "JetProduct.h"
 #include "JetPipelineSettings.h"
@@ -36,5 +39,5 @@ typedef FilterBase<JetTypes> JetFilterBase;
 typedef Pipeline<JetTypes> JetPipeline;
 
 //Setup our custom pipeline runner
-typedef PipelineRunner<JetPipeline, JetGlobalProducerBase> JetPipelineRunner;
+typedef KappaPipelineRunner<JetTypes, JetPipeline, JetGlobalProducerBase> JetPipelineRunner;
 

@@ -10,8 +10,9 @@
 #include "Artus/Configuration/interface/SettingsBase.h"
 #include "Artus/Configuration/interface/SettingMacros.h"
 #include "Artus/Configuration/interface/PropertyTreeSupport.h"
+#include "Artus/KappaAnalysis/interface/KappaPipelineSettings.h"
 
-class JetPipelineSettings: public SettingsBase {
+class JetPipelineSettings: public KappaPipelineSettings {
 public:
 
 	IMPL_SETTING( float, FilterPtLow )
@@ -31,7 +32,7 @@ public:
 
 };
 
-class JetGlobalSettings: public GlobalSettingsBase {
+class JetGlobalSettings: public KappaGlobalSettings {
 public:
 
 	IMPL_SETTING( float, ProducerPtCorrectionFactor )

@@ -8,8 +8,13 @@
 #pragma once
 
 
-struct JetProduct {
+#include "Artus/KappaAnalysis/interface/KappaProduct.h"
 
-	float m_leadingJetPt;
-	float m_leadingJetEta;
+class JetProduct : public KappaProduct 
+{
+	public:
+
+		double m_leadingJetPt;
+		double m_leadingJetEta;
+
 };
