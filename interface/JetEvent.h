@@ -5,13 +5,13 @@
 #include <KappaTools/RootTools/FileInterface2.h>
 #include <Kappa/DataFormats/interface/KDebug.h>
 
-#include "Artus/Provider/interface/KappaEvent.h"
+#include "Artus/KappaAnalysis/interface/KappaEventBase.h"
 
-class JetEvent : public KappaEvent
+class JetEvent : public KappaEventBase
 {
 
 public:
-	JetEvent() : KappaEvent() {};
+	JetEvent() : KappaEventBase() {};
 
 	KGenEventMetadata* m_geneventmetadata;
 	KEventMetadata* m_eventmetadata;

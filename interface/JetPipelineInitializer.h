@@ -22,7 +22,7 @@
 //#include "PtFilter.h"
 
 // consumer
-#include "JetObservableProducer.h"
+#include "ValidJetsProducer.h"
 #include "JetNtupleConsumer.h"
 #include "PreselectionFilter.h"
 
@@ -70,12 +70,12 @@ public:
 
 		BOOST_FOREACH(std::string producerId, pset.GetLocalProducers())
 		{
-			if(producerId == JetObservableProducer().GetProducerId()) {
-				pLine->AddProducer(new JetObservableProducer());
-			}
-			else {
-				LOG_FATAL("Producer \"" << producerId << "\" not found.");
-			}
+			//if(producerId == JetObservableProducer().GetProducerId()) {
+			//	pLine->AddProducer(new JetObservableProducer());
+			//}
+			//else {
+			//	LOG_FATAL("Producer \"" << producerId << "\" not found.");
+			//}
 		}
 
 		BOOST_FOREACH(std::string id, pset.GetConsumer())

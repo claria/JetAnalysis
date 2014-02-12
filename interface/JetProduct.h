@@ -10,6 +10,8 @@
 
 struct JetProduct {
 
+	KDataPFJets m_validJets;
+	KDataPFJets m_invalidJets;
 	float m_leadingJetPt;
 	float m_leadingJetEta;
 };

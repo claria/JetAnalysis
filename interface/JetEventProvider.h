@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Artus/Core/interface/Cpp11Support.h"
-#include "Artus/Provider/interface/KappaEventProvider.h"
+#include "Artus/KappaAnalysis/interface/KappaEventProviderBase.h"
 #include "KappaTools/Toolbox/ProgressMonitor.h"
 
 #include "JetTypes.h"
@@ -16,10 +16,10 @@
  * The memory locations are passed to ROOT one time, in the
  * WireEvent() method call.
  */
-class JetEventProvider: public KappaEventProvider<JetTypes> {
+class JetEventProvider: public KappaEventProviderBase<JetTypes> {
 public:
 	JetEventProvider(FileInterface2& fi, InputTypeEnum inpType) :
-			KappaEventProvider<JetTypes>(fi,inpType) {
+			KappaEventProviderBase<JetTypes>(fi,inpType) {
 
 	//virtual void WireEvent(global_setting_type const&);
 	}

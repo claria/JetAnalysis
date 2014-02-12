@@ -9,30 +9,40 @@
 #include "Artus/Core/interface/Cpp11Support.h"
 #include "JetTypes.h"
 
-class JetObservableProducer: public JetLocalProducerBase {
+class ValidJetsProducer: public JetGlobalProducerBase {
 public:
-
-	virtual ~JetObservableProducer() {
-	}
 
 	virtual std::string GetProducerId() {
 		return "valid_jets";
 	}
 
-	virtual void ProduceGlobal(JetEvent const& event,
+	virtual bool ProduceGlobal(JetEvent const& event,
 			JetProduct & product,
-			global_setting_type const& globalSettings) const
+			JetGlobalSettings const& globalSettings) const
 		{
 
-			for (KDataPFJets::iterator jet = event._m
+
+			for(KDataPFJets::iterator jet = event.m_ak5pfJets->begin(); jet != event.m_ak5pfJets->end(); ++jet)
+			{
+			// Select good jets in event
+			// Not complete, just a first try
 			bool good_jet = true;
 
-			// Check for at least two
+			good_jet = good_jet && jet->p4.Pt() > 50.
+						 		&& std::abs(jet->p4.Eta()) < 5.0;
+			if (good_jet)
+				product.m_validJets.push_back(*jet);
+			else
+				product.m_invalidJets.push_back(*jet);
 
-			good_jet = good_jet
-						&& 
-			product.m_leadingJetPt = event.m_ak5pfJets->at(0).p4.Pt();
-			product.m_leadingJetEta = event.m_ak5pfJets->at(0).p4.Eta();
+			}
+
+			// Only accept Events with at least two good jets
+			if (product.m_validJets.size() >= 2)
+				return true;
+			else
+				return false;
+
 		}
 
 };
