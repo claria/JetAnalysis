@@ -33,7 +33,7 @@ public:
 
 class JetGlobalSettings: public GlobalSettingsBase {
 public:
-
+	IMPL_SETTING_DEFAULT(std::string, Jets, "");
 	IMPL_SETTING( float, ProducerPtCorrectionFactor )
 
 };

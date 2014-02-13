@@ -21,9 +21,10 @@ public:
 	KVertexSummary* m_vertexsummary;
 	KFilterSummary* m_filter;
 
+	// Jets
+	KDataPFJets* m_pfJets = 0;
+	KJetArea* m_jetArea = 0;
 
-	KDataPFJets* m_ak5pfJets;
-	KDataPFJets* m_ak7pfJets;
 
 	KGenLumiMetadata* GetGenLumiMetadata() const
 	{

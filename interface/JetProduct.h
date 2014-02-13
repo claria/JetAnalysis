@@ -10,8 +10,11 @@
 
 struct JetProduct {
 
-	KDataPFJets m_validJets;
-	KDataPFJets m_invalidJets;
 	float m_leadingJetPt;
 	float m_leadingJetEta;
+	// use pointers to be able to handle tagged and untagged jets
+	std::vector<KDataPFJet*> m_validJets;
+	std::vector<KDataPFJet*> m_invalidJets;
+
+
 };

@@ -16,6 +16,7 @@
 #include "JetAnalysis/DijetAna/interface/JetEventProvider.h"
 #include "JetAnalysis/DijetAna/interface/JetPipelineInitializer.h"
 
+#include "Artus/KappaAnalysis/interface/Producers/ValidJetsProducer.h"
 /*
 	This example implements a simple dummy anaylsis which
 	reads entries from a root file and produces various pt plots
@@ -48,6 +49,7 @@ int main(int argc, char** argv) {
 
 	// add global producers
 	//runner.AddGlobalProducer(new PtCorrectionProducer());
+	runner.AddGlobalProducer(new ValidJetsProducer<JetTypes>());
 
 	// load the pipeline with their configuration from the config file
 	myConfig.LoadPipelines(pInit, runner, rootOutputFile.get());
