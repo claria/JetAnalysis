@@ -13,17 +13,24 @@ class JetEvent : public KappaEventBase
 public:
 	JetEvent() : KappaEventBase() {};
 
-	KGenEventMetadata* m_geneventmetadata;
-	KEventMetadata* m_eventmetadata;
-	KLumiMetadata* m_lumimetadata;
-	KGenLumiMetadata* m_genlumimetadata;
-	KFilterMetadata* m_filtermetadata;
-	KVertexSummary* m_vertexsummary;
-	KFilterSummary* m_filter;
 
 	// Jets
 	KDataPFJets* m_pfJets = 0;
 	KJetArea* m_jetArea = 0;
+
+
+	KDataPFMET* m_pfMet;
+	KGenParticles* m_particles;
+
+	//Metadata
+	KGenEventMetadata* m_geneventmetadata;
+	KEventMetadata* m_eventmetadata;
+	KLumiMetadata* m_lumimetadata;
+	KGenLumiMetadata* m_genlumimetadata;
+	//KFilterMetadata* m_filtermetadata;
+	KVertexSummary* m_vertexSummary;
+	//KDataBeamSpot* m_beamSpot;
+	//KFilterSummary* m_filter;
 
 
 	KGenLumiMetadata* GetGenLumiMetadata() const

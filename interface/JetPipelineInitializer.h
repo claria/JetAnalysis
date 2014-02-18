@@ -24,6 +24,7 @@
 // consumer
 #include "JetNtupleConsumer.h"
 #include "PreselectionFilter.h"
+#include "JetObservables.h"
 
 class JetPipelineInitializer: public PipelineInitilizerBase<JetTypes> {
 public:
@@ -70,12 +71,12 @@ public:
 
 		BOOST_FOREACH(std::string producerId, pset.GetLocalProducers())
 		{
-			//if(producerId == JetObservableProducer().GetProducerId()) {
-			//	pLine->AddProducer(new JetObservableProducer());
-			//}
-			//else {
-			//	LOG_FATAL("Producer \"" << producerId << "\" not found.");
-			//}
+			if(producerId == JetObservables().GetProducerId()) {
+				pLine->AddProducer(new JetObservables());
+			}
+			else {
+				LOG_FATAL("Producer \"" << producerId << "\" not found.");
+			}
 		}
 
 		BOOST_FOREACH(std::string id, pset.GetConsumer())

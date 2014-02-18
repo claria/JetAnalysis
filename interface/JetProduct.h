@@ -15,6 +15,9 @@ struct JetProduct {
 	// use pointers to be able to handle tagged and untagged jets
 	std::vector<KDataPFJet*> m_validJets;
 	std::vector<KDataPFJet*> m_invalidJets;
+	// Dijets
+	std::vector<KDataPFJet*> m_validDiJets;
+	std::vector<KDataPFJet*> m_invalDiidJets;
 
 
 };
