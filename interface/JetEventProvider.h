@@ -28,9 +28,6 @@ public:
 		ARTUS_CPP11_OVERRIDE
 	{
 		KappaEventProvider::WireEvent(globalSettings);
-		//m_event.m_vertexsummary = m_fi.Get<KVertexSummary> ("offlinePrimaryVerticesSummary", false);
-		//m_event.m_ak5pfJets = m_fi.Get<KDataPFJets>("AK5PFJets");
-		//m_event.m_ak7pfJets = m_fi.Get<KDataPFJets>("AK7PFJets");
 	}
 
 

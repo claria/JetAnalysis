@@ -26,9 +26,13 @@ private:
 			JetProduct const& product) ARTUS_CPP11_OVERRIDE
 	{
 		if (string == "LeadingJetPt")
-			return product.m_leadingJetPt;
-		if (string == "LeadingJetEta")
-			return product.m_leadingJetEta;
+			return product.m_Jet1Pt;
+		else if (string == "LeadingJetEta")
+			return product.m_Jet1Eta;
+		else if (string == "SecondJetPt")
+			return product.m_Jet2Pt;
+		else if (string == "SecondJetEta")
+			return product.m_Jet2Eta;
 		else
 			LOG_FATAL("The quantity " << string << " could not be added to the Ntuple")
 

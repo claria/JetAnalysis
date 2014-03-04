@@ -14,7 +14,12 @@ class JetProduct : public KappaProduct
 {
 	public:
 
-		double m_leadingJetPt;
-		double m_leadingJetEta;
+		double m_Jet1Pt;
+		double m_Jet1Eta;
+		double m_Jet1Rap;
+		double m_Jet2Pt;
+		double m_Jet2Eta;
+		double m_Jet2Rap;
+		double m_DiJetMass;
 
 };

@@ -15,6 +15,7 @@
 #include "JetAnalysis/DijetAna/interface/JetTypes.h"
 #include "JetAnalysis/DijetAna/interface/JetEventProvider.h"
 #include "JetAnalysis/DijetAna/interface/JetPipelineInitializer.h"
+#include "JetAnalysis/DijetAna/interface/ValidDiJetsProducer.h"
 
 /*
 	This example implements a simple dummy anaylsis which
@@ -46,6 +47,7 @@ int main(int argc, char** argv) {
 
 	JetPipelineRunner runner(global_settings);
 	runner.AddGlobalProducersById();
+	runner.AddGlobalProducer(new ValidDiJetsProducer());
 
 	// add global producers
 	//runner.AddGlobalProducer(new ValidJetsProducer());
