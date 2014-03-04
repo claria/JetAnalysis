@@ -23,7 +23,6 @@
 
 // consumer
 #include "JetNtupleConsumer.h"
-#include "PreselectionFilter.h"
 #include "JetObservables.h"
 
 class JetPipelineInitializer: public PipelineInitilizerBase<JetTypes> {
@@ -34,40 +33,27 @@ public:
 			{
 
 		// define how to extract Pt and the range
-		//auto extractNPV =
-		//		[]( JetEvent const& ev, JetProduct const & prod )
-		//		-> std::vector<float> {return {(float)ev.m_vertexsummary->nVertices};};
-		//auto extractNJet =
-		//		[]( JetEvent const& ev, JetProduct const & prod )
-		//		-> std::vector<float> {return {(float) ev.m_ak5pfJets->size()};};
-		//auto extractPt =
-		//		[]( JetEvent const& ev, JetProduct const & prod )
-		//		-> std::vector<float> {
-		//			std::vector<float> ptjets(ev.m_ak5pfJets->size());
-		//			transform(ev.m_ak5pfJets->begin(),ev.m_ak5pfJets->end(), ptjets.begin(),
-		//					[](KDataPFJet pfjet){ return (float)pfjet.p4.Pt(); });
-		//			return ptjets;
-		//		};
+		auto extractNPV =
+				[]( JetEvent const& ev, JetProduct const & prod )
+				-> std::vector<float> {return {(float)ev.m_vertexSummary->nVertices};};
+		auto extractNJet =
+				[]( JetEvent const& ev, JetProduct const & prod )
+				-> std::vector<float> {return {(float) prod.m_validJets.size()};};
+		auto extractPt =
+				[]( JetEvent const& ev, JetProduct const & prod )
+				-> std::vector<float> {
+					std::vector<float> ptjets(prod.m_validJets.size());
+					transform(prod.m_validJets.begin(),prod.m_validJets.end(), ptjets.begin(),
+							[](KDataPFJet* pfjet){ return (float)pfjet->p4.Pt(); });
+					return ptjets;
+				};
 
-		//auto NPVValue = std::make_pair(extractNPV,
-		//		DefaultModifiers::getGenericModifier(0., 50., 50));
-		//auto NJetValue = std::make_pair(extractNJet,
-		//		DefaultModifiers::getGenericModifier(-0.5, 20.5, 21));
-		//auto PtValue = std::make_pair(extractPt,
-		//		DefaultModifiers::getGenericModifier(0., 1000., 50));
-
-
-
-		BOOST_FOREACH(std::string filterId, pset.GetFilters())
-		{
-			if(filterId == PreselectionFilter().GetFilterId()) {
-				pLine->AddFilter(new PreselectionFilter());
-			}
-			else {
-				LOG_FATAL("Filter \"" << filterId << "\" not found.");
-			}
-		}
-
+		auto NPVValue = std::make_pair(extractNPV,
+				DefaultModifiers::getGenericModifier(0., 50., 50));
+		auto NJetValue = std::make_pair(extractNJet,
+				DefaultModifiers::getGenericModifier(-0.5, 20.5, 21));
+		auto PtValue = std::make_pair(extractPt,
+				DefaultModifiers::getGenericModifier(0., 1000., 50));
 
 		BOOST_FOREACH(std::string producerId, pset.GetLocalProducers())
 		{
@@ -79,16 +65,31 @@ public:
 			}
 		}
 
-		BOOST_FOREACH(std::string id, pset.GetConsumer())
+
+		BOOST_FOREACH(std::string filterId, pset.GetFilters())
 		{
-			if (id == "quantities_all")
+			//if(filterId == PreselectionFilter().GetFilterId()) {
+				//pLine->AddFilter(new PreselectionFilter());
+				//LOG("Filter \"" << filterId << "\" added.");
+			//}
+			//else {
+				//LOG_FATAL("Filter \"" << filterId << "\" not found.");
+			//}
+		}
+
+
+
+		BOOST_FOREACH(std::string consumerId, pset.GetConsumer())
+		{
+			if (consumerId == "quantities_all")
 			{
 				//pLine->AddConsumer(new DrawHist1dConsumerBase<JetTypes>("npv", NPVValue));
 				//pLine->AddConsumer(new DrawHist1dConsumerBase<JetTypes>("pT", PtValue));
 				//pLine->AddConsumer(new DrawHist1dConsumerBase<JetTypes>("nJet", NJetValue));
 			}
-			else if (id == "ntuple")
+			else if (consumerId == "ntuple")
 				pLine->AddConsumer(new JetNtupleConsumer);
+				LOG("Consumer \"" << consumerId << "\" added.");
 		}
 
 	}

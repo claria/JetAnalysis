@@ -8,16 +8,18 @@
 #pragma once
 
 
-struct JetProduct {
+#include "Artus/KappaAnalysis/interface/KappaProduct.h"
 
-	float m_leadingJetPt;
-	float m_leadingJetEta;
-	// use pointers to be able to handle tagged and untagged jets
-	std::vector<KDataPFJet*> m_validJets;
-	std::vector<KDataPFJet*> m_invalidJets;
-	// Dijets
-	std::vector<KDataPFJet*> m_validDiJets;
-	std::vector<KDataPFJet*> m_invalDiidJets;
+class JetProduct : public KappaProduct 
+{
+	public:
 
+		double m_Jet1Pt;
+		double m_Jet1Eta;
+		double m_Jet1Rap;
+		double m_Jet2Pt;
+		double m_Jet2Eta;
+		double m_Jet2Rap;
+		double m_DiJetMass;
 
 };

@@ -15,6 +15,7 @@
 #include "JetAnalysis/DijetAna/interface/JetTypes.h"
 #include "JetAnalysis/DijetAna/interface/JetEventProvider.h"
 #include "JetAnalysis/DijetAna/interface/JetPipelineInitializer.h"
+#include "JetAnalysis/DijetAna/interface/ValidDiJetsProducer.h"
 
 #include "Artus/KappaAnalysis/interface/Producers/ValidJetsProducer.h"
 #include "JetAnalysis/DijetAna/interface/ValidDiJetsProducer.h"
@@ -46,12 +47,12 @@ int main(int argc, char** argv) {
 	// all the attached Producer, Filer and Consumer
 	JetPipelineInitializer pInit;
 
-	JetPipelineRunner runner;
+	JetPipelineRunner runner(global_settings);
+	runner.AddGlobalProducersById();
+	runner.AddGlobalProducer(new ValidDiJetsProducer());
 
 	// add global producers
-	//runner.AddGlobalProducer(new PtCorrectionProducer());
-	runner.AddGlobalProducer(new ValidJetsProducer<JetTypes>());
-	runner.AddGlobalProducer(new ValidDiJetsProducer());
+	//runner.AddGlobalProducer(new ValidJetsProducer());
 
 	// load the pipeline with their configuration from the config file
 	myConfig.LoadPipelines(pInit, runner, rootOutputFile.get());

@@ -7,4 +7,5 @@
    <use   name="Artus/Provider"/>
    <use   name="Artus/Configuration"/>
    <use   name="Artus/Consumer"/>
+   <use   name="boost_regex"/>
 </bin>

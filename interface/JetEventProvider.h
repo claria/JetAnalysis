@@ -7,8 +7,7 @@
 #pragma once
 
 #include "Artus/Core/interface/Cpp11Support.h"
-#include "Artus/KappaAnalysis/interface/KappaEventProviderBase.h"
-#include "KappaTools/Toolbox/ProgressMonitor.h"
+#include "Artus/KappaAnalysis/interface/KappaEventProvider.h"
 
 #include "JetTypes.h"
 /*
@@ -18,25 +17,17 @@
  */
 class JetEventProvider: public KappaEventProviderBase<JetTypes> {
 public:
+
+	typedef typename JetTypes::global_setting_type global_setting_type;
 	JetEventProvider(FileInterface2& fi, InputTypeEnum inpType) :
 			KappaEventProviderBase<JetTypes>(fi,inpType) {
 
-	//virtual void WireEvent(global_setting_type const&);
 	}
 
 	virtual void WireEvent(global_setting_type const& globalSettings)
 		ARTUS_CPP11_OVERRIDE
 	{
-
-		m_event.m_pfJets = m_fi.Get<KDataPFJets>(globalSettings.GetJets(), true);
-
-		m_event.m_vertexSummary = m_fi.Get<KVertexSummary>("offlinePrimaryVerticesSummary", false);
-		//m_event.m_beamSpot = m_fi.Get<KDataBeamSpot>("offlineBeamSpot");
-		m_event.m_jetArea = m_fi.Get<KJetArea>("KT6Area");
-		m_event.m_pfMet = m_fi.Get<KDataPFMET>("PFMET");
-		//m_event.m_filtermetadata = m_fi.GetMeta<KFilterMetadata>("KFilterMetadata");
-		//m_event.m_filter = m_fi.Get<KFilterSummary>("filterSummary");
-
+		KappaEventProvider::WireEvent(globalSettings);
 	}
 
 
