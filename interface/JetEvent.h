@@ -2,10 +2,10 @@
 
 #include "Artus/KappaAnalysis/interface/KappaEvent.h"
 
-class JetEvent : public KappaEventBase
+class JetEvent : public KappaEvent
 {
 public:
-	JetEvent() : KappaEventBase() {};
+	JetEvent() : KappaEvent() {};
 
 	//KGenEventMetadata* m_geneventmetadata;
 	//KEventMetadata* m_eventmetadata;

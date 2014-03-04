@@ -9,10 +9,10 @@
 #include "Artus/Core/interface/Cpp11Support.h"
 #include "JetTypes.h"
 
-class JetObservables: public JetLocalProducerBase {
+class JetObservables : public JetProducerBase {
 public:
 
-	virtual std::string GetProducerId() {
+	virtual std::string GetProducerId() const {
 		return "jetobservables";
 	}
 

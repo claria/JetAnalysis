@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Artus/Core/interface/Cpp11Support.h"
-#include "Artus/Core/interface/GlobalProducerBase.h"
+#include "Artus/Core/interface/ProducerBase.h"
 #include "Artus/Core/interface/PipelineRunner.h"
 
 #include "Artus/KappaAnalysis/interface/KappaPipelineRunner.h"
@@ -26,8 +26,7 @@ struct JetTypes {
 };
 
 // Pass the template parameters for the Producers
-typedef GlobalProducerBase<JetTypes> JetGlobalProducerBase;
-typedef LocalProducerBase<JetTypes> JetLocalProducerBase;
+typedef ProducerBase<JetTypes> JetProducerBase;
 
 // Pass the template parameters for the Consumer
 typedef ConsumerBase<JetTypes> JetConsumerBase;
@@ -39,5 +38,5 @@ typedef FilterBase<JetTypes> JetFilterBase;
 typedef Pipeline<JetTypes> JetPipeline;
 
 //Setup our custom pipeline runner
-typedef KappaPipelineRunner<JetTypes, JetPipeline, JetGlobalProducerBase> JetPipelineRunner;
+typedef KappaPipelineRunner<JetTypes, JetPipeline, JetProducerBase> JetPipelineRunner;
 

@@ -15,12 +15,12 @@
  * The memory locations are passed to ROOT one time, in the
  * WireEvent() method call.
  */
-class JetEventProvider: public KappaEventProviderBase<JetTypes> {
+class JetEventProvider: public KappaEventProvider<JetTypes> {
 public:
 
 	typedef typename JetTypes::global_setting_type global_setting_type;
 	JetEventProvider(FileInterface2& fi, InputTypeEnum inpType) :
-			KappaEventProviderBase<JetTypes>(fi,inpType) {
+			KappaEventProvider<JetTypes>(fi,inpType) {
 
 	}
 
