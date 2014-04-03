@@ -27,11 +27,11 @@ private:
 	{
 		if (string == "LeadingJetPt")
 			return product.m_Jet1Pt;
-		else if (string == "LeadingJetEta")
+		else if (string == "LeadingJetRap")
 			return product.m_Jet1Eta;
 		else if (string == "SecondJetPt")
 			return product.m_Jet2Pt;
-		else if (string == "SecondJetEta")
+		else if (string == "SecondJetRap")
 			return product.m_Jet2Eta;
 		else
 			LOG(FATAL) << "The quantity " << string << " could not be added to the Ntuple";

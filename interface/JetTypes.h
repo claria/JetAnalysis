@@ -8,9 +8,10 @@
 
 #include "Artus/Core/interface/Cpp11Support.h"
 #include "Artus/Core/interface/ProducerBase.h"
+#include "Artus/Core/interface/Pipeline.h"
 #include "Artus/Core/interface/PipelineRunner.h"
 
-//#include "Artus/KappaAnalysis/interface/KappaPipelineRunner.h"
+#include "Artus/KappaAnalysis/interface/KappaPipelineInitializer.h"
 
 
 #include "JetEvent.h"
@@ -39,4 +40,5 @@ typedef Pipeline<JetTypes> JetPipeline;
 
 //Setup our custom pipeline runner
 typedef PipelineRunner<JetPipeline, JetTypes> JetPipelineRunner;
+typedef KappaPipelineInitializer<JetTypes> JetPipelineInitializer;
 

@@ -11,14 +11,15 @@
 #include <TFile.h>
 
 #include "Artus/Configuration/interface/ArtusConfig.h"
+#include "Artus/Configuration/interface/RootEnvironment.h"
 
 #include "JetAnalysis/DijetAna/interface/JetTypes.h"
 #include "JetAnalysis/DijetAna/interface/JetEventProvider.h"
-#include "JetAnalysis/DijetAna/interface/JetPipelineInitializer.h"
+//#include "JetAnalysis/DijetAna/interface/JetPipelineInitializer.h"
 //#include "JetAnalysis/DijetAna/interface/ValidDiJetsProducer.h"
 #include "JetAnalysis/DijetAna/interface/JetFactory.h"
 
-#include "Artus/KappaAnalysis/interface/Producers/ValidJetsProducer.h"
+//#include "Artus/KappaAnalysis/interface/Producers/ValidJetsProducer.h"
 //#include "JetAnalysis/DijetAna/interface/ValidDiJetsProducer.h"
 /*
 	This example implements a simple dummy anaylsis which
