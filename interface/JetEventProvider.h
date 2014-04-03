@@ -19,10 +19,9 @@ class JetEventProvider: public KappaEventProvider<JetTypes> {
 public:
 
 	typedef typename JetTypes::global_setting_type global_setting_type;
-	JetEventProvider(FileInterface2& fi, InputTypeEnum inpType) :
-			KappaEventProvider<JetTypes>(fi,inpType) {
 
-	}
+	JetEventProvider(FileInterface2& fi, InputTypeEnum inpType) :
+			KappaEventProvider<JetTypes>(fi,inpType) {}
 
 	virtual void WireEvent(global_setting_type const& globalSettings)
 		ARTUS_CPP11_OVERRIDE

@@ -17,7 +17,7 @@ class JetNtupleConsumer: public NtupleConsumerBase<JetTypes> {
 
 public:
 	virtual std::string GetConsumerId() {
-		return "ntuple";
+		return "JetNtupleConsumer";
 	}
 
 private:
@@ -34,8 +34,7 @@ private:
 		else if (string == "SecondJetEta")
 			return product.m_Jet2Eta;
 		else
-			LOG_FATAL("The quantity " << string << " could not be added to the Ntuple")
-
+			LOG(FATAL) << "The quantity " << string << " could not be added to the Ntuple";
 		return -999.0;
 	}
 

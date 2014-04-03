@@ -34,7 +34,7 @@ public:
 
 class JetGlobalSettings: public KappaGlobalSettings {
 public:
-	IMPL_SETTING_DEFAULT(std::string, Jets, "");
-	IMPL_SETTING( float, ProducerPtCorrectionFactor )
-
+	//IMPL_SETTING_DEFAULT(std::string, Jets, "");
+	IMPL_SETTING(float, ProducerPtCorrectionFactor)
+	IMPL_SETTING(bool, InputIsData)
 };

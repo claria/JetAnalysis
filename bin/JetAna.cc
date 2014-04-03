@@ -15,11 +15,11 @@
 #include "JetAnalysis/DijetAna/interface/JetTypes.h"
 #include "JetAnalysis/DijetAna/interface/JetEventProvider.h"
 #include "JetAnalysis/DijetAna/interface/JetPipelineInitializer.h"
-#include "JetAnalysis/DijetAna/interface/ValidDiJetsProducer.h"
+//#include "JetAnalysis/DijetAna/interface/ValidDiJetsProducer.h"
 #include "JetAnalysis/DijetAna/interface/JetFactory.h"
 
 #include "Artus/KappaAnalysis/interface/Producers/ValidJetsProducer.h"
-#include "JetAnalysis/DijetAna/interface/ValidDiJetsProducer.h"
+//#include "JetAnalysis/DijetAna/interface/ValidDiJetsProducer.h"
 /*
 	This example implements a simple dummy anaylsis which
 	reads entries from a root file and produces various pt plots
@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
 	// this must be modified if you want to load more/new quantities
 	
 	FileInterface2 finterface(myConfig.GetInputFiles());
-	JetEventProvider evtProvider(finterface, McInput);
+	JetEventProvider evtProvider(finterface, (global_settings.GetInputIsData() ? DataInput : McInput));
 	evtProvider.WireEvent(global_settings);
 
 	// the pipeline initializer will setup the pipeline, with

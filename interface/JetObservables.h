@@ -13,14 +13,13 @@ class JetObservables : public JetProducerBase {
 public:
 
 	virtual std::string GetProducerId() const {
-		return "jetobservables";
+		return "JetObservables";
 	}
 
 	virtual void ProduceLocal(JetEvent const& event,
 			JetProduct & product,
 			JetPipelineSettings const& pipelineSettings) const
 		{
-			//std::cout << "aa" << product.m_validJets->at(0).p4.Pt() << std::endl;
 			product.m_Jet1Pt = product.m_validJets.at(0)->p4.Pt();
 			product.m_Jet1Eta = product.m_validJets.at(0)->p4.Eta();
 			product.m_Jet1Rap = product.m_validJets.at(0)->p4.Rapidity();

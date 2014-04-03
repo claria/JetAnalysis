@@ -13,10 +13,10 @@ class ValidDiJetsProducer: public JetProducerBase {
 public:
 
 	virtual std::string GetProducerId() const {
-		return "valid_dijets";
+		return "ValidDiJetsProducer";
 	}
 
-	virtual bool ProduceGlobal(JetEvent const& event,
+	virtual void ProduceGlobal(JetEvent const& event,
 			JetProduct & product,
 			JetGlobalSettings const& globalSettings) const
 		{
