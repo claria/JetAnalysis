@@ -1,0 +1,14 @@
+
+<Flags LDFLAGS="-Lsrc/KappaTools/lib -lKToolbox -lKRootTools" />
+<Flags LDFLAGS="-Lsrc/Kappa/lib -lKappa" />
+
+<bin   name="JetAna" file="JetAna.cc">
+   <use   name="Artus/Core"/>
+   <use   name="Artus/Provider"/>
+   <use   name="Artus/Configuration"/>
+   <use   name="Artus/Consumer"/>
+   <use   name="JetAnalysis/DijetAna"/>
+   <use   name="boost"/>
+   <use   name="boost_regex"/>
+   <use   name="root"/>
+</bin>
