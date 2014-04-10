@@ -37,4 +37,6 @@ public:
 	//IMPL_SETTING_DEFAULT(std::string, Jets, "");
 	IMPL_SETTING(float, ProducerPtCorrectionFactor)
 	IMPL_SETTING(bool, InputIsData)
+	IMPL_SETTING(float, MinJetPtCut)
+	IMPL_SETTING(float, MaxJetRapCut)
 };

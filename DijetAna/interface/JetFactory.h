@@ -19,9 +19,12 @@
 // producer
 //#include "ValidDiJetsProducer.h"
 #include "DiJetsObservables.h"
+#include "JetHltProducer.h"
 
 // filter
 #include "DiJetsFilter.h"
+#include "DiJetsPtFilter.h"
+#include "DiJetsRapFilter.h"
 
 // consumer
 #include "JetNtupleConsumer.h"
@@ -38,6 +41,8 @@ public:
 	{
         if ( DiJetsObservables().GetProducerId() == id )
 			return new DiJetsObservables();
+		else if ( JetHltProducer().GetProducerId() == id )
+			return new JetHltProducer();
 		else
 			return KappaFactory<JetTypes>::createProducer( id );
 	}
@@ -56,6 +61,10 @@ public:
 	{
 		if ( DiJetsFilter().GetFilterId() == id)
 			return new DiJetsFilter();
+		else if ( DiJetsPtFilter().GetFilterId() == id)
+			return new DiJetsPtFilter();
+		else if ( DiJetsRapFilter().GetFilterId() == id)
+			return new DiJetsRapFilter();
 		else
 			return KappaFactory<JetTypes>::createFilter( id );
 	}

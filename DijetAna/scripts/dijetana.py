@@ -29,11 +29,11 @@ def main():
 
 
 def SetMCSpecific():
-	config['InputIsData'] = 'true'
+	config['InputIsData'] = 'false'
 	pass
 
 def SetDataSpecific():
-	config['InputIsData'] = 'True'
+	config['InputIsData'] = 'true'
 	config['HltPaths'] = ['HLT_PFJET40','HLT_PFJET80','HLT_PFJET140','HLT_PFJET200','HLT_PFJET260','HLT_PFJET320',]
 	#config['GlobalProcessors'].insert(0, 'producer:hlt_selector')
 
@@ -54,7 +54,7 @@ baseconfig = {
 	'Pipelines': {
 		'default': {
 			'Processors': ['producer:DiJetsObservables'],
-			'Consumers': ['JetNtupleConsumer', 'quantities_all'],
+			'Consumers': ['JetNtupleConsumer', 'cutflow_histogram'],
 			'Quantities' : ['LeadingJetPt', 'LeadingJetRap', 'SecondJetPt', 'SecondJetRap']
 		}
 	},
