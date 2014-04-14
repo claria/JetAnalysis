@@ -19,13 +19,16 @@ public:
 	virtual void ProduceGlobal(JetEvent const& event,
 			JetProduct & product,
 			JetGlobalSettings const& globalSettings) const
-		{
-		for (size_t i = 0; i < event.m_lumiMetadata->hltNames.size(); ++i)
-			if (event.m_eventMetadata->bitsHLT & (1ul << i))
-				std::cout << event.m_lumiMetadata->hltNames[i] << " ";
-		std::cout << std::endl;
-		std::cout << "=========" << std::endl << std::endl;
-
+	{
+		for (size_t i = 0; i < event.m_lumiMetadata->hltNames.size(); ++i){
+			product.m_HltTrigger[event.m_lumiMetadata->hltNames[i]] = false;
+			if (event.m_eventMetadata->bitsHLT & (1ul << i)){
+				product.m_HltTrigger[event.m_lumiMetadata->hltNames[i]] = true;
+			}
 		}
+		//for (auto& kv : product.m_HltTrigger) {
+		//	std::cout << kv.first << " has value " << std::boolalpha << kv.second << std::endl;
+		//}
+	}
 
 };

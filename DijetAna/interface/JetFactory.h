@@ -23,6 +23,7 @@
 
 // filter
 #include "DiJetsFilter.h"
+#include "JetHltFilter.h"
 #include "DiJetsPtFilter.h"
 #include "DiJetsRapFilter.h"
 
@@ -61,6 +62,8 @@ public:
 	{
 		if ( DiJetsFilter().GetFilterId() == id)
 			return new DiJetsFilter();
+		else if ( JetHltFilter().GetFilterId() == id)
+			return new JetHltFilter();
 		else if ( DiJetsPtFilter().GetFilterId() == id)
 			return new DiJetsPtFilter();
 		else if ( DiJetsRapFilter().GetFilterId() == id)

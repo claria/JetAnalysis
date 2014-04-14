@@ -21,5 +21,5 @@ class JetProduct : public KappaProduct
 		double m_Jet2Eta;
 		double m_Jet2Rap;
 		double m_DiJetMass;
-
+		std::map<std::string, bool> m_HltTrigger;
 };

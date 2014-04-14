@@ -25,14 +25,20 @@ private:
 	float returnvalue(std::string string, JetEvent const& event,
 			JetProduct const& product) ARTUS_CPP11_OVERRIDE
 	{
-		if (string == "LeadingJetPt")
+		std::string trigger("HLT");
+		// Observables
+		if (string == "Jet1Pt")
 			return product.m_Jet1Pt;
-		else if (string == "LeadingJetRap")
+		else if (string == "Jet1Rap")
 			return product.m_Jet1Eta;
-		else if (string == "SecondJetPt")
+		else if (string == "Jet2Pt")
 			return product.m_Jet2Pt;
-		else if (string == "SecondJetRap")
+		else if (string == "Jet2Rap")
 			return product.m_Jet2Eta;
+		else if (string.compare(0, trigger.length(), trigger) == 0)
+		{
+			return product.m_HltTrigger.find(string)->second;
+		}
 		else
 			LOG(FATAL) << "The quantity " << string << " could not be added to the Ntuple";
 		return -999.0;
