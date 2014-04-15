@@ -22,4 +22,5 @@ class JetProduct : public KappaProduct
 		double m_Jet2Rap;
 		double m_DiJetMass;
 		std::map<std::string, bool> m_HltTrigger;
+		std::map<std::string, double> m_weights;
 };

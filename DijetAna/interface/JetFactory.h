@@ -20,6 +20,7 @@
 //#include "ValidDiJetsProducer.h"
 #include "DiJetsObservables.h"
 #include "JetHltProducer.h"
+#include "EventWeightProducer.h"
 
 // filter
 #include "DiJetsFilter.h"
@@ -44,6 +45,8 @@ public:
 			return new DiJetsObservables();
 		else if ( JetHltProducer().GetProducerId() == id )
 			return new JetHltProducer();
+		else if(EventWeightProducer().GetProducerId() == id)
+			return new EventWeightProducer();
 		else
 			return KappaFactory<JetTypes>::createProducer( id );
 	}
