@@ -10,7 +10,7 @@
 
 #include "Artus/Consumer/interface/NtupleConsumerBase.h"
 
-#include "JetTypes.h"
+#include "../JetTypes.h"
 
 
 class JetNtupleConsumer: public NtupleConsumerBase<JetTypes> {
@@ -26,6 +26,7 @@ private:
 			JetProduct const& product) ARTUS_CPP11_OVERRIDE
 	{
 		std::string trigger("HLT");
+		std::string weight("weight");
 		// Observables
 		if (string == "Jet1Pt")
 			return product.m_Jet1Pt;
@@ -35,6 +36,9 @@ private:
 			return product.m_Jet2Pt;
 		else if (string == "Jet2Rap")
 			return product.m_Jet2Eta;
+		else if (string.find(weight) != std::string::npos){
+			return product.m_weights.find(string)->second;
+		}
 		else if (string.compare(0, trigger.length(), trigger) == 0)
 		{
 			return product.m_HltTrigger.find(string)->second;

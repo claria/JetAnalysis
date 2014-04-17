@@ -1,5 +1,5 @@
 
-<Flags LDFLAGS="-Lsrc/KappaTools/lib -lKToolbox -lKRootTools" />
+<Flags LDFLAGS="-L../KappaTools/lib -lKToolbox -lKRootTools" />
 <Flags LDFLAGS="-L../Kappa/lib -lKappa" />
 <Flags CXXFLAGS="-I/afs/desy.de/user/g/gsieber/dijetana/ana/" />
 

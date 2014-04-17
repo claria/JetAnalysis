@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Artus/Core/interface/Cpp11Support.h"
-#include "JetTypes.h"
+#include "../JetTypes.h"
 
 class DiJetsObservables : public JetProducerBase {
 public:

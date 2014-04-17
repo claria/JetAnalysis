@@ -18,18 +18,18 @@
 
 // producer
 //#include "ValidDiJetsProducer.h"
-#include "DiJetsObservables.h"
-#include "JetHltProducer.h"
-#include "EventWeightProducer.h"
+#include "Producer/DiJetsObservables.h"
+#include "Producer/JetHltProducer.h"
+#include "Producer/EventWeightProducer.h"
 
 // filter
-#include "DiJetsFilter.h"
-#include "JetHltFilter.h"
-#include "DiJetsPtFilter.h"
-#include "DiJetsRapFilter.h"
+#include "Filter/DiJetsFilter.h"
+#include "Filter/JetHltFilter.h"
+#include "Filter/DiJetsPtFilter.h"
+#include "Filter/DiJetsRapFilter.h"
 
 // consumer
-#include "JetNtupleConsumer.h"
+#include "Consumer/JetNtupleConsumer.h"
 
 class JetFactory: public KappaFactory<JetTypes> {
 public:

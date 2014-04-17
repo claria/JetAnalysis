@@ -3,7 +3,7 @@
 #include "Artus/Core/interface/Cpp11Support.h"
 #include "Artus/Core/interface/FilterBase.h"
 
-#include "JetTypes.h"
+#include "../JetTypes.h"
 
 class DiJetsRapFilter: public JetFilterBase {
 
