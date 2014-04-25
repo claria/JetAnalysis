@@ -40,6 +40,7 @@ def SetDataSpecific():
 	config["LumiMetadata"] = "KLumiMetadata"
 	config["EventMetadata"] = "KEventMetadata"
 	config["TriggerObjects"] = "KTriggerObjects"
+	config['JsonFiles'] = ['/afs/desy.de/user/g/gsieber/dijetana/ana/CMSSW_6_2_8/src/JetAnalysis/DijetAna/data/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt']
 	config['HltPaths'] = [
 						'HLT_PFJET40',
 						'HLT_PFJET80',
@@ -48,8 +49,8 @@ def SetDataSpecific():
 						'HLT_PFJET260',
 						'HLT_PFJET320',
 						]
-	config['GlobalProcessors'].append('filter:JetHltFilter')
-	config['GlobalProcessors'].append('producer:JetHLTProducer')
+	config['GlobalProcessors'] += ['filter:JetHltFilter']
+	config['GlobalProcessors'] += ['filter:json_filter']
 
 
 def getUserParser():
