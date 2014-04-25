@@ -30,6 +30,7 @@ public:
 		RETURN_CACHED(quantities, PropertyTreeSupport::GetAsStringList(GetPropTree(), "Pipelines." + GetName() + ".Quantities"))
 	}
 
+	IMPL_SETTING(float, MaxJetRapCut)
 };
 
 class JetGlobalSettings: public KappaGlobalSettings {

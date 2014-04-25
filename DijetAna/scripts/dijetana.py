@@ -12,6 +12,8 @@ def main():
 	config.update(baseconfig)
 	config.update(wrapper.getConfig())
 
+
+	SetCuts()
 	if wrapper._args.data:
 		SetDataSpecific()
 	else:
@@ -32,10 +34,23 @@ def SetMCSpecific():
 	config['InputIsData'] = 'false'
 	pass
 
+
 def SetDataSpecific():
 	config['InputIsData'] = 'true'
-	config['HltPaths'] = ['HLT_PFJET40','HLT_PFJET80','HLT_PFJET140','HLT_PFJET200','HLT_PFJET260','HLT_PFJET320',]
-	#config['GlobalProcessors'].insert(0, 'producer:hlt_selector')
+	config["LumiMetadata"] = "KLumiMetadata"
+	config["EventMetadata"] = "KEventMetadata"
+	config["TriggerObjects"] = "KTriggerObjects"
+	config['HltPaths'] = [
+						'HLT_PFJET40',
+						'HLT_PFJET80',
+						'HLT_PFJET140',
+						'HLT_PFJET200',
+						'HLT_PFJET260',
+						'HLT_PFJET320',
+						]
+	config['GlobalProcessors'].append('filter:JetHltFilter')
+	config['GlobalProcessors'].append('producer:JetHLTProducer')
+
 
 def getUserParser():
 	parser = argparse.ArgumentParser(add_help=False)
@@ -43,19 +58,30 @@ def getUserParser():
 	return parser
 
 
+def SetCuts():
+	config['MinJetPtCut'] = '100.'
+	config['MaxJetRapCut'] = '3.'
+
+
 baseconfig = {
 	'SkipEvents': 0,
-	'Jets' : 'AK5PFJets',
 	'EventCount': -1,
-	'GlobalProcessors': ['producer:valid_jets', 'filter:DiJetsFilter'],
+	'GlobalProcessors': [
+						'producer:valid_jets',
+						'filter:DiJetsFilter',
+						'filter:DiJetsRapFilter',
+						'filter:DiJetsPtFilter',
+						],
 	'InputIsData': 'false',
 	'InputFiles': [],
 	'OutputPath': 'output.root',
+	'JetID' : 'Tight',
+	'Jets' : 'AK5PFJets',
 	'Pipelines': {
 		'default': {
 			'Processors': ['producer:DiJetsObservables'],
 			'Consumers': ['JetNtupleConsumer', 'cutflow_histogram'],
-			'Quantities' : ['LeadingJetPt', 'LeadingJetRap', 'SecondJetPt', 'SecondJetRap']
+			'Quantities' : ['Jet1Pt', 'Jet1Rap', 'Jet2Pt', 'Jet2Rap']
 		}
 	},
 }
