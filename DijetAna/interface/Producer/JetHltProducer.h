@@ -8,6 +8,7 @@
 
 #include "Artus/Core/interface/Cpp11Support.h"
 #include "../JetTypes.h"
+#include "KappaTools/RootTools/HLTTools.h"
 
 class JetHltProducer : public JetProducerBase {
 public:
@@ -71,6 +72,8 @@ public:
 			}
 		}
 		std::cout << std::endl;
+		HLTTools asdf = new HLTTools(event.m_lumiMetadata);
+		st::cout << "fired2 ";
 		//for (auto& kv : product.m_HltTrigger) {
 		//	std::cout << kv.first << " has value " << std::boolalpha << kv.second << std::endl;
 		//}

@@ -21,6 +21,7 @@
 #include "Producer/DiJetsObservables.h"
 #include "Producer/JetHltProducer.h"
 #include "Producer/EventWeightProducer.h"
+#include "Producer/CrossSectionWeightProducer.h"
 
 // filter
 #include "Filter/DiJetsFilter.h"
@@ -47,6 +48,8 @@ public:
 			return new JetHltProducer();
 		else if(EventWeightProducer().GetProducerId() == id)
 			return new EventWeightProducer();
+		else if(CrossSectionWeightProducer().GetProducerId() == id)
+			return new CrossSectionWeightProducer();
 		else
 			return KappaFactory<JetTypes>::createProducer( id );
 	}

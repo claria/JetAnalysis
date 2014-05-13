@@ -2,13 +2,17 @@
 #pragma once
 
 #include "../JetTypes.h"
-
+#include <typeinfo>
 
 class EventWeightProducer: public JetProducerBase {
 public:
 
 	virtual std::string GetProducerId() const ARTUS_CPP11_OVERRIDE {
-		return "EventWeightProducer";
+		int status;
+		char *realname = abi::__cxa_demangle(typeid(*this).name(), 0, 0, &status);
+		std::cout << realname;
+		return std::string(realname);
+		//return "EventWeightProducer";
 	}
 	
 	EventWeightProducer() : JetProducerBase() {};

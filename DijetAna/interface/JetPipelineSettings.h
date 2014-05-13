@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include "Artus/Core/interface/GlobalInclude.h"
 #include "Artus/Configuration/interface/SettingsBase.h"
 #include "Artus/Configuration/interface/SettingMacros.h"
 #include "Artus/Configuration/interface/PropertyTreeSupport.h"
@@ -36,8 +35,8 @@ public:
 class JetGlobalSettings: public KappaGlobalSettings {
 public:
 	//IMPL_SETTING_DEFAULT(std::string, Jets, "");
-	IMPL_SETTING(float, ProducerPtCorrectionFactor)
+	IMPL_SETTING_DEFAULT(float, XSection, 0.)
 	IMPL_SETTING(bool, InputIsData)
-	IMPL_SETTING(float, MinJetPtCut)
-	IMPL_SETTING(float, MaxJetRapCut)
+	IMPL_SETTING_DEFAULT(float, MinJetPtCut, 0.)
+	IMPL_SETTING_DEFAULT(float, MaxJetRapCut, 10.)
 };

@@ -31,7 +31,10 @@ def main():
 
 
 def SetMCSpecific():
+	config["GenLumiMetadata"] = "KLumiMetadata"
+	config["GenEventMetadata"] = "KEventMetadata"
 	config['InputIsData'] = 'false'
+	config['GlobalProcessors'].insert(0, 'producer:CrossSectionWeightProducer')
 	pass
 
 
@@ -80,9 +83,10 @@ baseconfig = {
 	'Jets' : 'AK5PFJets',
 	'Pipelines': {
 		'default': {
-			'Processors': ['producer:DiJetsObservables'],
+			'Processors': ['producer:DiJetsObservables',
+						   'producer:EventWeightProducer'],
 			'Consumers': ['JetNtupleConsumer', 'cutflow_histogram'],
-			'Quantities' : ['Jet1Pt', 'Jet1Rap', 'Jet2Pt', 'Jet2Rap']
+			'Quantities' : ['Jet1Pt', 'Jet1Rap', 'Jet2Pt', 'Jet2Rap', 'EventWeight', 'CrossSectionPerEventWeight']
 		}
 	},
 }
