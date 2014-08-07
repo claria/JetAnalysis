@@ -11,34 +11,16 @@ class DiJetsRapFilter: public JetFilterBase {
 		virtual ~DiJetsRapFilter() {
 		}
 
-		virtual void InitGlobal(JetGlobalSettings const& globalSettings) {
-			maxJetRapCut = globalSettings.GetMaxJetRapCut();
-		}
-
-		virtual void InitLocal(JetPipelineSettings const& pipelineSettings) {
-			maxJetRapCut = pipelineSettings.GetMaxJetRapCut();
+		virtual void Init(JetSettings const& settings) {
+			maxJetRapCut = settings.GetMaxJetRapCut();
 		}
 
 		virtual std::string GetFilterId() const {
 			return "DiJetsRapFilter";
 		}
 
-		virtual bool DoesEventPassGlobal(JetEvent const& event,
-				JetProduct const& product,
-				JetGlobalSettings const& settings) const {
-
-			return DoesEventPass(event, product);
-		}
-
-		virtual bool DoesEventPassLocal(JetEvent const& event, 
-				JetProduct const& product,
-				JetGlobalSettings const& settings) const {
-
-			return DoesEventPass(event, product);
-		}
-
 		virtual bool DoesEventPass(JetEvent const& event, 
-				JetProduct const& product) const {
+				JetProduct const& product, JetSettings const& settings) const {
 
 			bool pass = true;
 

@@ -34,7 +34,7 @@ def SetMCSpecific():
 	config["GenLumiMetadata"] = "KLumiMetadata"
 	config["GenEventMetadata"] = "KEventMetadata"
 	config['InputIsData'] = 'false'
-	config['GlobalProcessors'].insert(0, 'producer:CrossSectionWeightProducer')
+	config['Processors'].insert(0, 'producer:CrossSectionWeightProducer')
 	pass
 
 
@@ -52,8 +52,8 @@ def SetDataSpecific():
 						'HLT_PFJET260',
 						'HLT_PFJET320',
 						]
-	config['GlobalProcessors'] += ['filter:JetHltFilter']
-	config['GlobalProcessors'] += ['filter:json_filter']
+	config['Processors'] += ['filter:JetHltFilter']
+	config['Processors'] += ['filter:json_filter']
 
 
 def getUserParser():
@@ -70,7 +70,7 @@ def SetCuts():
 baseconfig = {
 	'SkipEvents': 0,
 	'EventCount': -1,
-	'GlobalProcessors': [
+	'Processors': [
 						'producer:valid_jets',
 						'filter:DiJetsFilter',
 						'filter:DiJetsRapFilter',
@@ -83,10 +83,10 @@ baseconfig = {
 	'Jets' : 'AK5PFJets',
 	'Pipelines': {
 		'default': {
-			'Processors': ['producer:DiJetsObservables',
-						   'producer:EventWeightProducer'],
+			'Processors': ['producer:DiJetsObservables', 'producer:event_weight'],
 			'Consumers': ['JetNtupleConsumer', 'cutflow_histogram'],
-			'Quantities' : ['Jet1Pt', 'Jet1Rap', 'Jet2Pt', 'Jet2Rap', 'EventWeight', 'CrossSectionPerEventWeight']
+			'Quantities' : ['Jet1Pt', 'Jet1Rap', 'Jet2Pt', 'Jet2Rap', 'EventWeight', 'CrossSectionPerEventWeight'],
+			'EventWeight' : 'EventWeight'
 		}
 	},
 }

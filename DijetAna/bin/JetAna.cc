@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
 	ArtusConfig myConfig(argc, argv);
 
 	// load the global settings from the config file
-	JetGlobalSettings global_settings = myConfig.GetGlobalSettings<JetGlobalSettings>();
+	JetSettings settings = myConfig.GetSettings<JetSettings>();
 	// create the output root file
 	boost::scoped_ptr < TFile > rootOutputFile(new TFile(myConfig.GetOutputPath().c_str(), "RECREATE"));
 
@@ -42,8 +42,8 @@ int main(int argc, char** argv) {
 	// this must be modified if you want to load more/new quantities
 	
 	FileInterface2 finterface(myConfig.GetInputFiles());
-	JetEventProvider evtProvider(finterface, (global_settings.GetInputIsData() ? DataInput : McInput));
-	evtProvider.WireEvent(global_settings);
+	JetEventProvider evtProvider(finterface, (settings.GetInputIsData() ? DataInput : McInput));
+	evtProvider.WireEvent(settings);
 
 	// the pipeline initializer will setup the pipeline, with
 	// all the attached Producer, Filer and Consumer
@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
 
 	// run all the configured pipelines and all their attached
 	// consumers
-	runner.RunPipelines(evtProvider, global_settings);
+	runner.RunPipelines(evtProvider, settings);
 
 	// close output root file, pointer will be automatically
 	// deleted

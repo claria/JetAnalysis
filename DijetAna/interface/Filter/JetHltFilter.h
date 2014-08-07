@@ -15,9 +15,9 @@ class JetHltFilter: public JetFilterBase {
 			return "JetHltFilter";
 		}
 
-		virtual bool DoesEventPassGlobal(JetEvent const& event,
+		virtual bool DoesEventPass(JetEvent const& event,
 				JetProduct const& product,
-				JetGlobalSettings const& settings) const {
+				JetSettings const& settings) const {
 
 			bool pass = false;
 			for (size_t i = 0; i < event.m_lumiMetadata->hltNames.size(); ++i)

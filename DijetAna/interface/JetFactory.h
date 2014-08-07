@@ -12,15 +12,15 @@
 
 #include "JetTypes.h"
 
-#include "JetPipelineSettings.h"
+#include "JetSettings.h"
 #include "JetEvent.h"
 #include "JetProduct.h"
 
 // producer
 //#include "ValidDiJetsProducer.h"
 #include "Producer/DiJetsObservables.h"
-#include "Producer/JetHltProducer.h"
-#include "Producer/EventWeightProducer.h"
+//#include "Producer/JetHltProducer.h"
+#include "Artus/KappaAnalysis/interface/Producers/EventWeightProducer.h"
 #include "Producer/CrossSectionWeightProducer.h"
 
 // filter
@@ -36,7 +36,6 @@ class JetFactory: public KappaFactory<JetTypes> {
 public:
 
 	JetFactory() : KappaFactory<JetTypes>() {}
-
 	virtual ~JetFactory() {}
 
 	virtual JetProducerBase * createProducer ( std::string const& id )
@@ -44,10 +43,6 @@ public:
 	{
         if ( DiJetsObservables().GetProducerId() == id )
 			return new DiJetsObservables();
-		else if ( JetHltProducer().GetProducerId() == id )
-			return new JetHltProducer();
-		else if(EventWeightProducer().GetProducerId() == id)
-			return new EventWeightProducer();
 		else if(CrossSectionWeightProducer().GetProducerId() == id)
 			return new CrossSectionWeightProducer();
 		else

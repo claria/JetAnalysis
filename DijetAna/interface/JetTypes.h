@@ -16,14 +16,13 @@
 
 #include "JetEvent.h"
 #include "JetProduct.h"
-#include "JetPipelineSettings.h"
+#include "JetSettings.h"
 
 // all data types which are used for this analysis
 struct JetTypes {
 	typedef JetEvent event_type;
 	typedef JetProduct product_type;
-	typedef JetPipelineSettings setting_type;
-	typedef JetGlobalSettings global_setting_type;
+	typedef JetSettings setting_type;
 };
 
 // Pass the template parameters for the Producers

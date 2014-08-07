@@ -15,13 +15,13 @@ class DiJetsPtFilter: public JetFilterBase {
 			return "DiJetsPtFilter";
 		}
 
-		virtual void InitGlobal(JetGlobalSettings const& globalSettings) {
-			minJetPtCut = globalSettings.GetMinJetPtCut();
+		virtual void Init(JetSettings const& settings) {
+			minJetPtCut = settings.GetMinJetPtCut();
 		}
 
-		virtual bool DoesEventPassGlobal(JetEvent const& event,
+		virtual bool DoesEventPass(JetEvent const& event,
 				JetProduct const& product,
-				JetGlobalSettings const& globalSettings) const {
+				JetSettings const& settings) const {
 
 			bool pass = true;
 

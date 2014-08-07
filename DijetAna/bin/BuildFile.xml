@@ -1,7 +1,6 @@
 
-<Flags LDFLAGS="-L../KappaTools/lib -lKToolbox -lKRootTools" />
-<Flags LDFLAGS="-L../Kappa/lib -lKappa" />
-<Flags CXXFLAGS="-I/afs/desy.de/user/g/gsieber/dijetana/ana/" />
+<Flags LDFLAGS="-Lsrc/KappaTools/lib -lKToolbox -lKRootTools" />
+<Flags LDFLAGS="-Lsrc/Kappa/lib -lKappa" />
 
 <bin   name="JetAna" file="JetAna.cc">
    <use   name="Artus/Core"/>
@@ -10,5 +9,9 @@
    <use   name="Artus/Consumer"/>
    <use   name="boost"/>
    <use   name="boost_regex"/>
+   <use   name="boost_serialization"/>
    <use   name="root"/>
+   <use   name="rootmath"/>
+   <use   name="roottmva"/>
+   <use   name="CondFormats/JetMETObjects"/>
 </bin>

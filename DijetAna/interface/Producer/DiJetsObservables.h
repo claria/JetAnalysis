@@ -16,9 +16,9 @@ public:
 		return "DiJetsObservables";
 	}
 
-	virtual void ProduceLocal(JetEvent const& event,
+	virtual void Produce(JetEvent const& event,
 			JetProduct & product,
-			JetPipelineSettings const& pipelineSettings) const
+			JetSettings const& settings) const
 		{
 			product.m_Jet1Pt = product.m_validJets.at(0)->p4.Pt();
 			product.m_Jet1Eta = product.m_validJets.at(0)->p4.Eta();

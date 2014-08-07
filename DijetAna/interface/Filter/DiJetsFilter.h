@@ -15,9 +15,9 @@ class DiJetsFilter: public JetFilterBase {
 			return "DiJetsFilter";
 		}
 
-		virtual bool DoesEventPassGlobal(JetEvent const& event,
+		virtual bool DoesEventPass(JetEvent const& event,
 				JetProduct const& product,
-				JetGlobalSettings const& settings) const {
+				JetSettings const& settings) const {
 
 			bool pass = true;
 

@@ -14,7 +14,7 @@
 
 #include "JetTypes.h"
 
-#include "JetPipelineSettings.h"
+#include "JetSettings.h"
 #include "JetEvent.h"
 #include "JetProduct.h"
 
