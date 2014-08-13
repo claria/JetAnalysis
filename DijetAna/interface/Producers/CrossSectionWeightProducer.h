@@ -27,7 +27,7 @@ public:
 			else if (event.m_genLumiMetadata->xSectionInt > 0.)
 				product.m_weights["CrossSectionPerEventWeight"] = event.m_genLumiMetadata->xSectionInt;
 			else
-				LOG(INFO) << "No CrossSection information found.";
+				LOG(ERROR) << "No CrossSection information found.";
 
 		}
 

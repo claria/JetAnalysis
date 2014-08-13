@@ -1,1 +1,1 @@
-LD_LIBRARY_PATH=$CMSSW_BASE/../Kappa/lib:$CMSSW_BASE/../KappaTools/lib:$LD_LIBRARY_PATH
+LD_LIBRARY_PATH=$CMSSW_BASE/src/Kappa/lib:$CMSSW_BASE/src/KappaTools/lib:$LD_LIBRARY_PATH

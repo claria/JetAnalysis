@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import sys
 from Artus.Configuration.artusWrapper import ArtusWrapper
 import argparse
@@ -33,8 +34,11 @@ def main():
 def SetMCSpecific():
 	config["GenLumiMetadata"] = "KLumiMetadata"
 	config["GenEventMetadata"] = "KEventMetadata"
+	config['PileupWeightFile'] = os.path.expandvars('$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup.root')
 	config['InputIsData'] = 'false'
 	config['Processors'].insert(0, 'producer:CrossSectionWeightProducer')
+	config['Processors'].insert(0, 'producer:GeneratorWeightProducer')
+	config['Processors'].insert(0, 'producer:pu_weights')
 	pass
 
 
@@ -42,8 +46,8 @@ def SetDataSpecific():
 	config['InputIsData'] = 'true'
 	config["LumiMetadata"] = "KLumiMetadata"
 	config["EventMetadata"] = "KEventMetadata"
-	config["TriggerObjects"] = "KTriggerObjects"
-	config['JsonFiles'] = ['/afs/desy.de/user/g/gsieber/dijetana/ana/CMSSW_6_2_8/src/JetAnalysis/DijetAna/data/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt']
+	# config["TriggerObjects"] = "KTriggerObjects"
+	config['JsonFiles'] = [os.path.expandvars('$CMSSW_BASE/src/JetAnalysis/DijetAna/data/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt')]
 	config['HltPaths'] = [
 						'HLT_PFJET40',
 						'HLT_PFJET80',
@@ -52,7 +56,7 @@ def SetDataSpecific():
 						'HLT_PFJET260',
 						'HLT_PFJET320',
 						]
-	config['Processors'] += ['filter:JetHltFilter']
+	config['Processors'] += ['producer:hlt_selector']
 	config['Processors'] += ['filter:json_filter']
 
 
@@ -63,8 +67,8 @@ def getUserParser():
 
 
 def SetCuts():
-	config['MinJetPtCut'] = '100.'
-	config['MaxJetRapCut'] = '3.'
+	config['MinJetPtCut'] = '200.'
+	config['MaxJetRapCut'] = '2.'
 
 
 baseconfig = {
@@ -85,7 +89,7 @@ baseconfig = {
 		'default': {
 			'Processors': ['producer:DiJetsObservables', 'producer:event_weight'],
 			'Consumers': ['JetNtupleConsumer', 'cutflow_histogram'],
-			'Quantities' : ['Jet1Pt', 'Jet1Rap', 'Jet2Pt', 'Jet2Rap', 'EventWeight', 'CrossSectionPerEventWeight'],
+			'Quantities' : ['Jet1Pt', 'Jet1Rap', 'Jet2Pt', 'Jet2Rap', 'EventWeight', 'CrossSectionPerEventWeight', 'GeneratorWeight', 'hltPrescaleWeight', 'puWeight'],
 			'EventWeight' : 'EventWeight'
 		}
 	},
