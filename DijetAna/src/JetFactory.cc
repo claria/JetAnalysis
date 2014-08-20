@@ -9,8 +9,8 @@
 
 
 // Producers
-#include "Artus/KappaAnalysis/interface/Producers/EventWeightProducer.h"
-#include "JetAnalysis/DijetAna/interface/Producers/CrossSectionWeightProducer.h"
+// #include "Artus/KappaAnalysis/interface/Producers/EventWeightProducer.h"
+// #include "JetAnalysis/DijetAna/interface/Producers/CrossSectionWeightProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/DiJetsObservables.h"
 
 // Filters
@@ -21,6 +21,7 @@
 
 // Consumers
 #include "JetAnalysis/DijetAna/interface/Consumers/JetNtupleConsumer.h"
+#include "JetAnalysis/DijetAna/interface/Consumers/JetLambdaNtupleConsumer.h"
 
 
 JetFactory::JetFactory() : KappaFactory<JetTypes>() {}
@@ -30,8 +31,8 @@ JetProducerBase * JetFactory::createProducer ( std::string const& id )
 {
 	if ( DiJetsObservables().GetProducerId() == id )
 		return new DiJetsObservables();
-	else if(CrossSectionWeightProducer().GetProducerId() == id)
-		return new CrossSectionWeightProducer();
+	//else if(CrossSectionWeightProducer().GetProducerId() == id)
+	//	return new CrossSectionWeightProducer();
 	else
 		return KappaFactory<JetTypes>::createProducer( id );
 }
@@ -40,6 +41,8 @@ JetConsumerBase * JetFactory::createConsumer ( std::string const& id )
 {
 	if ( JetNtupleConsumer().GetConsumerId() == id )
 		return new JetNtupleConsumer();
+	if (JetLambdaNtupleConsumer().GetConsumerId() == id)
+		return new JetLambdaNtupleConsumer();
 	else
 		return KappaFactory<JetTypes>::createConsumer( id );
 }

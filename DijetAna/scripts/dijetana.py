@@ -43,10 +43,13 @@ def SetMCSpecific():
 
 
 def SetDataSpecific():
-	config['InputIsData'] = 'true'
-	config["LumiMetadata"] = "KLumiMetadata"
-	config["EventMetadata"] = "KEventMetadata"
-	# config["TriggerObjects"] = "KTriggerObjects"
+	config['InputIsData']    = 'true'
+	config["LumiMetadata"]   = "KLumiMetadata"
+	config["EventMetadata"]  = "KEventMetadata"
+	config["TriggerInfos"]   = "KTriggerInfos",
+	config["BeamSpot"]       = "offlineBeamSpot",
+	#config["TriggerObjects"] = "KTriggerObjects"
+
 	config['JsonFiles'] = [os.path.expandvars('$CMSSW_BASE/src/JetAnalysis/DijetAna/data/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt')]
 	config['HltPaths'] = [
 						'HLT_PFJET40',
@@ -67,20 +70,27 @@ def getUserParser():
 
 
 def SetCuts():
-	config['MinJetPtCut'] = '200.'
-	config['MaxJetRapCut'] = '2.'
+	config['MinJetPtCut'] = '100.'
+	config['MaxJetRapCut'] = '0.5'
 
 
 baseconfig = {
+	'InputIsData': '',
 	'SkipEvents': 0,
 	'EventCount': -1,
+	"LumiMetadata" : "KLumiMetadata",
+	"GenLumiMetadata" : "",
+	"EventMetadata" : "KEventMetadata",
+	"GenEventMetadata" : "",
+	"FilterMetadata" : "",
+	"FilterSummary" : "",
+	"VertexSummary" : "offlinePrimaryVerticesSummary",
 	'Processors': [
 						'producer:valid_jets',
 						'filter:DiJetsFilter',
 						'filter:DiJetsRapFilter',
 						'filter:DiJetsPtFilter',
 						],
-	'InputIsData': 'false',
 	'InputFiles': [],
 	'OutputPath': 'output.root',
 	'JetID' : 'Tight',
@@ -88,9 +98,10 @@ baseconfig = {
 	'Pipelines': {
 		'default': {
 			'Processors': ['producer:DiJetsObservables', 'producer:event_weight'],
-			'Consumers': ['JetNtupleConsumer', 'cutflow_histogram'],
-			'Quantities' : ['Jet1Pt', 'Jet1Rap', 'Jet2Pt', 'Jet2Rap', 'EventWeight', 'CrossSectionPerEventWeight', 'GeneratorWeight', 'hltPrescaleWeight', 'puWeight'],
+			'Consumers': ["lambda_ntuple", 'cutflow_histogram'],
+			'Quantities' : ['npv', 'npu', 'weight', 'jet1_pt', 'jet1_eta', 'jet1_phi', 'crossSectionPerEventWeight', 'hltPrescaleWeight', 'puWeight', 'generatorWeight'],
 			'EventWeight' : 'EventWeight'
+
 		}
 	},
 }

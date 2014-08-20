@@ -30,8 +30,7 @@ public:
 	//}
 
 	//IMPL_SETTING_DEFAULT(std::string, Jets, "");
-	IMPL_SETTING_DEFAULT(float, XSection, 0.)
-	IMPL_SETTING(bool, InputIsData)
+	//IMPL_SETTING(bool, InputIsData)
 	IMPL_SETTING_DEFAULT(float, MinJetPtCut, 0.)
 	IMPL_SETTING_DEFAULT(float, MaxJetRapCut, 10.)
 };
