@@ -36,9 +36,11 @@ def SetMCSpecific():
 	config["GenEventMetadata"] = "KEventMetadata"
 	config['PileupWeightFile'] = os.path.expandvars('$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup.root')
 	config['InputIsData'] = 'false'
-	config['Processors'].insert(0, 'producer:CrossSectionWeightProducer')
-	config['Processors'].insert(0, 'producer:GeneratorWeightProducer')
-	config['Processors'].insert(0, 'producer:pu_weights')
+	config['Processors'].append('producer:CrossSectionWeightProducer')
+	config['Processors'].append('producer:SampleWeightProducer')
+	config['SampleWeight'] = 1./9991674
+	config['Processors'].append('producer:GeneratorWeightProducer')
+	config['Processors'].append('producer:PUWeightProducer')
 	pass
 
 
@@ -59,8 +61,10 @@ def SetDataSpecific():
 						'HLT_PFJET260',
 						'HLT_PFJET320',
 						]
-	config['Processors'] += ['producer:hlt_selector']
-	config['Processors'] += ['filter:json_filter']
+	config['Processors'].append('producer:SampleWeightProducer')
+	config['SampleWeight'] = 1./4897.
+	config['Processors'] += ['producer:HltProducer']
+	config['Processors'] += ['filter:JsonFilter']
 
 
 def getUserParser():
@@ -86,7 +90,7 @@ baseconfig = {
 	"FilterSummary" : "",
 	"VertexSummary" : "offlinePrimaryVerticesSummary",
 	'Processors': [
-						'producer:valid_jets',
+						'producer:ValidJetsFilter',
 						'filter:DiJetsFilter',
 						'filter:DiJetsRapFilter',
 						'filter:DiJetsPtFilter',
@@ -97,9 +101,9 @@ baseconfig = {
 	'Jets' : 'AK5PFJets',
 	'Pipelines': {
 		'default': {
-			'Processors': ['producer:DiJetsObservables', 'producer:event_weight'],
-			'Consumers': ["lambda_ntuple", 'cutflow_histogram'],
-			'Quantities' : ['npv', 'npu', 'weight', 'jet1_pt', 'jet1_eta', 'jet1_phi', 'crossSectionPerEventWeight', 'hltPrescaleWeight', 'puWeight', 'generatorWeight'],
+			'Processors': ['producer:DiJetsObservables', 'producer:EventWeightProducer'],
+			'Consumers': ["KappaLambdaNtupleConsumer", 'cutflow_histogram'],
+			'Quantities' : ['npv', 'npu', 'weight', 'jet1_pt', 'jet1_eta', 'jet1_phi', 'crossSectionPerEventWeight', 'hltPrescaleWeight', 'puWeight', 'generatorWeight', 'sampleWeight'],
 			'EventWeight' : 'EventWeight'
 
 		}
