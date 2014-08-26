@@ -5,110 +5,161 @@ import sys
 from Artus.Configuration.artusWrapper import ArtusWrapper
 import argparse
 
-config = {}
+baseconfig = {
+        'InputIsData': '',
+        'SkipEvents': 0,
+        'EventCount': -1,
+        "LumiMetadata" : "KLumiMetadata",
+        "GenLumiMetadata" : "",
+        "EventMetadata" : "KEventMetadata",
+        "GenEventMetadata" : "",
+        "FilterMetadata" : "",
+        "FilterSummary" : "",
+        "VertexSummary" : "offlinePrimaryVerticesSummary",
+        'Processors': [
+            'producer:ValidJetsFilter',
+            'filter:DiJetsFilter',
+            'filter:DiJetsRapFilter',
+            'filter:DiJetsPtFilter',
+            ],
+        'InputFiles': [],
+        'OutputPath': 'output.root',
+        'JetID' : 'Tight',
+        'Jets' : 'AK5PFJets',
+        'Pipelines': {
+            'default': {
+                'Processors': ['producer:DiJetsObservables', 
+                    'producer:EventWeightProducer'],
+                'Consumers': ['KappaLambdaNtupleConsumer', 
+                    'cutflow_histogram'],
+                'Quantities' : ['npv', 
+                    'npu', 
+                    'weight', 
+                    'jet1_pt', 
+                    'jet1_eta', 
+                    'jet1_phi', 
+                    'crossSectionPerEventWeight', 
+                    'hltPrescaleWeight', 
+                    'puWeight', 
+                    'generatorWeight', 
+                    'numberGeneratedEventsWeight'],
+                'EventWeight' : 'EventWeight'
+
+                }
+            },
+        }
+
+
 
 def main():
-	userParser = getUserParser()
-	wrapper = ArtusWrapper('JetAna', userArgParsers=[userParser])
-	config.update(baseconfig)
-	config.update(wrapper.getConfig())
+    global config
+
+    userParser = getUserParser()
+    wrapper = ArtusWrapper('JetAna', userArgParsers=[userParser])
+
+    # Use baseconfig with settings valid for data and all MC
+    config = baseconfig
+    config.update(wrapper.getConfig())
+
+    # Identify input type based on Nickname
+    nickname = wrapper.determineNickname('auto')
 
 
-	SetCuts()
-	if wrapper._args.data:
-		SetDataSpecific()
-	else:
-		SetMCSpecific()
-
-	wrapper.setConfig(config)
-
-	print config['InputFiles']
-	if not config['InputFiles']:
-		wrapper.setInputFilenames('/nfs/dust/cms/user/gsieber/SKIMS/SKIM_JETS_2012/kappa_QCDP6*.root')
-	if not config['OutputPath']:
-		wrapper.setOutputFilename('output.root')
-
-	sys.exit(wrapper.run())
+    # Define cuts
+    config['MinJetPtCut'] = '80.'
+    config['MaxJetRapCut'] = '2.0'
 
 
-def SetMCSpecific():
-	config["GenLumiMetadata"] = "KLumiMetadata"
-	config["GenEventMetadata"] = "KEventMetadata"
-	config['PileupWeightFile'] = os.path.expandvars('$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup.root')
-	config['InputIsData'] = 'false'
-	config['Processors'].append('producer:CrossSectionWeightProducer')
-	config['Processors'].append('producer:SampleWeightProducer')
-	config['SampleWeight'] = 1./9991674
-	config['Processors'].append('producer:GeneratorWeightProducer')
-	config['Processors'].append('producer:PUWeightProducer')
-	pass
+    # Add Producers etc specifict to data/MC
+    if isData(nickname):
+        SetDataSpecific(nickname)
+    else:
+        SetMCSpecific(nickname)
+
+    wrapper.setConfig(config)
+
+    print config
+
+    if not config['OutputPath']:
+        wrapper.setOutputFilename('output.root')
+
+    sys.exit(wrapper.run())
 
 
-def SetDataSpecific():
-	config['InputIsData']    = 'true'
-	config["LumiMetadata"]   = "KLumiMetadata"
-	config["EventMetadata"]  = "KEventMetadata"
-	config["TriggerInfos"]   = "KTriggerInfos",
-	config["BeamSpot"]       = "offlineBeamSpot",
-	#config["TriggerObjects"] = "KTriggerObjects"
+def SetMCSpecific(nickname=None):
+    config['InputIsData'] = 'false'
+    config["GenLumiMetadata"] = "KLumiMetadata"
+    config["GenEventMetadata"] = "KEventMetadata"
+    config['PileupWeightFile'] = os.path.expandvars('$CMSSW_BASE/src/JetAnalysis/DijetAna/data/Data_Pileup_2012_ReReco-600bins_OVER_MC_Summer12_PU_S10-600bins.root')
+    config['Processors'].append('producer:PUWeightProducer')
+    config['Processors'].append('producer:CrossSectionWeightProducer')
+    config['Processors'].append('producer:GeneratorWeightProducer')
 
-	config['JsonFiles'] = [os.path.expandvars('$CMSSW_BASE/src/JetAnalysis/DijetAna/data/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt')]
-	config['HltPaths'] = [
-						'HLT_PFJET40',
-						'HLT_PFJET80',
-						'HLT_PFJET140',
-						'HLT_PFJET200',
-						'HLT_PFJET260',
-						'HLT_PFJET320',
-						]
-	config['Processors'].append('producer:SampleWeightProducer')
-	config['SampleWeight'] = 1./4897.
-	config['Processors'] += ['producer:HltProducer']
-	config['Processors'] += ['filter:JsonFilter']
+    if nickname in mc_samples:
+        config['Processors'].append('producer:NumberGeneratedEventsWeightProducer')
+        config['NumberGeneratedEvents'] = mc_samples[nickname].get('NumberGeneratedEvents', 0)
+        config['CrossSection'] = mc_samples[nickname].get('CrossSection', -1)
+    pass
+
+
+def SetDataSpecific(nickname=None):
+    config['InputIsData']    = 'true'
+    config["LumiMetadata"]   = "KLumiMetadata"
+    config["EventMetadata"]  = "KEventMetadata"
+    config["TriggerInfos"]   = "KTriggerInfos",
+    config["BeamSpot"]       = "offlineBeamSpot",
+    config["TriggerObjects"] = "KTriggerObjects"
+
+    config['JsonFiles'] = [os.path.expandvars('$CMSSW_BASE/src/JetAnalysis/DijetAna/data/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt')]
+    config['HltPaths'] = [
+            'HLT_PFJET40',
+            'HLT_PFJET80',
+            'HLT_PFJET140',
+            'HLT_PFJET200',
+            'HLT_PFJET260',
+            'HLT_PFJET320',
+            'HLT_PFJET400',
+            ]
+
+    config['Processors'].insert(0, 'filter:JsonFilter')
+    config['Processors'].append('producer:HltProducer')
+    config['Processors'].append('producer:NumberGeneratedEventsWeightProducer')
+    config['NumberGeneratedEvents'] = 815
+
+
+def isData(nickname):
+    if nickname.startswith('Jet_2012'):
+        return True
+    elif nickname in mc_samples:
+        return False
 
 
 def getUserParser():
-	parser = argparse.ArgumentParser(add_help=False)
-	parser.add_argument('--data', default=False, action='store_true')
-	return parser
+    parser = argparse.ArgumentParser(add_help=False)
+    # parser.add_argument('--data', default=False, action='store_true')
+    return parser
 
 
-def SetCuts():
-	config['MinJetPtCut'] = '100.'
-	config['MaxJetRapCut'] = '0.5'
+# Dict with information about MC samples
+
+mc_samples = {
+        'QCDP6_Z2S_S10' : { 'Dataset' : '/QCD_Pt-15to3000_TuneZ2star_Flat_8TeV_pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+                            'NumberGeneratedEvents' : 9991674,
+                            'CrossSection' : -1.
+                           },
+        'QCDP8_4C_S10' : { 'Dataset' : '',
+                            'NumberGeneratedEvents' : -1,
+                            'CrossSection' : -1.
+                           },
+        'QCDHW_EE3C_S10' : { 'Dataset' : '',
+                            'NumberGeneratedEvents' : -1,
+                            'CrossSection' : -1.
+                           },
+        }
 
 
-baseconfig = {
-	'InputIsData': '',
-	'SkipEvents': 0,
-	'EventCount': -1,
-	"LumiMetadata" : "KLumiMetadata",
-	"GenLumiMetadata" : "",
-	"EventMetadata" : "KEventMetadata",
-	"GenEventMetadata" : "",
-	"FilterMetadata" : "",
-	"FilterSummary" : "",
-	"VertexSummary" : "offlinePrimaryVerticesSummary",
-	'Processors': [
-						'producer:ValidJetsFilter',
-						'filter:DiJetsFilter',
-						'filter:DiJetsRapFilter',
-						'filter:DiJetsPtFilter',
-						],
-	'InputFiles': [],
-	'OutputPath': 'output.root',
-	'JetID' : 'Tight',
-	'Jets' : 'AK5PFJets',
-	'Pipelines': {
-		'default': {
-			'Processors': ['producer:DiJetsObservables', 'producer:EventWeightProducer'],
-			'Consumers': ["KappaLambdaNtupleConsumer", 'cutflow_histogram'],
-			'Quantities' : ['npv', 'npu', 'weight', 'jet1_pt', 'jet1_eta', 'jet1_phi', 'crossSectionPerEventWeight', 'hltPrescaleWeight', 'puWeight', 'generatorWeight', 'sampleWeight'],
-			'EventWeight' : 'EventWeight'
 
-		}
-	},
-}
+
 
 if __name__ == '__main__':
-	main()
+    main()
