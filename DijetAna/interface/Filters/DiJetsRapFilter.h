@@ -24,8 +24,9 @@ class DiJetsRapFilter: public JetFilterBase {
 
 			bool pass = true;
 
-			if (abs(product.m_validJets.at(0)->p4.Rapidity()) >= maxJetRapCut ||
-				abs(product.m_validJets.at(1)->p4.Rapidity()) >= maxJetRapCut) {
+			if (abs(product.m_validJets.at(0)->p4.Rapidity()) >= maxJetRapCut)
+				//abs(product.m_validJets.at(1)->p4.Rapidity()) >= maxJetRapCut) 
+				{
 				pass = false;
 			}
 			return pass;
