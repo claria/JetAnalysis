@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 	// parse the command line and load the
 	ArtusConfig myConfig(argc, argv);
 
-	// load the global settings from the config file
+	// load the settings from the config file
 	JetSettings settings = myConfig.GetSettings<JetSettings>();
 	// create the output root file
 	boost::scoped_ptr < TFile > rootOutputFile(new TFile(myConfig.GetOutputPath().c_str(), "RECREATE"));
@@ -51,15 +51,9 @@ int main(int argc, char** argv) {
     JetFactory factory;
 
 	JetPipelineRunner runner;
-	//runner.AddGlobalProducersById();
-	//runner.AddGlobalProducer(new ValidDiJetsProducer());
-
-	// add global producers
-	//runner.AddGlobalProducer(new ValidJetsProducer());
 
 	// load the pipeline with their configuration from the config file
 	myConfig.LoadConfiguration(pInit, runner, factory, rootOutputFile.get());
-
 
 	// run all the configured pipelines and all their attached
 	// consumers
