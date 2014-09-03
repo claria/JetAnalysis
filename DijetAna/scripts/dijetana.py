@@ -22,12 +22,12 @@ baseconfig = {
         'producer:JetCorrectionsProducer',
         'producer:ValidJetsProducer',
         'filter:DiJetsFilter',
-        'filter:DiJetsRapFilter',
-        'filter:DiJetsPtFilter',
+        'filter:LeadingJetPtFilter',
+        'filter:LeadingJetRapFilter',
     ],
     'InputFiles': [],
     'OutputPath': 'output.root',
-    'JetID': 'Tight',
+    'JetID': 'tight',
     'Jets': 'AK5PFJets',
     'JetArea': 'KT6Area',
     'Met': "PFMET",
@@ -73,16 +73,19 @@ def main():
 
     # Identify input type based on Nickname
     nickname = wrapper.determineNickname('auto')
+    print 'nickname', nickname
 
     # Define cuts
-    config['MinJetPtCut'] = '80.'
-    config['MaxJetRapCut'] = '2.0'
+    config['MinLeadingJetPt'] = '25.'
+    config['MinLeadingJetRap'] = '0.0'
+    config['MaxLeadingJetRap'] = '2.0'
 
     # Add Producers etc specifict to data/MC
     if isData(nickname):
         SetDataSpecific(nickname)
     else:
         SetMCSpecific(nickname)
+
 
     walk_dic(config, os.path.expandvars)
     wrapper.setConfig(config)
@@ -148,8 +151,7 @@ def SetDataSpecific(nickname=None):
 
     config['Processors'].insert(0, 'filter:JsonFilter')
     config['Processors'].append('producer:HltProducer')
-    config['Processors'].append('producer:NumberGeneratedEventsWeightProducer')
-    config['NumberGeneratedEvents'] = 815
+    config['Processors'].append('producer:TriggerObjectsProducer')
 
 
 def isData(nickname):
@@ -157,11 +159,13 @@ def isData(nickname):
         return True
     elif nickname in mc_samples:
         return False
+    else:
+        return True
 
 
 def getUserParser():
     parser = argparse.ArgumentParser(add_help=False)
-    # parser.add_argument('--data', default=False, action='store_true')
+    parser.add_argument('--data', default=None, type=bool)
     return parser
 
 
