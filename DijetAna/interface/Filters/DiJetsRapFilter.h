@@ -8,31 +8,12 @@
 class DiJetsRapFilter: public JetFilterBase {
 
 	public:
-		virtual ~DiJetsRapFilter() {
-		}
-
-		virtual void Init(JetSettings const& settings) {
-			maxJetRapCut = settings.GetMaxJetRapCut();
-		}
-
 		virtual std::string GetFilterId() const {
 			return "DiJetsRapFilter";
 		}
-
+		virtual void Init(JetSettings const& settings);
 		virtual bool DoesEventPass(JetEvent const& event, 
-				JetProduct const& product, JetSettings const& settings) const {
-
-			bool pass = true;
-
-			if (abs(product.m_validJets.at(0)->p4.Rapidity()) >= maxJetRapCut)
-				//abs(product.m_validJets.at(1)->p4.Rapidity()) >= maxJetRapCut) 
-				{
-				pass = false;
-			}
-			return pass;
-		}
-
-		
+				JetProduct const& product, JetSettings const& settings) const;
 	private:
 		double maxJetRapCut;
 };
