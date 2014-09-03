@@ -11,6 +11,8 @@
 #include "Artus/Configuration/interface/PropertyTreeSupport.h"
 #include "Artus/KappaAnalysis/interface/KappaSettings.h"
 
+#include <limits> 
+
 class JetSettings: public KappaSettings {
 public:
 
@@ -31,6 +33,9 @@ public:
 
 	//IMPL_SETTING_DEFAULT(std::string, Jets, "");
 	//IMPL_SETTING(bool, InputIsData)
-	IMPL_SETTING_DEFAULT(float, MinJetPtCut, 0.)
-	IMPL_SETTING_DEFAULT(float, MaxJetRapCut, 10.)
+	IMPL_SETTING_DEFAULT(float, MinLeadingJetPt, std::numeric_limits<float>::min())
+	IMPL_SETTING_DEFAULT(float, MaxLeadingJetPt, std::numeric_limits<float>::max())
+
+	IMPL_SETTING_DEFAULT(float, MinLeadingJetRap, std::numeric_limits<float>::min())
+	IMPL_SETTING_DEFAULT(float, MaxLeadingJetRap, std::numeric_limits<float>::max())
 };
