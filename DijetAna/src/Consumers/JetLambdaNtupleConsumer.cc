@@ -11,7 +11,7 @@
 //	return "JetLambdaNtupleConsumer";
 //}
 
-void JetLambdaNtupleConsumer::Init(Pipeline<JetTypes> * pipeline)
+void JetLambdaNtupleConsumer::Init( setting_type const& settings)
 {
 	// add possible quantities for the lambda ntuples consumers
 	
@@ -23,8 +23,8 @@ void JetLambdaNtupleConsumer::Init(Pipeline<JetTypes> * pipeline)
 	//LambdaNtupleConsumer<JetTypes>::Quantities["puweight"] = [](event_type const& event, product_type const& product) {
 	//	return SafeMap::GetWithDefault(product.m_weights, std::string("puWeight"), 1.0);
 	//};
-	LambdaNtupleConsumer<JetTypes>::Quantities["weight"] = [pipeline](event_type const& event, product_type const& product) {
-		return SafeMap::GetWithDefault(product.m_weights, pipeline->GetSettings().GetEventWeight(), 1.0);
+	LambdaNtupleConsumer<JetTypes>::Quantities["weight"] = [&settings](event_type const& event, product_type const& product) {
+		return SafeMap::GetWithDefault(product.m_weights, settings.GetEventWeight(), 1.0);
 	};
 	LambdaNtupleConsumer<JetTypes>::Quantities["jet1_pt"]  = LambdaNtupleConsumer<JetTypes>::Quantities["leadingJetPt"];
 	LambdaNtupleConsumer<JetTypes>::Quantities["jet1_eta"] = LambdaNtupleConsumer<JetTypes>::Quantities["leadingJetEta"];
@@ -34,5 +34,5 @@ void JetLambdaNtupleConsumer::Init(Pipeline<JetTypes> * pipeline)
 	LambdaNtupleConsumer<JetTypes>::Quantities["jet2_phi"] = LambdaNtupleConsumer<JetTypes>::Quantities["trailingJetPhi"];
 
 	// need to be called at last
-	KappaLambdaNtupleConsumer<JetTypes>::Init(pipeline);
+	KappaLambdaNtupleConsumer<JetTypes>::Init(settings);
 }
