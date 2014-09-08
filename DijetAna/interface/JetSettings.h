@@ -38,4 +38,8 @@ public:
 
 	IMPL_SETTING_DEFAULT(float, MinLeadingJetRap, std::numeric_limits<float>::min())
 	IMPL_SETTING_DEFAULT(float, MaxLeadingJetRap, std::numeric_limits<float>::max())
+
+	IMPL_SETTING_STRINGLIST(PipelineNames);
+	IMPL_SETTING_FLOATLIST(EffectiveLumiPerHLTPath);
+	IMPL_SETTING_DEFAULT(std::string, TriggerEfficiencyQuantity, "");
 };
