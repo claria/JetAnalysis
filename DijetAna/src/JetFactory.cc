@@ -9,8 +9,6 @@
 
 
 // Producers
-// #include "Artus/KappaAnalysis/interface/Producers/EventWeightProducer.h"
-// #include "JetAnalysis/DijetAna/interface/Producers/CrossSectionWeightProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/DiJetsObservables.h"
 
 // Filters
@@ -22,6 +20,8 @@
 // Consumers
 #include "JetAnalysis/DijetAna/interface/Consumers/JetNtupleConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/JetLambdaNtupleConsumer.h"
+#include "JetAnalysis/DijetAna/interface/Consumers/TriggerResultsHistogramConsumer.h"
+#include "JetAnalysis/DijetAna/interface/Consumers/TriggerHistogramFitConsumer.h"
 
 
 JetFactory::JetFactory() : KappaFactory<JetTypes>() {}
@@ -41,8 +41,12 @@ JetConsumerBase * JetFactory::createConsumer ( std::string const& id )
 {
 	if ( JetNtupleConsumer().GetConsumerId() == id )
 		return new JetNtupleConsumer();
-	if (JetLambdaNtupleConsumer().GetConsumerId() == id)
+	else if (JetLambdaNtupleConsumer().GetConsumerId() == id)
 		return new JetLambdaNtupleConsumer();
+	else if (TriggerResultsHistogramConsumer().GetConsumerId() == id)
+		return new TriggerResultsHistogramConsumer();
+	else if (TriggerHistogramFitConsumer().GetConsumerId() == id)
+		return new TriggerHistogramFitConsumer();
 	else
 		return KappaFactory<JetTypes>::createConsumer( id );
 }
