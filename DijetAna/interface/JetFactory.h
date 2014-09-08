@@ -16,7 +16,7 @@
 #include "JetEvent.h"
 #include "JetProduct.h"
 
-class JetFactory: public KappaFactory<JetTypes> {
+class JetFactory: public KappaFactory/*<JetTypes> */{
 public:
 
 	JetFactory();

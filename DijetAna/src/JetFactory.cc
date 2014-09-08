@@ -24,30 +24,30 @@
 #include "JetAnalysis/DijetAna/interface/Consumers/JetLambdaNtupleConsumer.h"
 
 
-JetFactory::JetFactory() : KappaFactory<JetTypes>() {}
+JetFactory::JetFactory() : KappaFactory/*<JetTypes>*/() {}
 JetFactory::~JetFactory() {}
 
-JetProducerBase * JetFactory::createProducer ( std::string const& id )
+ProducerBaseUntemplated * JetFactory::createProducer ( std::string const& id )
 {
 	if ( DiJetsObservables().GetProducerId() == id )
 		return new DiJetsObservables();
 	//else if(CrossSectionWeightProducer().GetProducerId() == id)
 	//	return new CrossSectionWeightProducer();
 	else
-		return KappaFactory<JetTypes>::createProducer( id );
+		return KappaFactory/*<JetTypes>*/::createProducer( id );
 }
 
-JetConsumerBase * JetFactory::createConsumer ( std::string const& id )
+ConsumerBaseUntemplated * JetFactory::createConsumer ( std::string const& id )
 {
 	if ( JetNtupleConsumer().GetConsumerId() == id )
 		return new JetNtupleConsumer();
 	if (JetLambdaNtupleConsumer().GetConsumerId() == id)
 		return new JetLambdaNtupleConsumer();
 	else
-		return KappaFactory<JetTypes>::createConsumer( id );
+		return KappaFactory/*<JetTypes>*/::createConsumer( id );
 }
 
-JetFilterBase * JetFactory::createFilter ( std::string const& id )
+FilterBaseUntemplated * JetFactory::createFilter ( std::string const& id )
 {
 	if ( DiJetsFilter().GetFilterId() == id)
 		return new DiJetsFilter();
@@ -58,5 +58,5 @@ JetFilterBase * JetFactory::createFilter ( std::string const& id )
 	else if ( DiJetsRapFilter().GetFilterId() == id)
 		return new DiJetsRapFilter();
 	else
-		return KappaFactory<JetTypes>::createFilter( id );
+		return KappaFactory/*<JetTypes>*/::createFilter( id );
 }
