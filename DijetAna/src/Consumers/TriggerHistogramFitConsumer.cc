@@ -40,21 +40,18 @@ void TriggerHistogramFitConsumer::Process()
 				m_pipelineNames[i]);
 		for (std::vector<std::string>::size_type j = 0; j < m_triggerPaths.size() - 1; j++)
 		{
-			TH1F* trgN = (TH1F*)RootFileHelper::SafeGet<TH1F>(
+			TH1F* trgemul = (TH1F*)RootFileHelper::SafeGet<TH1F>(
 					this->GetPipelineSettings().GetRootOutFile(),
-					m_pipelineNames[i] + "/" + m_triggerPaths[j])->Clone(("trgeffs_" + m_triggerPaths[j]).c_str());
-			TH1F* trgNP1 = (TH1F*)RootFileHelper::SafeGet<TH1F>(
+					m_pipelineNames[i] + "/emul_" + m_triggerPaths[j+1])->Clone(("trgeff_" + m_triggerPaths[j+1]).c_str());
+			TH1F* trg = (TH1F*)RootFileHelper::SafeGet<TH1F>(
 					this->GetPipelineSettings().GetRootOutFile(),
-					m_pipelineNames[i] + "/" + m_triggerPaths[j+1])->Clone(("trgeffs_" + m_triggerPaths[j+1]).c_str());
+					m_pipelineNames[i] + "/" + m_triggerPaths[j]);
 
-			trgN->Scale(1. / this->GetPipelineSettings().GetEffectiveLumiPerHLTPath()[j]);
-			trgNP1->Scale(1. / this->GetPipelineSettings().GetEffectiveLumiPerHLTPath()[j+1]);
+			//trgN->Scale(1. / this->GetPipelineSettings().GetEffectiveLumiPerHLTPath()[j]);
+			//trgNP1->Scale(1. / this->GetPipelineSettings().GetEffectiveLumiPerHLTPath()[j+1]);
 
-			m_triggerEffHists[i][j] = trgNP1;
-			m_triggerEffHists[i][j]->SetName(("trgeffs_" + m_triggerPaths[j+1]).c_str());
-			m_triggerEffHists[i][j]->SetTitle(("trgeffs_" + m_triggerPaths[j+1]).c_str());
-
-			m_triggerEffHists[i][j]->Divide(trgN);
+			m_triggerEffHists[i][j] = trgemul;
+			m_triggerEffHists[i][j]->Divide(trg);
 
 		}
 	}

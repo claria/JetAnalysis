@@ -17,7 +17,14 @@ public:
 	virtual void Finish();
 
 protected:
-	std::vector<std::string> m_triggerPaths;
-	std::vector<TH1F*> m_triggerResultHists;
+	std::vector<std::string> m_hltPaths;
+	std::vector<std::string> m_hltObjectsPaths;
+	std::vector<std::string> m_l1ObjectsPaths;
+	std::vector<float> m_l1SingleJetThresholds;
+	std::vector<float> m_hltSingleJetThresholds;
 
+	std::vector<TH1F*> m_triggerResultHists;
+	std::vector<TH1F*> m_triggerEmulatedHists;
+
+	HLTTools hltInfo;
 };

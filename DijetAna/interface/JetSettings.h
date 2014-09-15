@@ -42,4 +42,9 @@ public:
 	IMPL_SETTING_STRINGLIST(PipelineNames);
 	IMPL_SETTING_FLOATLIST(EffectiveLumiPerHLTPath);
 	IMPL_SETTING_DEFAULT(std::string, TriggerEfficiencyQuantity, "");
+
+	IMPL_SETTING_STRINGLIST(L1ObjectsPaths);
+	IMPL_SETTING_STRINGLIST(HltObjectsPaths);
+	IMPL_SETTING_FLOATLIST(L1SingleJetThresholds);
+	IMPL_SETTING_FLOATLIST(HltSingleJetThresholds);
 };
