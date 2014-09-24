@@ -6,17 +6,7 @@
 
 #include "JetAnalysis/DijetAna/interface/Consumers/JetLambdaNtupleConsumer.h"
 
-<<<<<<< HEAD
-//std::string JetLambdaNtupleConsumer::GetConsumerId() const
-//{
-//	return "JetLambdaNtupleConsumer";
-//}
-
 void JetLambdaNtupleConsumer::Init( setting_type const& settings)
-=======
-void JetLambdaNtupleConsumer::Init(Pipeline<JetTypes> * pipeline)
->>>>>>> master
-{
 	// add possible quantities for the lambda ntuples consumers
 	
 	// settings for synch ntuples
