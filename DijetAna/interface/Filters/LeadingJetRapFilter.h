@@ -5,15 +5,18 @@
 
 #include "../JetTypes.h"
 
-class DiJetsRapFilter: public JetFilterBase {
+class LeadingJetRapFilter: public JetFilterBase {
 
 	public:
 		virtual std::string GetFilterId() const {
-			return "DiJetsRapFilter";
+			return "LeadingJetRapFilter";
 		}
 		virtual void Init(JetSettings const& settings);
 		virtual bool DoesEventPass(JetEvent const& event, 
 				JetProduct const& product, JetSettings const& settings) const;
+
 	private:
-		double maxJetRapCut;
+		double maxLeadingJetRap;
+		double minLeadingJetRap;
 };
+
