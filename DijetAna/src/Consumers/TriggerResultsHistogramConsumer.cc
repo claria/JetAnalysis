@@ -8,19 +8,20 @@
 
 #include "KappaTools/RootTools/HLTTools.h"
 
-void TriggerResultsHistogramConsumer::Init(Pipeline<JetTypes> * pipeline)
+
+void TriggerResultsHistogramConsumer::Init(setting_type const& settings)
 {
-	ConsumerBase<JetTypes>::Init( pipeline );
+	ConsumerBase<JetTypes>::Init( settings );
 
-	m_hltPaths = this->GetPipelineSettings().GetHltPaths();
+	m_hltPaths = settings.GetHltPaths();
 
-	m_l1ObjectsPaths = this->GetPipelineSettings().GetL1ObjectsPaths();
-	m_hltObjectsPaths = this->GetPipelineSettings().GetHltObjectsPaths();
-	m_l1SingleJetThresholds = this->GetPipelineSettings().GetL1SingleJetThresholds();
-	m_hltSingleJetThresholds = this->GetPipelineSettings().GetHltSingleJetThresholds();
+	m_l1ObjectsPaths = settings.GetL1ObjectsPaths();
+	m_hltObjectsPaths = settings.GetHltObjectsPaths();
+	m_l1SingleJetThresholds = settings.GetL1SingleJetThresholds();
+	m_hltSingleJetThresholds = settings.GetHltSingleJetThresholds();
 
-	RootFileHelper::SafeCd(this->GetPipelineSettings().GetRootOutFile(),
-	                       this->GetPipelineSettings().GetRootFileFolder());
+	RootFileHelper::SafeCd(settings.GetRootOutFile(),
+	                       settings.GetRootFileFolder());
 
 
 	for (size_t i = 0; i != m_hltObjectsPaths.size(); ++i)
@@ -33,11 +34,12 @@ void TriggerResultsHistogramConsumer::Init(Pipeline<JetTypes> * pipeline)
 }
 
 void TriggerResultsHistogramConsumer::ProcessFilteredEvent(event_type const& event,
-                          product_type const& product)
+		product_type const& product,
+		setting_type const& settings)
 {
 	//std::cout << "Event " << std::endl;
 	hltInfo = HLTTools(event.m_lumiMetadata);
-	float triggerEffQuantity = (LambdaNtupleConsumer<JetTypes>::Quantities[this->GetPipelineSettings().GetTriggerEfficiencyQuantity()])(event, product);
+	float triggerEffQuantity = (LambdaNtupleConsumer<JetTypes>::GetQuantities()[settings.GetTriggerEfficiencyQuantity()])(event, product);
 
 	for(std::vector<std::string>::size_type i = 0; i != m_hltPaths.size() - 1; i++) {
 		// Fill Histograms for trigger which actually have fired
@@ -81,12 +83,12 @@ void TriggerResultsHistogramConsumer::ProcessFilteredEvent(event_type const& eve
 	}
 }
 
-void TriggerResultsHistogramConsumer::Finish()
+void TriggerResultsHistogramConsumer::Finish(setting_type const& settings)
 {
 	
 	// save histograms
-	RootFileHelper::SafeCd(this->GetPipelineSettings().GetRootOutFile(),
-	                       this->GetPipelineSettings().GetRootFileFolder());
+	RootFileHelper::SafeCd(settings.GetRootOutFile(),
+	                       settings.GetRootFileFolder());
 	
 	for (size_t i = 0; i != m_hltPaths.size(); ++i)
 	{

@@ -11,9 +11,9 @@ public:
 		return "TriggerHistogramFitConsumer";
 	}
 
-	virtual void Init(Pipeline<JetTypes> * pipeline);
-	virtual void Process();
-	virtual void Finish();
+	virtual void Init(setting_type const& settings) ARTUS_CPP11_OVERRIDE;
+	virtual void Process(setting_type const& settings) ARTUS_CPP11_OVERRIDE;
+	virtual void Finish(setting_type const& settings) ARTUS_CPP11_OVERRIDE;
 
 protected:
 	std::vector<std::string> m_triggerPaths;

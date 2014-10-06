@@ -11,10 +11,11 @@ public:
 		return "TriggerResultsHistogramConsumer";
 	}
 
-	virtual void Init(Pipeline<JetTypes> * pipeline);
+	virtual void Init(setting_type const& settings);
 	virtual void ProcessFilteredEvent(event_type const& event,
-	                          product_type const& product);
-	virtual void Finish();
+	                          product_type const& product,
+	                          setting_type const& settings);
+	virtual void Finish(setting_type const& settings);
 
 protected:
 	std::vector<std::string> m_hltPaths;

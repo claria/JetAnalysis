@@ -23,9 +23,9 @@ void JetLambdaNtupleConsumer::Init( setting_type const& settings)
 	//LambdaNtupleConsumer<JetTypes>::Quantities["puweight"] = [](event_type const& event, product_type const& product) {
 	//	return SafeMap::GetWithDefault(product.m_weights, std::string("puWeight"), 1.0);
 	//};
-	LambdaNtupleConsumer<JetTypes>::AddQuantity ( "weight", [&settings](event_type const& event, product_type const& product) {
-		return SafeMap::GetWithDefault(product.m_weights, settings.GetEventWeight(), 1.0);
-	} );
+	//LambdaNtupleConsumer<JetTypes>::AddQuantity ( "weight", [&settings](event_type const& event, product_type const& product) {
+	//	return SafeMap::GetWithDefault(product.m_weights, settings.GetEventWeight(), 1.0);
+	//} );
 	LambdaNtupleConsumer<JetTypes>::AddQuantity("jet1_pt", LambdaNtupleConsumer<JetTypes>::GetQuantities()["leadingJetPt"] );
 	LambdaNtupleConsumer<JetTypes>::AddQuantity("jet1_eta", LambdaNtupleConsumer<JetTypes>::GetQuantities()["leadingJetEta"] );
 	LambdaNtupleConsumer<JetTypes>::AddQuantity("jet1_phi", LambdaNtupleConsumer<JetTypes>::GetQuantities()["leadingJetPhi"] );

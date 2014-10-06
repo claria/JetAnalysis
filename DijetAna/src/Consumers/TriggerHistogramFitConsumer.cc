@@ -6,15 +6,15 @@
 
 #include "JetAnalysis/DijetAna/interface/Consumers/TriggerHistogramFitConsumer.h"
 
-void TriggerHistogramFitConsumer::Init(Pipeline<JetTypes> * pipeline)
+void TriggerHistogramFitConsumer::Init(setting_type const& settings)
 {
-	ConsumerBase<JetTypes>::Init(pipeline);
+	ConsumerBase<JetTypes>::Init(settings);
 
-	RootFileHelper::SafeCd(this->GetPipelineSettings().GetRootOutFile(),
-			this->GetPipelineSettings().GetRootFileFolder());
+	RootFileHelper::SafeCd(settings.GetRootOutFile(),
+			settings.GetRootFileFolder());
 
 	// Get Level 1 Pipelines
-	for ( auto pipeline : this->GetPipelineSettings().GetPipelineInfos())
+	for ( auto pipeline : settings.GetPipelineInfos())
 	{
 		if (pipeline.second == 1) {
 			m_pipelineNames.push_back(pipeline.first);
@@ -22,8 +22,8 @@ void TriggerHistogramFitConsumer::Init(Pipeline<JetTypes> * pipeline)
 	}
 	
 
-	m_triggerPaths = this->GetPipelineSettings().GetHltPaths();
-	//m_pipelineNames = this->GetPipelineSettings().GetPipelineNames();
+	m_triggerPaths = settings.GetHltPaths();
+	//m_pipelineNames = settings.GetPipelineNames();
 	m_triggerEffHists.resize(m_pipelineNames.size());
 	for (std::vector<std::string>::size_type i = 0; i < m_pipelineNames.size(); i++)
 	{
@@ -32,23 +32,23 @@ void TriggerHistogramFitConsumer::Init(Pipeline<JetTypes> * pipeline)
 	}
 }
 
-void TriggerHistogramFitConsumer::Process()
+void TriggerHistogramFitConsumer::Process(setting_type const& settings)
 {
 	for (std::vector<std::string>::size_type i = 0; i < m_pipelineNames.size(); i++)
 	{
-		RootFileHelper::SafeCd(this->GetPipelineSettings().GetRootOutFile(),
+		RootFileHelper::SafeCd(settings.GetRootOutFile(),
 				m_pipelineNames[i]);
 		for (std::vector<std::string>::size_type j = 0; j < m_triggerPaths.size() - 1; j++)
 		{
 			TH1F* trgemul = (TH1F*)RootFileHelper::SafeGet<TH1F>(
-					this->GetPipelineSettings().GetRootOutFile(),
+					settings.GetRootOutFile(),
 					m_pipelineNames[i] + "/emul_" + m_triggerPaths[j+1])->Clone(("trgeff_" + m_triggerPaths[j+1]).c_str());
 			TH1F* trg = (TH1F*)RootFileHelper::SafeGet<TH1F>(
-					this->GetPipelineSettings().GetRootOutFile(),
+					settings.GetRootOutFile(),
 					m_pipelineNames[i] + "/" + m_triggerPaths[j]);
 
-			//trgN->Scale(1. / this->GetPipelineSettings().GetEffectiveLumiPerHLTPath()[j]);
-			//trgNP1->Scale(1. / this->GetPipelineSettings().GetEffectiveLumiPerHLTPath()[j+1]);
+			//trgN->Scale(1. / settings.GetEffectiveLumiPerHLTPath()[j]);
+			//trgNP1->Scale(1. / settings.GetEffectiveLumiPerHLTPath()[j+1]);
 
 			m_triggerEffHists[i][j] = trgemul;
 			m_triggerEffHists[i][j]->Divide(trg);
@@ -58,7 +58,7 @@ void TriggerHistogramFitConsumer::Process()
 
 }
 
-void TriggerHistogramFitConsumer::Finish()
+void TriggerHistogramFitConsumer::Finish(setting_type const& settings)
 {
 	// save histograms
 	// for (TH1F* hist : m_triggerEffHists) {
@@ -66,7 +66,7 @@ void TriggerHistogramFitConsumer::Finish()
 	// }
 	for (std::vector<std::string>::size_type i = 0; i < m_pipelineNames.size(); i++)
 	{
-		RootFileHelper::SafeCd(this->GetPipelineSettings().GetRootOutFile(),
+		RootFileHelper::SafeCd(settings.GetRootOutFile(),
 				m_pipelineNames[i]);
 		for (std::vector<std::string>::size_type j = 0; j < m_triggerPaths.size() - 1; j++)
 		{
