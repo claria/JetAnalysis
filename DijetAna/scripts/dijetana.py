@@ -192,7 +192,7 @@ def SetDataSpecific(nickname=None):
     config['Pipelines']['default']['Consumers'].append('TriggerResultsHistogramConsumer')
     config['Pipelines']['2ndlevel'] = {}
     config['Pipelines']['2ndlevel']['Consumers'] = []
-    config['Pipelines']['2ndlevel']['Consumers'].append('TriggerHistogramFitConsumer')
+    # config['Pipelines']['2ndlevel']['Consumers'].append('TriggerHistogramFitConsumer')
     config['Pipelines']['2ndlevel']['HltPaths'] = config['HltPaths']
     # config['Pipelines']['2ndlevel']['EffectiveLumiPerHLTPath'] = [0.079769, 2.156015, 55.932865, 262.449, 1068.024, 19789.31, 19789.31]
     config['Pipelines']['2ndlevel']['Level'] = 2

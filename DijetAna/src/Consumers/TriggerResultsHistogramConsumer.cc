@@ -38,13 +38,14 @@ void TriggerResultsHistogramConsumer::ProcessFilteredEvent(event_type const& eve
 		setting_type const& settings)
 {
 	//std::cout << "Event " << std::endl;
-	hltInfo = HLTTools(event.m_lumiMetadata);
-	float triggerEffQuantity = (LambdaNtupleConsumer<JetTypes>::GetQuantities()[settings.GetTriggerEfficiencyQuantity()])(event, product);
+	auto const& specEvent = static_cast < JetEvent const&> (event);
+	auto const& specProduct = static_cast < JetProduct const&> (product);
+	float triggerEffQuantity = (LambdaNtupleConsumer<JetTypes>::GetQuantities()[settings.GetTriggerEfficiencyQuantity()])(specEvent, specProduct);
 
 	for(std::vector<std::string>::size_type i = 0; i != m_hltPaths.size() - 1; i++) {
 		// Fill Histograms for trigger which actually have fired
-		std::string hltName = hltInfo.getHLTName(m_hltObjectsPaths[i]);
-		size_t hltPosition = hltInfo.getHLTPosition(m_hltObjectsPaths[i]);
+		std::string hltName = product.m_hltInfo.getHLTName(m_hltObjectsPaths[i]);
+		size_t hltPosition = product.m_hltInfo.getHLTPosition(m_hltObjectsPaths[i]);
 		if (event.m_eventMetadata->hltFired(hltName, event.m_lumiMetadata)){
 			m_triggerResultHists[i]->Fill(triggerEffQuantity);
 			// Check if next trigger would have fired as well if it would not have been prescaled
