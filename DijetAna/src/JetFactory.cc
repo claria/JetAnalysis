@@ -2,6 +2,7 @@
 
 // Producers
 #include "JetAnalysis/DijetAna/interface/Producers/DiJetsObservables.h"
+#include "JetAnalysis/DijetAna/interface/Producers/JetHltProducer.h"
 
 // Filters
 #include "JetAnalysis/DijetAna/interface/Filters/DiJetsFilter.h"
@@ -16,17 +17,17 @@
 #include "JetAnalysis/DijetAna/interface/Consumers/TriggerHistogramFitConsumer.h"
 
 
-JetFactory::JetFactory() : KappaFactory/*<JetTypes>*/() {}
+JetFactory::JetFactory() : KappaFactory() {}
 JetFactory::~JetFactory() {}
 
 ProducerBaseUntemplated * JetFactory::createProducer ( std::string const& id )
 {
 	if ( DiJetsObservables().GetProducerId() == id )
 		return new DiJetsObservables();
-	//else if(CrossSectionWeightProducer().GetProducerId() == id)
-	//	return new CrossSectionWeightProducer();
+	else if (JetHltProducer().GetProducerId() == id)
+		return new JetHltProducer();
 	else
-		return KappaFactory/*<JetTypes>*/::createProducer( id );
+		return KappaFactory::createProducer( id );
 }
 
 ConsumerBaseUntemplated * JetFactory::createConsumer ( std::string const& id )
@@ -40,7 +41,7 @@ ConsumerBaseUntemplated * JetFactory::createConsumer ( std::string const& id )
 	else if (TriggerHistogramFitConsumer().GetConsumerId() == id)
 		return new TriggerHistogramFitConsumer();
 	else
-		return KappaFactory/*<JetTypes>*/::createConsumer( id );
+		return KappaFactory::createConsumer( id );
 }
 
 FilterBaseUntemplated * JetFactory::createFilter ( std::string const& id )
@@ -52,5 +53,5 @@ FilterBaseUntemplated * JetFactory::createFilter ( std::string const& id )
 	else if (LeadingJetRapFilter().GetFilterId() == id)
 		return new LeadingJetRapFilter();
 	else
-		return KappaFactory/*<JetTypes>*/::createFilter( id );
+		return KappaFactory::createFilter( id );
 }
