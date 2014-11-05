@@ -5,6 +5,16 @@ import sys
 from Artus.Configuration.artusWrapper import ArtusWrapper
 import argparse
 
+
+# Change envs for artus run
+kappatools_dir = os.path.join(os.path.expandvars('$CMSSW_BASE'),'src/KappaTools/lib')
+kappa_dir = os.path.join(os.path.expandvars('$CMSSW_BASE'),'src/Kappa/lib')
+artus_dir = os.path.join(os.path.expandvars('$CMSSW_BASE'),'src/Artus')
+os.environ['PATH'] += ":{0}/grid-control".format(os.path.expandvars('$HOME'))
+os.environ['LD_LIBRARY_PATH'] += ":{0}:{1}".format(kappatools_dir, kappa_dir)
+os.environ['ARTUS_WORK_BASE'] = "/nfs/dust/cms/user/gsieber/ARTUS"
+os.environ['ARTUSPATH'] = artus_dir
+
 baseconfig = {
     'InputIsData': '',
     'SkipEvents': 0,
@@ -12,6 +22,9 @@ baseconfig = {
     "LumiMetadata": "KLumiMetadata",
     "GenLumiMetadata": "",
     "EventMetadata": "KEventMetadata",
+    "EventBlacklist" : [],
+    "LumiBlacklist" : [],
+    "RunBlacklist" : [],
     "GenEventMetadata": "",
     "FilterMetadata": "",
     "FilterSummary": "",
@@ -21,7 +34,6 @@ baseconfig = {
     'Processors': [
         'producer:JetCorrectionsProducer',
         'producer:ValidJetsProducer',
-        'producer:JetTriggerMatchingProducer',
         'filter:DiJetsFilter',
         'filter:LeadingJetPtFilter',
         'filter:LeadingJetRapFilter',
@@ -41,20 +53,26 @@ baseconfig = {
             'Consumers': [
                 'KappaLambdaNtupleConsumer',
                 'cutflow_histogram',
-                'KappaTriggerResultsHistogramConsumer',
             ],
             'Quantities': [
+                'run',
+                'lumi',
+                'event',
                 'npv',
                 'npu',
                 'weight',
+                'njets',
                 'jet1_pt',
                 'jet1_eta',
+                'jet1_rap',
                 'jet1_phi',
-                'crossSectionPerEventWeight',
-                'hltPrescaleWeight',
-                'puWeight',
-                'generatorWeight',
-                'numberGeneratedEventsWeight'
+                'jet2_pt',
+                'jet2_eta',
+                'jet2_rap',
+                'jet2_phi',
+                'trigweight',
+                'puweight',
+                'pathindex',
             ],
             'EventWeight': 'EventWeight'
 
@@ -74,10 +92,9 @@ def main():
 
     # Identify input type based on Nickname
     nickname = wrapper.determineNickname('auto')
-    print 'nickname', nickname
 
     # Define cuts
-    config['MinLeadingJetPt'] = '25.'
+    config['MinLeadingJetPt'] = '50.'
     config['MinLeadingJetRap'] = '0.0'
     config['MaxLeadingJetRap'] = '2.0'
 
@@ -90,8 +107,6 @@ def main():
 
     walk_dic(config, os.path.expandvars)
     wrapper.setConfig(config)
-
-    print config
 
     if not config['OutputPath']:
         wrapper.setOutputFilename('output.root')
@@ -137,67 +152,35 @@ def SetDataSpecific(nickname=None):
     config['JsonFiles'] = [
         '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt'
     ]
-    config['HltPaths'] = [
-        'HLT_PFJET40',
-        'HLT_PFJET80',
-        'HLT_PFJET140',
-        'HLT_PFJET200',
-        'HLT_PFJET260',
-        'HLT_PFJET320',
-        'HLT_PFJET400',
-    ]
+
+    if 'MON' in nickname:
+        config['HltPaths'] = [
+            'HLT_PFJET40',
+            'HLT_PFJET80',
+            'HLT_PFJET140',
+            'HLT_PFJET200',
+            'HLT_PFJET260',
+            ]
+    elif 'HT' in nickname:
+        config['HltPaths'] = [
+            'HLT_PFJET320'
+            ]
+
+    config['TriggerEffPaths'] = ['HLT_PFJET40','HLT_PFJET80','HLT_PFJET140','HLT_PFJET200','HLT_PFJET260','HLT_PFJET320']
+    config['TriggerEffThresholds'] = [60., 100., 170., 240., 320., 400.]
+
+    config['HltPathsBlacklist'] = []
     # Add HLT Paths to Pipeline for tests
     config['Pipelines']['default']['HltPaths'] = config['HltPaths']
-    config['Pipelines']['default']['L1ObjectsPaths'] = [
-            'L1SingleJet16', 
-            'L1SingleJet36',
-            'L1SingleJet68',
-            'L1SingleJet128',
-            'L1SingleJet128',
-            'L1SingleJet128',
-            ]
-    config['Pipelines']['default']['HltObjectsPaths'] = [
-           'PFJet40',
-           'PFJet80',
-           'PFJet140',
-           'PFJet200',
-           'PFJet260',
-           'PFJet320',
-           'PFJet400',
-            ]
- 
-    config['Pipelines']['default']['L1SingleJetThresholds'] = [
-            16.,
-            36.,
-            68.,
-            128.,
-            128.,
-            128.,
-            ]
-    config['Pipelines']['default']['HltSingleJetThresholds'] = [
-            40.,
-            80.,
-            140.,
-            200.,
-            260.,
-            320.,
-            400.,
-            ]
+    config['Pipelines']['default']['L1FilterPattern'] = "(L1SingleJet)([0-9]+)"
+    config['Pipelines']['default']['HltFilterPattern'] = "(PFJet)([0-9]+)"
     config['Pipelines']['default']['TriggerEfficiencyQuantity'] = 'jet1_pt'
 
     config['Processors'].insert(0, 'filter:JsonFilter')
-    config['Processors'].append('producer:HltProducer')
+    config['Processors'].append('producer:JetHltProducer')
     config['Processors'].append('filter:HltFilter')
-    config['TriggerEfficiencyThresholdPerHLTPath'] = [50., 100., 175., 250., 325., 400., 500.]
-    config['Pipelines']['default']['Consumers'].append('TriggerResultsHistogramConsumer')
-    config['Pipelines']['2ndlevel'] = {}
-    config['Pipelines']['2ndlevel']['Consumers'] = []
-    # config['Pipelines']['2ndlevel']['Consumers'].append('TriggerHistogramFitConsumer')
-    config['Pipelines']['2ndlevel']['HltPaths'] = config['HltPaths']
-    # config['Pipelines']['2ndlevel']['EffectiveLumiPerHLTPath'] = [0.079769, 2.156015, 55.932865, 262.449, 1068.024, 19789.31, 19789.31]
-    config['Pipelines']['2ndlevel']['Level'] = 2
-    config['Pipelines']['2ndlevel']['PipelineNames'] = ['default']
-
+    # config['TriggerEffThresholds'] = [0., 0., 0., 0., 0., 0.,0.]
+   # config['Pipelines']['default']['Consumers'].append('TriggerResultsHistogramConsumer')
 
 
 def isData(nickname):
@@ -211,7 +194,6 @@ def isData(nickname):
 
 def getUserParser():
     parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument('--data', default=None, type=bool)
     return parser
 
 
@@ -239,10 +221,76 @@ def walk_dic(node, func):
     seq_iter = node.keys() if isinstance(node, dict) else xrange(len(node))
     for key in seq_iter:
         if isinstance(node[key], basestring):
-            print "running node", node, key
             node[key] = func(node[key])
         elif isinstance(node[key], dict) or isinstance(node[key], list):
             walk_dic(node[key], func)
+
+
+# class ArtusConfig(object):
+#
+#     _baseconfig = {
+#         'SkipEvents': 0,
+#         'EventCount': -1,
+#         'Processors': [],
+#         'InputFiles': [],
+#         'OutputPath': 'output.root',
+#         'Pipelines': {}
+#         }
+#
+#     def __init__(config=None):
+#
+#         self._config = config if config else Artusconfig._baseconfig
+#
+#     def get_config():
+#         return self._config
+#
+#     def add_pipeline(pipeline_name, level=1):
+#
+#         self._config['Pipelines'][pipeline_name] = {}
+#         self._config['Pipelines'][pipeline_name]['Processors'] = []
+#         self._config['Pipelines'][pipeline_name]['Consumers'] = []
+#
+#         if (level > 1):
+#             self._config['Pipelines'][pipeline_name]['Level'] = level
+#
+#     def add_processor(processor_name, processor_type='auto', pipeline_name=None)
+#
+#         if (processor_type == 'auto'):
+#             if ('filter' in processor_name.tolower()):
+#                 processor_type = 'filter'
+#             elif ('producer' in processor_name.tolower()):
+#                 processor_type = 'producer'
+#             else:
+#                 raise ValueError('Processor type could not be determined automatically. Please specify explicitly')
+#
+#         if pipeline_name is None:
+#             self._config['Processors'].append('{0}:{1}'.format(processor_type, processor_name))
+#         else:
+#             self._config['Processors'][pipeline_name].append('{0}:{1}'.format(processor_type, processor_name))
+#
+#     def expand_envs(self, node=None):
+#         """ Expands all environment variables in the config."""
+#         if node is None:
+#             node = self._config
+#
+#         seq_iter = node.keys() if isinstance(node, dict) else xrange(len(node))
+#         for key in seq_iter:
+#             if isinstance(node[key], basestring):
+#                 node[key] = os.path.expandvars(node[key])
+#             elif isinstance(node[key], dict) or isinstance(node[key], list):
+#                 self.expand_envs(node[key])
+#
+#  
+#
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
