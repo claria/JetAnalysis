@@ -40,11 +40,16 @@ public:
 	IMPL_SETTING_DEFAULT(float, MaxLeadingJetRap, std::numeric_limits<float>::max())
 
 	IMPL_SETTING_STRINGLIST(PipelineNames);
-	IMPL_SETTING_FLOATLIST(EffectiveLumiPerHLTPath);
 	IMPL_SETTING_DEFAULT(std::string, TriggerEfficiencyQuantity, "");
+	IMPL_SETTING_DEFAULT(std::string, L1FilterPattern, "");
+	IMPL_SETTING_DEFAULT(std::string, HltFilterPattern, "");
 
-	IMPL_SETTING_STRINGLIST(L1ObjectsPaths);
-	IMPL_SETTING_STRINGLIST(HltObjectsPaths);
-	IMPL_SETTING_FLOATLIST(L1SingleJetThresholds);
-	IMPL_SETTING_FLOATLIST(HltSingleJetThresholds);
+	IMPL_SETTING_STRINGLIST(TriggerEffPaths);
+	IMPL_SETTING_FLOATLIST(TriggerEffThresholds);
+	IMPL_SETTING_STRINGLIST(HltPathsBlacklist);
+
+	// IMPL_SETTING_STRINGLIST(L1FilterNames);
+	// IMPL_SETTING_STRINGLIST(HltFilterNames);
+	// IMPL_SETTING_FLOATLIST(L1FilterThresholds);
+	// IMPL_SETTING_FLOATLIST(HltFilterThresholds);
 };
