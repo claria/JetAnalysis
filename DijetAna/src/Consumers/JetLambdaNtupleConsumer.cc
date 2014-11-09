@@ -31,6 +31,15 @@ void JetLambdaNtupleConsumer::Init(setting_type const& settings)
 	LambdaNtupleConsumer<KappaTypes>::AddQuantity("weight", [settings](KappaEvent const& event, KappaProduct const& product) {
 		return SafeMap::GetWithDefault(product.m_weights, settings.GetEventWeight(), 1.0);
 	});
+	LambdaNtupleConsumer<KappaTypes>::AddQuantity("genweight", [](KappaEvent const& event, KappaProduct const& product) {
+		return SafeMap::GetWithDefault(product.m_weights, std::string("generatorWeight"), 1.0);
+	});
+	LambdaNtupleConsumer<KappaTypes>::AddQuantity("xsweight", [](KappaEvent const& event, KappaProduct const& product) {
+		return SafeMap::GetWithDefault(product.m_weights, std::string("crossSectionPerEventWeight"), 1.0);
+	});
+	LambdaNtupleConsumer<KappaTypes>::AddQuantity("ngeneventsweight", [](KappaEvent const& event, KappaProduct const& product) {
+		return SafeMap::GetWithDefault(product.m_weights, std::string("numberGeneratedEventsWeight"), 1.0);
+	});
 
 	LambdaNtupleConsumer<KappaTypes>::AddQuantity("pathindex",[](KappaEvent const& event, KappaProduct const& product) {
 		return product.m_selectedHltPosition;
