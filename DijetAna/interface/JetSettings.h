@@ -38,6 +38,11 @@ public:
 
 	IMPL_SETTING_DEFAULT(float, MinLeadingJetRap, std::numeric_limits<float>::min())
 	IMPL_SETTING_DEFAULT(float, MaxLeadingJetRap, std::numeric_limits<float>::max())
+	IMPL_SETTING_DEFAULT(float, MinSecondJetRap, std::numeric_limits<float>::min())
+	IMPL_SETTING_DEFAULT(float, MaxSecondJetRap, std::numeric_limits<float>::max())
+        //MET Filter
+	IMPL_SETTING_DEFAULT(float, MaxMETSumEtRatio, std::numeric_limits<float>::max())
+
 
 	IMPL_SETTING_STRINGLIST(PipelineNames);
 	IMPL_SETTING_DEFAULT(std::string, TriggerEfficiencyQuantity, "");

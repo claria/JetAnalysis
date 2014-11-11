@@ -1,4 +1,6 @@
 #include <Math/VectorUtil.h>
+#include <cmath>
+#include <algorithm>
 
 #include "Artus/Utility/interface/SafeMap.h"
 #include "Artus/Utility/interface/Utility.h"
@@ -45,12 +47,23 @@ void JetLambdaNtupleConsumer::Init(setting_type const& settings)
 		return product.m_selectedHltPosition;
 	} );
 
+	// MET
+	LambdaNtupleConsumer<KappaTypes>::AddQuantity("met",[](KappaEvent const& event, KappaProduct const& product) {
+		return event.m_met->p4.Pt();
+	} );
+	LambdaNtupleConsumer<KappaTypes>::AddQuantity("sumet",[](KappaEvent const& event, KappaProduct const& product) {
+		return event.m_met->sumEt;
+	} );
 
+	// Jets
 	LambdaNtupleConsumer<KappaTypes>::AddQuantity("njets",[](KappaEvent const& event, KappaProduct const& product) {
 		return product.m_validJets.size();
 	} );
 	// First jet
 	LambdaNtupleConsumer<KappaTypes>::AddQuantity("jet1_pt",[](KappaEvent const& event, KappaProduct const& product) {
+		return product.m_validJets.at(0)->p4.Pt();
+	} );
+	LambdaNtupleConsumer<KappaTypes>::AddQuantity("genjet1_pt",[](KappaEvent const& event, KappaProduct const& product) {
 		return product.m_validJets.at(0)->p4.Pt();
 	} );
 	LambdaNtupleConsumer<KappaTypes>::AddQuantity("jet1_eta",[](KappaEvent const& event, KappaProduct const& product) {
@@ -74,6 +87,23 @@ void JetLambdaNtupleConsumer::Init(setting_type const& settings)
 	} );
 	LambdaNtupleConsumer<KappaTypes>::AddQuantity("jet2_phi",[](KappaEvent const& event, KappaProduct const& product) {
 		return product.m_validJets.at(1)->p4.Phi();
+	} );
+	// Dijet observables
+	LambdaNtupleConsumer<KappaTypes>::AddQuantity("dijet_mass",[](KappaEvent const& event, KappaProduct const& product) {
+		return (product.m_validJets.at(1)->p4 + product.m_validJets.at(1)->p4).mass();
+	} );
+	LambdaNtupleConsumer<KappaTypes>::AddQuantity("dijet_ymax",[](KappaEvent const& event, KappaProduct const& product) {
+		return std::max(product.m_validJets.at(0)->p4.Rapidity(),product.m_validJets.at(1)->p4.Rapidity());
+	} );
+	LambdaNtupleConsumer<KappaTypes>::AddQuantity("dijet_yboost",[](KappaEvent const& event, KappaProduct const& product) {
+		return 0.5*(product.m_validJets.at(0)->p4.Rapidity() + product.m_validJets.at(1)->p4.Rapidity());
+	} );
+
+	LambdaNtupleConsumer<KappaTypes>::AddQuantity("dijet_ystar",[](KappaEvent const& event, KappaProduct const& product) {
+		return 0.5*std::abs(product.m_validJets.at(0)->p4.Rapidity() - product.m_validJets.at(1)->p4.Rapidity());
+	} );
+	LambdaNtupleConsumer<KappaTypes>::AddQuantity("dijet_chi",[](KappaEvent const& event, KappaProduct const& product) {
+		return exp(abs(product.m_validJets.at(0)->p4.Rapidity() - product.m_validJets.at(1)->p4.Rapidity()));
 	} );
 
 	// need to be called at last

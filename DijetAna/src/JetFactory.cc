@@ -9,6 +9,8 @@
 // #include "JetAnalysis/DijetAna/interface/Filters/JetHltFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/LeadingJetPtFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/LeadingJetRapFilter.h"
+#include "JetAnalysis/DijetAna/interface/Filters/SecondJetRapFilter.h"
+#include "JetAnalysis/DijetAna/interface/Filters/METSumEtFilter.h"
 
 // Consumers
 #include "JetAnalysis/DijetAna/interface/Consumers/JetNtupleConsumer.h"
@@ -52,6 +54,10 @@ FilterBaseUntemplated * JetFactory::createFilter ( std::string const& id )
 		return new LeadingJetPtFilter();
 	else if (LeadingJetRapFilter().GetFilterId() == id)
 		return new LeadingJetRapFilter();
+	else if (SecondJetRapFilter().GetFilterId() == id)
+		return new SecondJetRapFilter();
+	else if (METSumEtFilter().GetFilterId() == id)
+		return new METSumEtFilter();
 	else
 		return KappaFactory::createFilter( id );
 }
