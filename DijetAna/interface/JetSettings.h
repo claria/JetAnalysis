@@ -16,23 +16,6 @@
 class JetSettings: public KappaSettings {
 public:
 
-	//IMPL_SETTING( float, FilterPtLow )
-	//IMPL_SETTING( float, FilterPtHigh )
-
-	//VarCache<stringvector> m_consumer;
-	//stringvector GetConsumer() const
-	//{
-	//	RETURN_CACHED(m_consumer, PropertyTreeSupport::GetAsStringList(GetPropTree(), "Pipelines." + GetName() + ".Consumer"))
-	//}
-
-	//VarCache<stringvector> quantities;
-	//stringvector GetQuantities() const
-	//{
-	//	RETURN_CACHED(quantities, PropertyTreeSupport::GetAsStringList(GetPropTree(), "Pipelines." + GetName() + ".Quantities"))
-	//}
-
-	//IMPL_SETTING_DEFAULT(std::string, Jets, "");
-	//IMPL_SETTING(bool, InputIsData)
 	IMPL_SETTING_DEFAULT(float, MinLeadingJetPt, std::numeric_limits<float>::min())
 	IMPL_SETTING_DEFAULT(float, MaxLeadingJetPt, std::numeric_limits<float>::max())
 

@@ -46,7 +46,7 @@ void TriggerResultsHistogramConsumer::ProcessFilteredEvent(event_type const& eve
 	// }
 
 	// Quantity for which the histograms are filled
-	float triggerEffQuantity = (LambdaNtupleConsumer<JetTypes>::GetQuantities()[settings.GetTriggerEfficiencyQuantity()])(specEvent, specProduct);
+	float triggerEffQuantity = (LambdaNtupleConsumer<JetTypes>::GetFloatQuantities()[settings.GetTriggerEfficiencyQuantity()])(specEvent, specProduct);
 
 	// Threshold of the L1 and Hlt Filter
 	double m_l1FilterThreshold = 0.;
