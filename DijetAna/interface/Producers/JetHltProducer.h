@@ -21,6 +21,6 @@ public:
 	virtual void Produce(KappaEvent const& event, KappaProduct& product, KappaSettings const& settings) const override;
 	virtual void Init(KappaSettings const& settings) override;
 private:
-	std::map<std::string, double> triggerEffThresholds;
+	std::map<std::string, std::pair<double, double> > triggerEffThresholds;
 };
 
