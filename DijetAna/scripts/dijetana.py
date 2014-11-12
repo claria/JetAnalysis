@@ -31,6 +31,7 @@ def main():
     config['MinLeadingJetPt']  = '50.'
     config['MinLeadingJetRap'] = '0.0'
     config['MaxLeadingJetRap'] = '3.0'
+    config['MinSecondJetRap'] = '0.0'
     config['MaxSecondJetRap'] = '3.0'
     # MET
     config['MaxMETSumEtRatio'] = 0.3
