@@ -128,9 +128,9 @@ def set_mc_specific(config, nick_info=None):
     config['Processors'].append('producer:GeneratorWeightProducer')
     config['Processors'].append('producer:NumberGeneratedEventsWeightProducer')
     config['JetEnergyCorrectionParameters'] = [
-                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V23__All_L1FastJet_AK5PF.txt',
-                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V23__All_L2Relative_AK5PF.txt',
-                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V23__All_L3Absolute_AK5PF.txt'
+                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26__All_L1FastJet_AK5PF.txt',
+                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26__All_L2Relative_AK5PF.txt',
+                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26__All_L3Absolute_AK5PF.txt'
                                                 ]
     config['NumberGeneratedEvents'] = nick_info.get('sample_size', -1)
     config['CrossSection'] = nick_info.get('crosssection', -1)
@@ -145,10 +145,10 @@ def set_data_specific(config, nick_info=None):
     config['TriggerObjects'] = 'KTriggerObjects'
     config['TriggerInfos'] = 'KTriggerInfos'
     config['JetEnergyCorrectionParameters'] = [
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT_53_V21_AN4__All_L1FastJet_AK5PF.txt',
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT_53_V21_AN4__All_L2Relative_AK5PF.txt',
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT_53_V21_AN4__All_L3Absolute_AK5PF.txt',
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT_53_V21_AN4__All_L2L3Residual_AK5PF.txt'
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6__All_L1FastJet_AK5PF.txt',
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6__All_L2Relative_AK5PF.txt',
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6__All_L3Absolute_AK5PF.txt',
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6__All_L2L3Residual_AK5PF.txt'
     ]
     config['JsonFiles'] = [
         '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt'
