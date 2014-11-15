@@ -119,6 +119,9 @@ def set_mc_specific(config, nick_info=None):
     config['GenEventMetadata'] = 'KEventMetadata'
     config['GenJets'] = 'AK5GenJets'
     config['Pipelines']['default']['Quantities'].append('genjet1_pt')
+    config['Pipelines']['default']['Quantities'].append('genjet1_phi')
+    config['Pipelines']['default']['Quantities'].append('genjet1_eta')
+    config['Pipelines']['default']['Quantities'].append('genjet1_rap')
     config['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/Data_Pileup_2012_ReReco-600bins_OVER_MC_Summer12_PU_S10-600bins.root'
     config['Processors'].append('producer:PUWeightProducer')
     config['Processors'].append('producer:CrossSectionWeightProducer')
