@@ -1,0 +1,6 @@
+# SKIM
+next skim, MC -> START53_V27
+
+# ANA
+check pileup distribution
+trigger eff.
