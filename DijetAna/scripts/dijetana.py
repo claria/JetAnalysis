@@ -50,6 +50,7 @@ def main():
         'filter:METSumEtFilter',
         ]
     config['JetID']   = 'tight'
+    config['JetIDVersion']   = '2014'
     config['Jets']    = 'AK5PFJets'
     config['JetArea'] = 'KT6Area'
     config['Met']     = 'PFMET'
@@ -90,6 +91,8 @@ def main():
                 'xsweight',
                 'ngeneventsweight',
                 'genweight',
+                'met',
+                'sumet',
             ],
             'EventWeight': 'EventWeight'
         }
@@ -122,15 +125,15 @@ def set_mc_specific(config, nick_info=None):
     config['Pipelines']['default']['Quantities'].append('genjet1_phi')
     config['Pipelines']['default']['Quantities'].append('genjet1_eta')
     config['Pipelines']['default']['Quantities'].append('genjet1_rap')
-    config['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/Data_Pileup_2012_ReReco-600bins_OVER_MC_Summer12_PU_S10-600bins.root'
+    config['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup_weights.root'
     config['Processors'].append('producer:PUWeightProducer')
     config['Processors'].append('producer:CrossSectionWeightProducer')
     config['Processors'].append('producer:GeneratorWeightProducer')
     config['Processors'].append('producer:NumberGeneratedEventsWeightProducer')
     config['JetEnergyCorrectionParameters'] = [
-                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26__All_L1FastJet_AK5PF.txt',
-                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26__All_L2Relative_AK5PF.txt',
-                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26__All_L3Absolute_AK5PF.txt'
+                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L1FastJet_AK5PF.txt',
+                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L2Relative_AK5PF.txt',
+                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L3Absolute_AK5PF.txt'
                                                 ]
     config['NumberGeneratedEvents'] = nick_info.get('sample_size', -1)
     config['CrossSection'] = nick_info.get('crosssection', -1)
@@ -145,10 +148,10 @@ def set_data_specific(config, nick_info=None):
     config['TriggerObjects'] = 'KTriggerObjects'
     config['TriggerInfos'] = 'KTriggerInfos'
     config['JetEnergyCorrectionParameters'] = [
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6__All_L1FastJet_AK5PF.txt',
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6__All_L2Relative_AK5PF.txt',
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6__All_L3Absolute_AK5PF.txt',
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6__All_L2L3Residual_AK5PF.txt'
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L1FastJet_AK5PF.txt',
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L2Relative_AK5PF.txt',
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L3Absolute_AK5PF.txt',
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L2L3Residual_AK5PF.txt'
     ]
     config['JsonFiles'] = [
         '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt'
@@ -294,7 +297,7 @@ def get_nickinfo(nick):
             'QCDP8_4C_1800toInf': {'is_data' : False,
                     'dataset': '/QCD_Pt-1800_Tune4C_8TeV_pythia8/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
                     'sample_size': 200013,
-                    'crosssection': -1,
+                    'crosssection': 0.001977,
                     },
 
             }
