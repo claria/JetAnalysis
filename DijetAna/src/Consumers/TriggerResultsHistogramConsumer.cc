@@ -5,9 +5,7 @@
 #include "Artus/Consumer/interface/LambdaNtupleConsumer.h"
 
 #include "JetAnalysis/DijetAna/interface/Consumers/TriggerResultsHistogramConsumer.h"
-
 #include "KappaTools/RootTools/HLTTools.h"
-
 #include <boost/lexical_cast.hpp>
 
 
@@ -40,10 +38,6 @@ void TriggerResultsHistogramConsumer::ProcessFilteredEvent(event_type const& eve
 	              "run = " << event.m_eventMetadata->nRun << ", " <<
 	              "lumi = " << event.m_eventMetadata->nLumi << ", " <<
 	              "event = " << event.m_eventMetadata->nEvent;
-
-	// for (size_t i = 0; i < event.m_triggerInfos->toFilter.size(); i++) {
-		// std::cout << "toFilter[" << i << "] : " << event.m_triggerInfos->toFilter[i] << std::endl;
-	// }
 
 	// Quantity for which the histograms are filled
 	float triggerEffQuantity = (LambdaNtupleConsumer<JetTypes>::GetFloatQuantities()[settings.GetTriggerEfficiencyQuantity()])(specEvent, specProduct);

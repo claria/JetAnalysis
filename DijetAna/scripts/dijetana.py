@@ -125,6 +125,7 @@ def set_mc_specific(config, nick_info=None):
     config['Pipelines']['default']['Quantities'].append('genjet1_phi')
     config['Pipelines']['default']['Quantities'].append('genjet1_eta')
     config['Pipelines']['default']['Quantities'].append('genjet1_rap')
+    config['Pipelines']['default']['Quantities'].append('gendijet_mass')
     config['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup_weights.root'
     config['Processors'].append('producer:PUWeightProducer')
     config['Processors'].append('producer:CrossSectionWeightProducer')
@@ -166,7 +167,7 @@ def set_data_specific(config, nick_info=None):
 
     # Thresholds when a path gets efficient, need to be ordered increasingly
     config['TriggerEffPaths'] = ['HLT_PFJET40','HLT_PFJET80','HLT_PFJET140','HLT_PFJET200','HLT_PFJET260','HLT_PFJET320']
-    config['TriggerEffThresholds'] = [60., 100., 170., 240., 320., 400.]
+    config['TriggerEffThresholds'] = [74., 133., 220., 300., 395., 507.]
 
     config['HltPathsBlacklist'] = []
     # Add HLT Paths to Pipeline for tests
@@ -174,6 +175,8 @@ def set_data_specific(config, nick_info=None):
     config['Pipelines']['default']['L1FilterPattern'] = '(L1SingleJet)([0-9]+)'
     config['Pipelines']['default']['HltFilterPattern'] = '(PFJet)([0-9]+)'
     config['Pipelines']['default']['TriggerEfficiencyQuantity'] = 'jet1_pt'
+
+    config['Pipelines']['default']['Consumers'].append('TriggerResultsHistogramConsumer')
 
     config['Processors'].insert(0, 'filter:JsonFilter')
     config['Processors'].append('producer:JetHltProducer')
