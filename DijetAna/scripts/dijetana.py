@@ -168,19 +168,22 @@ def set_data_specific(config, nick_info=None):
     # Thresholds when a path gets efficient, need to be ordered increasingly
     config['TriggerEffPaths'] = ['HLT_PFJET40','HLT_PFJET80','HLT_PFJET140','HLT_PFJET200','HLT_PFJET260','HLT_PFJET320']
     config['TriggerEffThresholds'] = [74., 133., 220., 300., 395., 507.]
+    # config['TriggerEffThresholds'] = [0.,0.,0.,0.,0.,0.]
 
     config['HltPathsBlacklist'] = []
     # Add HLT Paths to Pipeline for tests
-    config['Pipelines']['default']['HltPaths'] = config['HltPaths']
+    config['Pipelines']['default']['TriggerEffPaths'] = ['HLT_PFJET40', 'HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
+    config['Pipelines']['default']['L1FilterThresholds'] = [16., 36., 68., 92., 128., 128.]
+    config['Pipelines']['default']['HltFilterThresholds'] = [40., 80., 140., 200., 260., 320.]
     config['Pipelines']['default']['L1FilterPattern'] = '(L1SingleJet)([0-9]+)'
     config['Pipelines']['default']['HltFilterPattern'] = '(PFJet)([0-9]+)'
     config['Pipelines']['default']['TriggerEfficiencyQuantity'] = 'jet1_pt'
 
     config['Pipelines']['default']['Consumers'].append('TriggerResultsHistogramConsumer')
-
     config['Processors'].insert(0, 'filter:JsonFilter')
     config['Processors'].append('producer:JetHltProducer')
-    config['Processors'].append('filter:HltFilter')
+    config['Processors'].append('filter:JetHltFilter')
+    # config['Processors'].append('filter:JetHltEfficiencyFilter')
 
 
 def get_nickinfo(nick):
