@@ -12,6 +12,7 @@ from Artus.HarryPlotter.core import HarryCore
 def harryplotter():
 	print os.path.abspath(__file__)
 	harry_core = HarryCore()
+	harry_core.register_modules_dir("$CMSSW_BASE/python/JetAnalysis/DijetAna/plotting")
 	harry_core.run()
 
 if __name__ == '__main__':
