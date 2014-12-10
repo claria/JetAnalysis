@@ -22,6 +22,7 @@ public:
 
 protected:
 	std::vector<std::string> m_hltPaths;
+	std::map<std::string, std::pair<double, double> > m_filterThresholds;
 
 	boost::regex m_patternL1Filter;
 	boost::regex m_patternHltFilter;

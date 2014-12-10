@@ -8,22 +8,6 @@
 class JetHltFilter: public JetFilterBase {
 	public:
 
-		virtual ~JetHltFilter() {
-		}
-
-		virtual std::string GetFilterId() const {
-			return "JetHltFilter";
-		}
-
-		virtual bool DoesEventPass(JetEvent const& event,
-				JetProduct const& product,
-				JetSettings const& settings) const {
-
-			bool pass = false;
-			for (size_t i = 0; i < event.m_lumiMetadata->hltNames.size(); ++i)
-				if (event.m_eventMetadata->bitsHLT & (1ul << i))
-					pass = true;
-
-			return pass;
-		}
+		virtual std::string GetFilterId() const;
+		virtual bool DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const;
 };

@@ -13,25 +13,34 @@ void TriggerResultsHistogramConsumer::Init(setting_type const& settings)
 {
 	ConsumerBase<JetTypes>::Init( settings );
 
-	m_hltPaths = settings.GetHltPaths();
+	m_hltPaths = settings.GetTriggerEffPaths();
 
 	m_patternL1Filter = boost::regex(settings.GetL1FilterPattern());
 	m_patternHltFilter = boost::regex(settings.GetHltFilterPattern());
 
 	for (size_t i = 0; i != m_hltPaths.size(); ++i)
 	{
-		m_triggerResultHists.push_back(new TH1F(m_hltPaths[i].c_str(), m_hltPaths[i].c_str(), 100., 0., 1000.));
+		m_triggerResultHists.push_back(new TH1F(m_hltPaths[i].c_str(), m_hltPaths[i].c_str(), 500., 0., 1000.));
 		if (i < m_hltPaths.size() -1) {
-			m_triggerEmulatedHists.push_back(new TH1F(("emul_" + m_hltPaths[i+1]).c_str(), m_hltPaths[i].c_str(), 100., 0., 1000.));
+			m_triggerEmulatedHists.push_back(new TH1F(("emul_" + m_hltPaths[i+1]).c_str(), ("emul_" +m_hltPaths[i+1]).c_str(), 500., 0., 1000.));
 		}
 	}
+
+	assert(settings.GetL1FilterThresholds().size() == settings.GetTriggerEffPaths().size());
+	assert(settings.GetHltFilterThresholds().size() == settings.GetTriggerEffPaths().size());
+	for (size_t i=0; i< settings.GetTriggerEffPaths().size(); i++) {
+		m_filterThresholds[settings.GetTriggerEffPaths()[i]] = std::make_pair(settings.GetL1FilterThresholds()[i], settings.GetHltFilterThresholds()[i]);
+	}
+
+
+
 }
 
 void TriggerResultsHistogramConsumer::ProcessFilteredEvent(event_type const& event,
 		product_type const& product,
 		setting_type const& settings)
 {
-	auto const& specEvent = static_cast < JetEvent const&> (event);
+	// auto const& specEvent = static_cast < JetEvent const&> (event);
 	auto const& specProduct = static_cast < JetProduct const&> (product);
 
 	LOG(DEBUG) << "Process: " <<
@@ -40,7 +49,7 @@ void TriggerResultsHistogramConsumer::ProcessFilteredEvent(event_type const& eve
 	              "event = " << event.m_eventMetadata->nEvent;
 
 	// Quantity for which the histograms are filled
-	float triggerEffQuantity = (LambdaNtupleConsumer<JetTypes>::GetFloatQuantities()[settings.GetTriggerEfficiencyQuantity()])(specEvent, specProduct);
+	float triggerEffQuantity = specProduct.m_validJets.at(0)->p4.Pt();
 
 	// Threshold of the L1 and Hlt Filter
 	double m_l1FilterThreshold = 0.;
@@ -78,13 +87,19 @@ void TriggerResultsHistogramConsumer::ProcessFilteredEvent(event_type const& eve
 				return;
 			}
 
-			m_triggerResultHists[i]->Fill(triggerEffQuantity);
 
-			m_l1FilterThreshold = GetL1FilterThreshold(event, product, m_hltPaths[i+1]);
-			m_hltFilterThreshold = GetHltFilterThreshold(event, product, m_hltPaths[i+1]);
+			// std::cout << "Get trigger thresholds for path "  << m_hltPaths[i+1] << std::endl;
+			// m_l1FilterThreshold = GetL1FilterThreshold(event, product, m_hltPaths[i+1]);
+			// m_hltFilterThreshold = GetHltFilterThreshold(event, product, m_hltPaths[i+1]);
+			m_l1FilterThreshold = m_filterThresholds[m_hltPaths[i+1]].first;
+			m_hltFilterThreshold = m_filterThresholds[m_hltPaths[i+1]].second;
+
 			// std::cout << "L1obj Pt: " << event.m_triggerObjects->trgObjects[l1objIdx].p4.Pt() << " thr: " << m_l1FilterThreshold << std::endl;
 			// std::cout << "Hltobj Pt: " << event.m_triggerObjects->trgObjects[hltobjIdx].p4.Pt() << " thr: " << m_hltFilterThreshold << std::endl;
 
+			// Fill pass histogram for path i
+			m_triggerResultHists[i]->Fill(triggerEffQuantity);
+			// Fill pass histogram for path i+1
 			if ((event.m_triggerObjects->trgObjects[l1objIdx].p4.Pt() > m_l1FilterThreshold) &&
 				(event.m_triggerObjects->trgObjects[hltobjIdx].p4.Pt() > m_hltFilterThreshold)) {
 					m_triggerEmulatedHists[i]->Fill(triggerEffQuantity);
@@ -96,6 +111,7 @@ void TriggerResultsHistogramConsumer::ProcessFilteredEvent(event_type const& eve
 double TriggerResultsHistogramConsumer::GetL1FilterThreshold(event_type const& event, product_type const& product, std::string path)
 {
 	size_t hltPosition = product.m_hltInfo.getHLTPosition(path);
+	// std::cout << "TriggerResultsHistogramConsumer::GetL1FilterThreshold" << "hltposition" << hltPosition;
 	for (size_t filterIndex = event.m_triggerInfos->getMinFilterIndex(hltPosition); filterIndex < event.m_triggerInfos->getMaxFilterIndex(hltPosition); filterIndex++)
 	{
 		std::string filterName = event.m_triggerInfos->toFilter[filterIndex];

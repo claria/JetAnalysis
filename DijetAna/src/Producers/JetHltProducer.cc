@@ -8,20 +8,11 @@ std::string JetHltProducer::GetProducerId() const {
 
 void JetHltProducer::Init(KappaSettings const& settings) {
 	KappaProducerBase::Init(settings);
-	auto const& jetSettings = static_cast<JetSettings const&>(settings);
+	// auto const& jetSettings = static_cast<JetSettings const&>(settings);
 
 	if (settings.GetHltPaths().empty()) 
 		LOG(FATAL) << "No Hlt Trigger path list (tag \"HltPaths\") configured!";
 
-	// Fill trigger efficiency thresholds map
-	assert(jetSettings.GetTriggerEffThresholds().size() == jetSettings.GetTriggerEffPaths().size());
-	for (size_t i=0; i< jetSettings.GetTriggerEffThresholds().size(); i++) {
-		double triggerEffThresholdNext = std::numeric_limits<double>::max();
-		if (i < jetSettings.GetHltPaths().size()) {
-			triggerEffThresholdNext = jetSettings.GetTriggerEffThresholds().at(i+1);
-		}
-		triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]] = std::make_pair(jetSettings.GetTriggerEffThresholds()[i], triggerEffThresholdNext);
-	}
 }
 
 void JetHltProducer::Produce(KappaEvent const& event, KappaProduct& product,
@@ -60,16 +51,8 @@ void JetHltProducer::Produce(KappaEvent const& event, KappaProduct& product,
 				{
 					// std::cout << "Trigger fired: " << hltFilter << std::endl;
 					if (product.m_hltInfo.getPrescale(hltFilter) < prescaleSelectedHlt) {
-						// Check if trigger is efficient
-						// TODO: Fix this by somehow adding the analysis specific quantities in the beginning
-						// double triggerEffQuantity = (LambdaNtupleConsumer<JetTypes>::GetFloatQuantities()[jetSettings.GetTriggerEfficiencyQuantity()])(jetEvent, jetProduct);
-						double triggerEffQuantity = product.m_validJets.at(0)->p4.Pt();
-						if ((triggerEffQuantity > triggerEffThresholds.at(*hltPath).first) && 
-							(triggerEffQuantity <= triggerEffThresholds.at(*hltPath).second))
-						{
-							prescaleSelectedHlt = product.m_hltInfo.getPrescale(hltFilter);
-							selectedHltName = hltFilter;
-						}
+						prescaleSelectedHlt = product.m_hltInfo.getPrescale(hltFilter);
+						selectedHltName = *hltPath;
 					}
 				}
 			}
@@ -80,7 +63,7 @@ void JetHltProducer::Produce(KappaEvent const& event, KappaProduct& product,
 	{
 		product.m_selectedHltName = selectedHltName;
 		product.m_weights["hltPrescaleWeight"] = prescaleSelectedHlt;
-		product.m_selectedHltPosition = (int) product.m_hltInfo.getHLTPosition(selectedHltName);
+		product.m_selectedHltPosition = (int) product.m_hltInfo.getHLTPosition(product.m_hltInfo.getHLTName(selectedHltName));
 	}
 	else
 	{

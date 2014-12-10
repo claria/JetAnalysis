@@ -38,6 +38,6 @@ public:
 
 	// IMPL_SETTING_STRINGLIST(L1FilterNames);
 	// IMPL_SETTING_STRINGLIST(HltFilterNames);
-	// IMPL_SETTING_FLOATLIST(L1FilterThresholds);
-	// IMPL_SETTING_FLOATLIST(HltFilterThresholds);
+	IMPL_SETTING_FLOATLIST(L1FilterThresholds);
+	IMPL_SETTING_FLOATLIST(HltFilterThresholds);
 };
