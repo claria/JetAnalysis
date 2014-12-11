@@ -9,9 +9,8 @@ log = logging.getLogger(__name__)
 
 from Artus.HarryPlotter.core import HarryCore
 
-def harryplotter():
-	print os.path.abspath(__file__)
-	harry_core = HarryCore()
+def harryplotter(args_from_script=None):
+	harry_core = HarryCore(args_from_script=args_from_script)
 	harry_core.register_modules_dir("$CMSSW_BASE/python/JetAnalysis/DijetAna/plotting")
 	harry_core.run()
 
