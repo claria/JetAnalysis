@@ -56,7 +56,6 @@ class JetResolution(AnalysisBase):
 			sigmaerr.append(tf1.GetParError(2))
 			th1_histos.append(th1_histogram)
 
-
 		# create root tgraph
 		x = array('d', y_bincenter)
 		xerr = array('d', y_binerr)

@@ -16,7 +16,7 @@ class LeadingJetRapFilter: public JetFilterBase {
 				JetProduct const& product, JetSettings const& settings) const;
 
 	private:
-		double maxLeadingJetRap;
-		double minLeadingJetRap;
+		double maxLeadingJetAbsRap;
+		double minLeadingJetAbsRap;
 };
 

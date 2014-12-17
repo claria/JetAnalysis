@@ -23,4 +23,8 @@ class JetProduct : public KappaProduct
 		double m_DiJetMass;
 		std::map<std::string, bool> m_HltTrigger;
 		std::map<std::string, double> m_weights;
+		std::vector<double> m_incJetsPt;
+		std::vector<double> m_incJetsEta;
+		std::vector<double> m_incJetsRap;
+		std::vector<double> m_incJetsPhi;
 };

@@ -16,7 +16,7 @@ class SecondJetRapFilter: public JetFilterBase {
 				JetProduct const& product, JetSettings const& settings) const;
 
 	private:
-		double maxSecondJetRap;
-		double minSecondJetRap;
+		double maxSecondJetAbsRap;
+		double minSecondJetAbsRap;
 };
 

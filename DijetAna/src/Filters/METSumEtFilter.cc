@@ -1,6 +1,8 @@
 #include "JetAnalysis/DijetAna/interface/Filters/METSumEtFilter.h"
 
+
 void METSumEtFilter::Init(JetSettings const& settings) {
+	JetFilterBase::Init(settings);
 	maxMETSumEtRatio = settings.GetMaxMETSumEtRatio();
 }
 

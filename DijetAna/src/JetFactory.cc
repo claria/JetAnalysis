@@ -1,11 +1,13 @@
 #include "JetAnalysis/DijetAna/interface/JetFactory.h"
 
 // Producers
-#include "JetAnalysis/DijetAna/interface/Producers/DiJetsObservables.h"
+#include "JetAnalysis/DijetAna/interface/Producers/JetQuantities.h"
 #include "JetAnalysis/DijetAna/interface/Producers/JetHltProducer.h"
+#include "JetAnalysis/DijetAna/interface/Producers/JetValidJetsProducer.h"
 
 // Filters
 #include "JetAnalysis/DijetAna/interface/Filters/DiJetsFilter.h"
+#include "JetAnalysis/DijetAna/interface/Filters/DijetsRapFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/JetHltFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/JetHltEfficiencyFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/LeadingJetPtFilter.h"
@@ -25,10 +27,12 @@ JetFactory::~JetFactory() {}
 
 ProducerBaseUntemplated * JetFactory::createProducer ( std::string const& id )
 {
-	if ( DiJetsObservables().GetProducerId() == id )
-		return new DiJetsObservables();
+	if ( JetQuantities().GetProducerId() == id )
+		return new JetQuantities();
 	else if (JetHltProducer().GetProducerId() == id)
 		return new JetHltProducer();
+	else if (JetValidJetsProducer().GetProducerId() == id)
+		return new JetValidJetsProducer();
 	else
 		return KappaFactory::createProducer( id );
 }
@@ -47,6 +51,8 @@ FilterBaseUntemplated * JetFactory::createFilter ( std::string const& id )
 {
 	if (DiJetsFilter().GetFilterId() == id)
 		return new DiJetsFilter();
+	else if (DijetsRapFilter().GetFilterId() == id)
+		return new DijetsRapFilter();
 	else if (LeadingJetPtFilter().GetFilterId() == id)
 		return new LeadingJetPtFilter();
 	else if (LeadingJetRapFilter().GetFilterId() == id)

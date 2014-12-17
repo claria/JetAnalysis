@@ -27,12 +27,15 @@ def main():
 
     print 'Prepare config for nick \'{0}\'.'.format(nick)
 
+    #Valid Jet Selection
+    config['JetID']   = 'tight'
+    config['JetIDVersion']   = '2014'
+    config['MinValidJetPt'] = '50.'
+    config['MaxValidJetAbsRap'] = '3.0'
+ 
     # Define global cuts
-    config['MinLeadingJetPt']  = '50.'
-    config['MinLeadingJetRap'] = '0.0'
-    config['MaxLeadingJetRap'] = '3.0'
-    config['MinSecondJetRap'] = '0.0'
-    config['MaxSecondJetRap'] = '3.0'
+    # config['MinLeadingJetPt']  = '50.'
+    # config['MaxDijetsAbsRap'] = '2.5'
     # MET
     config['MaxMETSumEtRatio'] = 0.3
 
@@ -45,12 +48,9 @@ def main():
         'producer:ValidJetsProducer',
         'filter:DiJetsFilter',
         'filter:LeadingJetPtFilter',
-        'filter:LeadingJetRapFilter',
-        'filter:SecondJetRapFilter',
+        'filter:DijetsRapFilter',
         'filter:METSumEtFilter',
         ]
-    config['JetID']   = 'tight'
-    config['JetIDVersion']   = '2014'
     config['Jets']    = 'AK5PFJets'
     config['JetArea'] = 'KT6Area'
     config['Met']     = 'PFMET'
@@ -59,7 +59,7 @@ def main():
     # Define standard pipepeline
     def_pipeline =  {
             'Processors': [
-                'producer:DiJetsObservables',
+                'producer:JetQuantities',
                 'producer:EventWeightProducer',
             ],
             'Consumers': [
@@ -74,6 +74,10 @@ def main():
                 'npu',
                 'weight',
                 'njets',
+                'incjets_pt',
+                'incjets_eta',
+                'incjets_rap',
+                'incjets_phi',
                 'jet1_pt',
                 'jet1_eta',
                 'jet1_rap',
@@ -126,7 +130,7 @@ def set_mc_specific(config, nick_info=None):
     config['Pipelines']['default']['Quantities'].append('genjet1_eta')
     config['Pipelines']['default']['Quantities'].append('genjet1_rap')
     config['Pipelines']['default']['Quantities'].append('gendijet_mass')
-    config['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup_weights.root'
+    config['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup/pileup_weights_S10.root'
     config['Processors'].append('producer:PUWeightProducer')
     config['Processors'].append('producer:CrossSectionWeightProducer')
     config['Processors'].append('producer:GeneratorWeightProducer')
@@ -175,15 +179,15 @@ def set_data_specific(config, nick_info=None):
     config['Pipelines']['default']['TriggerEffPaths'] = ['HLT_PFJET40', 'HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
     config['Pipelines']['default']['L1FilterThresholds'] = [16., 36., 68., 92., 128., 128.]
     config['Pipelines']['default']['HltFilterThresholds'] = [40., 80., 140., 200., 260., 320.]
-    config['Pipelines']['default']['L1FilterPattern'] = '(L1SingleJet)([0-9]+)'
-    config['Pipelines']['default']['HltFilterPattern'] = '(PFJet)([0-9]+)'
+    # config['Pipelines']['default']['L1FilterPattern'] = '(L1SingleJet)([0-9]+)'
+    # config['Pipelines']['default']['HltFilterPattern'] = '(PFJet)([0-9]+)'
     config['Pipelines']['default']['TriggerEfficiencyQuantity'] = 'jet1_pt'
 
-    config['Pipelines']['default']['Consumers'].append('TriggerResultsHistogramConsumer')
+    # config['Pipelines']['default']['Consumers'].append('TriggerResultsHistogramConsumer')
     config['Processors'].insert(0, 'filter:JsonFilter')
     config['Processors'].append('producer:JetHltProducer')
     config['Processors'].append('filter:JetHltFilter')
-    # config['Processors'].append('filter:JetHltEfficiencyFilter')
+    config['Processors'].append('filter:JetHltEfficiencyFilter')
 
 
 def get_nickinfo(nick):
@@ -217,13 +221,23 @@ def get_nickinfo(nick):
                 'data_stream' : 'MON',
                 },
             'Jet_2012D_HT' : {'is_data' : True,
-                'ilumi'   : -1,
-                'data_stream' : 'HT',
+                              'ilumi'   : -1,
+                              'data_stream' : 'HT',
                 },
             'QCDP6_Z2S_S10': {'is_data' : False,
-                'dataset': '/QCD_Pt-15to3000_TuneZ2star_Flat_8TeV_pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
-                'sample_size': 9991674,
-                'crosssection': 2.998e10
+                              'dataset': '/QCD_Pt-15to3000_TuneZ2star_Flat_8TeV_pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+                              'sample_size': 9991674,
+                              'crosssection': 2.998e10
+                },
+            'qcdHW_EE3C_S10': {'is_data' : False,
+                               'dataset': '/QCD_Pt-15to3000_TuneEE3C_Flat_8TeV_herwigpp/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+                               'sample_size': 9934463,
+                               'crosssection': 8.479E08
+               },
+            'qcdP8_4C_S10': {'is_data' : False,
+                             'dataset': '/QCD_Pt-15to3000_Tune4C_Flat_8TeV_pythia8/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+                             'sample_size': 1000128,
+                             'crosssection': 1.246E09
                 },
             'QCDMGP8_Z2S_100to250': {'is_data' : False,
                 'dataset': '/QCD_HT-100To250_TuneZ2star_8TeV-madgraph-pythia/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',

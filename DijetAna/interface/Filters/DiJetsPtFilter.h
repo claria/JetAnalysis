@@ -16,6 +16,7 @@ class DiJetsPtFilter: public JetFilterBase {
 		}
 
 		virtual void Init(JetSettings const& settings) {
+			JetFilterBase::Init(settings);
 			minJetPtCut = settings.GetMinJetPtCut();
 		}
 
@@ -23,11 +24,11 @@ class DiJetsPtFilter: public JetFilterBase {
 				JetProduct const& product,
 				JetSettings const& settings) const {
 
-			bool pass = true;
+			bool pass = false;
 
-			if (product.m_validJets.at(0)->p4.Pt() < minJetPtCut ||
-				product.m_validJets.at(1)->p4.Pt() < minJetPtCut) {
-				pass = false;
+			if (product.m_validJets.at(0)->p4.Pt() >= minJetPtCut &&
+				product.m_validJets.at(1)->p4.Pt() >= minJetPtCut) {
+				pass = true;
 			}
 			return pass;
 		}

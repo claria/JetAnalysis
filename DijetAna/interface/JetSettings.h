@@ -16,13 +16,22 @@
 class JetSettings: public KappaSettings {
 public:
 
+
+        // Cuts for valid jet Producer to validate/invalidate a jet
+	IMPL_SETTING_DEFAULT(float, MinValidJetPt, std::numeric_limits<float>::min())
+	IMPL_SETTING_DEFAULT(float, MinValidJetAbsRap, std::numeric_limits<float>::min())
+	IMPL_SETTING_DEFAULT(float, MaxValidJetAbsRap, std::numeric_limits<float>::max())
+
 	IMPL_SETTING_DEFAULT(float, MinLeadingJetPt, std::numeric_limits<float>::min())
 	IMPL_SETTING_DEFAULT(float, MaxLeadingJetPt, std::numeric_limits<float>::max())
 
-	IMPL_SETTING_DEFAULT(float, MinLeadingJetRap, std::numeric_limits<float>::min())
-	IMPL_SETTING_DEFAULT(float, MaxLeadingJetRap, std::numeric_limits<float>::max())
-	IMPL_SETTING_DEFAULT(float, MinSecondJetRap, std::numeric_limits<float>::min())
-	IMPL_SETTING_DEFAULT(float, MaxSecondJetRap, std::numeric_limits<float>::max())
+	IMPL_SETTING_DEFAULT(float, MinLeadingJetAbsRap, std::numeric_limits<float>::min())
+	IMPL_SETTING_DEFAULT(float, MaxLeadingJetAbsRap, std::numeric_limits<float>::max())
+	IMPL_SETTING_DEFAULT(float, MinSecondJetAbsRap, std::numeric_limits<float>::min())
+	IMPL_SETTING_DEFAULT(float, MaxSecondJetAbsRap, std::numeric_limits<float>::max())
+
+	IMPL_SETTING_DEFAULT(float, MinDijetsAbsRap, std::numeric_limits<float>::min())
+	IMPL_SETTING_DEFAULT(float, MaxDijetsAbsRap, std::numeric_limits<float>::max())
         //MET Filter
 	IMPL_SETTING_DEFAULT(float, MaxMETSumEtRatio, std::numeric_limits<float>::max())
 

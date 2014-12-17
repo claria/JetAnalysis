@@ -8,6 +8,7 @@
 #include "Artus/KappaAnalysis/interface/KappaTypes.h"
 
 #include "JetAnalysis/DijetAna/interface/Consumers/JetLambdaNtupleConsumer.h"
+#include "JetAnalysis/DijetAna/interface/JetTypes.h"
 
 //std::string JetLambdaNtupleConsumer::GetConsumerId() const
 //{
@@ -69,6 +70,24 @@ void JetLambdaNtupleConsumer::Init(setting_type const& settings)
 	LambdaNtupleConsumer<KappaTypes>::AddIntQuantity("njets",[](KappaEvent const& event, KappaProduct const& product) {
 		return product.m_validJets.size();
 	} );
+	// inclusive jet pts
+	LambdaNtupleConsumer<KappaTypes>::AddVDoubleQuantity("incjets_pt",[](KappaEvent const& event, KappaProduct const& product) {
+		auto const& specProduct = static_cast < JetProduct const&> (product);
+		return specProduct.m_incJetsPt;
+	} );
+	LambdaNtupleConsumer<KappaTypes>::AddVDoubleQuantity("incjets_eta",[](KappaEvent const& event, KappaProduct const& product) {
+		auto const& specProduct = static_cast < JetProduct const&> (product);
+		return specProduct.m_incJetsEta;
+	} );
+	LambdaNtupleConsumer<KappaTypes>::AddVDoubleQuantity("incjets_rap",[](KappaEvent const& event, KappaProduct const& product) {
+		auto const& specProduct = static_cast < JetProduct const&> (product);
+		return specProduct.m_incJetsRap;
+	} );
+	LambdaNtupleConsumer<KappaTypes>::AddVDoubleQuantity("incjets_phi",[](KappaEvent const& event, KappaProduct const& product) {
+		auto const& specProduct = static_cast < JetProduct const&> (product);
+		return specProduct.m_incJetsPhi;
+	} );
+
 	// Leading jet pT
 	LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("jet1_pt",[](KappaEvent const& event, KappaProduct const& product) {
 		return product.m_validJets.at(0)->p4.Pt();
@@ -159,7 +178,7 @@ void JetLambdaNtupleConsumer::Init(setting_type const& settings)
 		return 0.5*std::abs(product.m_validJets.at(0)->p4.Rapidity() - product.m_validJets.at(1)->p4.Rapidity());
 	} );
 	LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("dijet_chi",[](KappaEvent const& event, KappaProduct const& product) {
-		return exp(abs(product.m_validJets.at(0)->p4.Rapidity() - product.m_validJets.at(1)->p4.Rapidity()));
+		return exp(std::abs(product.m_validJets.at(0)->p4.Rapidity() - product.m_validJets.at(1)->p4.Rapidity()));
 	} );
 
 	KappaLambdaNtupleConsumer::Init(settings);

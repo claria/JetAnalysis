@@ -11,8 +11,7 @@ class METSumEtFilter : public JetFilterBase {
 		virtual std::string GetFilterId() const {
 			return "METSumEtFilter";
 		}
-
-		virtual void Init(JetSettings const& settings);
+		virtual void Init(JetSettings const& settings) override;
 		virtual bool DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const;
 
 	private:
