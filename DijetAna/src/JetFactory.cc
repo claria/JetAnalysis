@@ -7,6 +7,7 @@
 
 // Filters
 #include "JetAnalysis/DijetAna/interface/Filters/DiJetsFilter.h"
+#include "JetAnalysis/DijetAna/interface/Filters/NJetsFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/DijetsRapFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/JetHltFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/JetHltEfficiencyFilter.h"
@@ -51,6 +52,8 @@ FilterBaseUntemplated * JetFactory::createFilter ( std::string const& id )
 {
 	if (DiJetsFilter().GetFilterId() == id)
 		return new DiJetsFilter();
+	else if (NJetsFilter().GetFilterId() == id)
+		return new NJetsFilter();
 	else if (DijetsRapFilter().GetFilterId() == id)
 		return new DijetsRapFilter();
 	else if (LeadingJetPtFilter().GetFilterId() == id)

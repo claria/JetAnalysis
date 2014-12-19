@@ -1,26 +1,21 @@
-/* Copyright (c) 2013 - All Rights Reserved
- *   Thomas Hauth  <Thomas.Hauth@cern.ch>
- *   Joram Berger  <Joram.Berger@cern.ch>
- *   Dominik Haitz <Dominik.Haitz@kit.edu>
- */
-
 #pragma once
 
 #include "Artus/Configuration/interface/SettingsBase.h"
 #include "Artus/Configuration/interface/SettingMacros.h"
 #include "Artus/Configuration/interface/PropertyTreeSupport.h"
 #include "Artus/KappaAnalysis/interface/KappaSettings.h"
-
-#include <limits> 
+#include <limits>
 
 class JetSettings: public KappaSettings {
 public:
 
-
-        // Cuts for valid jet Producer to validate/invalidate a jet
+	// Cuts for valid jet Producer to validate/invalidate a jet
 	IMPL_SETTING_DEFAULT(float, MinValidJetPt, std::numeric_limits<float>::min())
 	IMPL_SETTING_DEFAULT(float, MinValidJetAbsRap, std::numeric_limits<float>::min())
 	IMPL_SETTING_DEFAULT(float, MaxValidJetAbsRap, std::numeric_limits<float>::max())
+
+	// Number of minimum required valid jets
+	IMPL_SETTING_DEFAULT(int, MinValidJets, 0)
 
 	IMPL_SETTING_DEFAULT(float, MinLeadingJetPt, std::numeric_limits<float>::min())
 	IMPL_SETTING_DEFAULT(float, MaxLeadingJetPt, std::numeric_limits<float>::max())

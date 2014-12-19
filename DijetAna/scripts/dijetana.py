@@ -32,7 +32,9 @@ def main():
     config['JetIDVersion']   = '2014'
     config['MinValidJetPt'] = '50.'
     config['MaxValidJetAbsRap'] = '3.0'
- 
+    # Global Cuts
+    config['MinValidJets'] = '1'
+    config['MinLeadingJetPt']  = '74.'
     # Define global cuts
     # config['MinLeadingJetPt']  = '50.'
     # config['MaxDijetsAbsRap'] = '2.5'
@@ -46,12 +48,12 @@ def main():
     config['Processors'] = [
         'producer:JetCorrectionsProducer',
         'producer:ValidJetsProducer',
-        'filter:DiJetsFilter',
+        'filter:NJetsFilter',
         'filter:LeadingJetPtFilter',
-        'filter:DijetsRapFilter',
+        # 'filter:DijetsRapFilter',
         'filter:METSumEtFilter',
         ]
-    config['Jets']    = 'AK5PFJets'
+    config['Jets']    = 'AK7PFJets'
     config['JetArea'] = 'KT6Area'
     config['Met']     = 'PFMET'
 
@@ -135,11 +137,10 @@ def set_mc_specific(config, nick_info=None):
     config['Processors'].append('producer:CrossSectionWeightProducer')
     config['Processors'].append('producer:GeneratorWeightProducer')
     config['Processors'].append('producer:NumberGeneratedEventsWeightProducer')
-    config['JetEnergyCorrectionParameters'] = [
-                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L1FastJet_AK5PF.txt',
-                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L2Relative_AK5PF.txt',
-                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L3Absolute_AK5PF.txt'
-                                                ]
+    config['JetEnergyCorrectionParameters'] = ['$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L1FastJet_AK5PF.txt',
+                                               '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L2Relative_AK5PF.txt',
+                                               '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L3Absolute_AK5PF.txt'
+                                               ]
     config['NumberGeneratedEvents'] = nick_info.get('sample_size', -1)
     config['CrossSection'] = nick_info.get('crosssection', -1)
 
@@ -390,7 +391,7 @@ class ArtusConfig(dict):
             elif isinstance(node[key], dict) or isinstance(node[key], list):
                 self.expand_envs(node[key])
 
-  
+
 
 
 

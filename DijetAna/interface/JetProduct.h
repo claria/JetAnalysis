@@ -1,30 +1,43 @@
-/* Copyright (c) 2013 - All Rights Reserved
- *   Thomas Hauth  <Thomas.Hauth@cern.ch>
- *   Joram Berger  <Joram.Berger@cern.ch>
- *   Dominik Haitz <Dominik.Haitz@kit.edu>
- */
-
-
 #pragma once
-
 
 #include "Artus/KappaAnalysis/interface/KappaProduct.h"
 
 class JetProduct : public KappaProduct 
 {
-	public:
+public:
 
-		double m_Jet1Pt;
-		double m_Jet1Eta;
-		double m_Jet1Rap;
-		double m_Jet2Pt;
-		double m_Jet2Eta;
-		double m_Jet2Rap;
-		double m_DiJetMass;
-		std::map<std::string, bool> m_HltTrigger;
-		std::map<std::string, double> m_weights;
-		std::vector<double> m_incJetsPt;
-		std::vector<double> m_incJetsEta;
-		std::vector<double> m_incJetsRap;
-		std::vector<double> m_incJetsPhi;
+	// std::map<std::string, bool> m_HltTrigger;
+	// std::map<std::string, double> m_weights;
+
+	std::vector<double> m_incJetsPt;
+	std::vector<double> m_incJetsEta;
+	std::vector<double> m_incJetsRap;
+	std::vector<double> m_incJetsPhi;
+
+	float m_jet1Pt;
+	float m_jet1Eta;
+	float m_jet1Rap;
+	float m_jet1Phi;
+	float m_jet2Pt;
+	float m_jet2Eta;
+	float m_jet2Rap;
+	float m_jet2Phi;
+
+	float m_dijet_mass;
+	float m_dijet_yMax;
+	float m_dijet_deltaPhi;
+	float m_dijet_cosThetaStar;
+	float m_dijet_yBoost;
+	float m_dijet_yStar;
+	float m_dijet_chi;
+
+	float m_genjet1Pt;
+	float m_genjet1Eta;
+	float m_genjet1Rap;
+	float m_genjet1Phi;
+	float m_genjet2Pt;
+	float m_genjet2Eta;
+	float m_genjet2Rap;
+	float m_genjet2Phi;
+	float m_gendijet_mass;
 };
