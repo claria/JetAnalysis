@@ -10,16 +10,9 @@ void JetHltEfficiencyFilter::Init(JetSettings const& settings) {
 
 	auto const& jetSettings = static_cast<JetSettings const&>(settings);
 	// Fill trigger efficiency thresholds map
-	assert(jetSettings.GetTriggerEffThresholds().size() == jetSettings.GetTriggerEffPaths().size());
-	for (size_t i=0; i< jetSettings.GetTriggerEffThresholds().size(); i++) {
-		double triggerEffThresholdNext = std::numeric_limits<double>::max();
-		if (i < jetSettings.GetHltPaths().size()) {
-			triggerEffThresholdNext = jetSettings.GetTriggerEffThresholds().at(i+1);
-		}
-		triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]] = std::make_pair(jetSettings.GetTriggerEffThresholds()[i], triggerEffThresholdNext);
-		// std::cout << jetSettings.GetTriggerEffPaths()[i] << std::endl;
-		// std::cout << "chacka1 " << triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]].first << std::endl;
-		// std::cout << "chacka2 " << triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]].second << std::endl;
+	assert(jetSettings.GetTriggerEffThresholds().size() == jetSettings.GetTriggerEffPaths().size() +1);
+	for (size_t i=0; i< jetSettings.GetTriggerEffPaths().size(); i++) {
+		triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]] = std::make_pair(jetSettings.GetTriggerEffThresholds()[i], jetSettings.GetTriggerEffThresholds()[i+1]);
 	}
 }
 
