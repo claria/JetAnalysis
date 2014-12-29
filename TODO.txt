@@ -1,6 +1,7 @@
 # SKIM
-next skim, MC -> START53_V27
+X next skim, MC -> START53_V27
 
 # ANA
-check pileup distribution
-trigger eff.
+goodvertex ndof > 4 or >= 4?
+implement beam scraping filter
+implement hcal noise filter

@@ -8,66 +8,68 @@ std::string JetHltProducer::GetProducerId() const {
 
 void JetHltProducer::Init(KappaSettings const& settings) {
 	KappaProducerBase::Init(settings);
-	// auto const& jetSettings = static_cast<JetSettings const&>(settings);
+	auto const& jetSettings = static_cast<JetSettings const&>(settings);
 
 	if (settings.GetHltPaths().empty()) 
 		LOG(FATAL) << "No Hlt Trigger path list (tag \"HltPaths\") configured!";
 
+	assert(jetSettings.GetTriggerEffThresholds().size() == jetSettings.GetTriggerEffPaths().size() +1);
+	for (size_t i=0; i< jetSettings.GetTriggerEffPaths().size(); i++) {
+		triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]] = std::make_pair(jetSettings.GetTriggerEffThresholds()[i], jetSettings.GetTriggerEffThresholds()[i+1]);
+		std::cout << "Trigger eff. thresholds for path " << jetSettings.GetTriggerEffPaths()[i] << " is: (" << triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]].first << ", " << triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]].second << ")." << std::endl;
+	}
 }
 
-void JetHltProducer::Produce(KappaEvent const& event, KappaProduct& product,
+void JetHltProducer::Produce(KappaEvent const& event, KappaProduct & product,
                      KappaSettings const& settings) const
 {
 	// auto const& jetEvent = static_cast <JetEvent const&> (event);
 	// auto const& jetProduct = static_cast <JetProduct const&> (product);
 	auto const& jetSettings = static_cast<JetSettings const&>(settings);
-	// std::cout << "New Event: " << event.m_eventMetadata->nRun << " " << event.m_eventMetadata->nLumi << " " << event.m_eventMetadata->nEvent << std::endl;
+
+	LOG(DEBUG) << "Process: " <<
+	              "run = " << event.m_eventMetadata->nRun << ", " <<
+	              "lumi = " << event.m_eventMetadata->nLumi << ", " <<
+	              "event = " << event.m_eventMetadata->nEvent;
+	
 	assert(event.m_lumiMetadata);
 	assert(event.m_eventMetadata);
+	assert(product.m_validJets.size() > 0);
 	
-	// set LumiMetadat, needs to be done here for the case running over multiple files
 	product.m_hltInfo.setLumiMetadata(event.m_lumiMetadata);
 
-	// Selected trigger Names
-	std::string selectedHltName;
-	int prescaleSelectedHlt = std::numeric_limits<int>::max();
-
-	// Check if any of the blacklisted triggers fired
-	bool blacklistHltFired = false;
-	for (std::vector<std::string>::const_iterator blacklistHltPath = jetSettings.GetHltPathsBlacklist().begin(); blacklistHltPath != jetSettings.GetHltPathsBlacklist().end(); ++blacklistHltPath) 
+	double triggerEffQuantity = product.m_validJets.at(0)->p4.Pt();
+	for (std::vector<std::string>::const_iterator hltPath = jetSettings.GetHltPaths().begin(); hltPath != jetSettings.GetHltPaths().end(); ++hltPath)
 	{
-		std::string blacklistHltFilter = product.m_hltInfo.getHLTName(*blacklistHltPath);
-		if (event.m_eventMetadata->hltFired(blacklistHltFilter, event.m_lumiMetadata)) {
-			blacklistHltFired = true;
-		}
-	}
-
-	if (!blacklistHltFired) {
-		for (std::vector<std::string>::const_iterator hltPath = jetSettings.GetHltPaths().begin(); hltPath != jetSettings.GetHltPaths().end(); ++hltPath)
+		std::string hltName = product.m_hltInfo.getHLTName(*hltPath);
+		if (!hltName.empty())
 		{
-			std::string hltFilter = product.m_hltInfo.getHLTName(*hltPath);
-			if (!hltFilter.empty()){
-				if (event.m_eventMetadata->hltFired(hltFilter, event.m_lumiMetadata)) 
+			if (event.m_eventMetadata->hltFired(hltName, event.m_lumiMetadata)) 
+			{
+				// std::cout << "Trigger " << *hltPath << " fired." << std::endl;
+				if ((triggerEffQuantity >= triggerEffThresholds.at(*hltPath).first) && 
+				   (triggerEffQuantity < triggerEffThresholds.at(*hltPath).second)) 
 				{
-					// std::cout << "Trigger fired: " << hltFilter << std::endl;
-					if (product.m_hltInfo.getPrescale(hltFilter) < prescaleSelectedHlt) {
-						prescaleSelectedHlt = product.m_hltInfo.getPrescale(hltFilter);
-						selectedHltName = *hltPath;
-					}
+					// std::cout << "Trigger " << *hltPath << " in selected pt range." << std::endl;
+					// std::cout << "Trigger " << *hltPath << " prescale: " << product.m_hltInfo.getPrescale(hltName) << std::endl;
+					// std::cout << "Trigger " << *hltPath << " leading Jet Pt: " << triggerEffQuantity << std::endl;
+					product.m_selectedHltName = *hltPath;
+					product.m_weights["hltPrescaleWeight"] = product.m_hltInfo.getPrescale(hltName);
+					product.m_selectedHltPosition = (int) product.m_hltInfo.getHLTPosition(hltName);
+					break;
+				}
+				else
+				{
+					product.m_selectedHltName = "";
+					product.m_weights["hltPrescaleWeight"] = 0.;
+					product.m_selectedHltPosition = DefaultValues::UndefinedInt;
 				}
 			}
 		}
-	}
-
-	if (! selectedHltName.empty()) 
-	{
-		product.m_selectedHltName = selectedHltName;
-		product.m_weights["hltPrescaleWeight"] = prescaleSelectedHlt;
-		product.m_selectedHltPosition = (int) product.m_hltInfo.getHLTPosition(product.m_hltInfo.getHLTName(selectedHltName));
-	}
-	else
-	{
-		product.m_selectedHltPosition = DefaultValues::UndefinedInt;
+		else 
+		{
+			std::cout << "Trigger " << *hltPath << " could not be resolved." << std::endl;
+		}
 	}
 }
 
