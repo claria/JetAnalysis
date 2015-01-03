@@ -80,12 +80,10 @@ def get_basic_config():
     config['LumiMetadata'] = 'KLumiMetadata'
     config['EventMetadata'] = 'KEventMetadata'
     config['VertexSummary'] = 'offlinePrimaryVerticesSummary'
-    config['VertexSummary'] = 'offlinePrimaryVerticesSummary'
     config['Processors'] = [
         'filter:HCALNoiseFilter',
         'producer:JetCorrectionsProducer',
         'producer:ValidJetsProducer',
-        'filter:NJetsFilter',
         'filter:NJetsFilter',
         'filter:METSumEtFilter',
         'filter:GoodPrimaryVertexFilter',
@@ -161,9 +159,9 @@ def set_mc_specific(config, nick_info=None, nick=''):
     config['Processors'].append('producer:CrossSectionWeightProducer')
     config['Processors'].append('producer:GeneratorWeightProducer')
     config['Processors'].append('producer:NumberGeneratedEventsWeightProducer')
-    config['JetEnergyCorrectionParameters'] = ['$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L1FastJet_AK5PF.txt',
-                                               '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L2Relative_AK5PF.txt',
-                                               '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L3Absolute_AK5PF.txt'
+    config['JetEnergyCorrectionParameters'] = ['$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L1FastJet_AK7PF.txt',
+                                               '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L2Relative_AK7PF.txt',
+                                               '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L3Absolute_AK7PF.txt'
                                                ]
     config['NumberGeneratedEvents'] = nick_info.get('sample_size', -1)
     config['CrossSection'] = nick_info.get('crosssection', -1)
@@ -177,10 +175,10 @@ def set_data_specific(config, nick_info=None, nick=''):
     config['TriggerObjects'] = 'KTriggerObjects'
     config['TriggerInfos'] = 'KTriggerInfos'
     config['JetEnergyCorrectionParameters'] = [
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L1FastJet_AK7PF.txt',
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L2Relative_AK7PF.txt',
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L3Absolute_AK7PF.txt',
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L2L3Residual_AK7PF.txt'
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L1FastJet_AK7PF.txt',
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L2Relative_AK7PF.txt',
+        # '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L3Absolute_AK7PF.txt',
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L2L3Residual_AK7PF.txt'
     ]
     config['JsonFiles'] = [
         '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/json/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt'
