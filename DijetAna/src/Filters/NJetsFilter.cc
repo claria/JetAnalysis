@@ -6,9 +6,8 @@ void NJetsFilter::Init(JetSettings const& settings) {
 
 bool NJetsFilter::DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const 
 {
-	bool pass = false;
 	if (product.m_validJets.size() >= minValidJets) {
-		pass = true;
+		return true;
 	}
-	return pass;
+	return false;
 }
