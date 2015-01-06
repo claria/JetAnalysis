@@ -89,6 +89,7 @@ def get_basic_config():
         'filter:GoodPrimaryVertexFilter',
     ]
     config['Jets'] = 'AK7PFJets'
+    # config['Jets'] = 'AK7PFJets'
     config['JetArea'] = 'KT6Area'
     config['Met'] = 'PFMET'
     # No pipelines
@@ -175,10 +176,10 @@ def set_data_specific(config, nick_info=None, nick=''):
     config['TriggerObjects'] = 'KTriggerObjects'
     config['TriggerInfos'] = 'KTriggerInfos'
     config['JetEnergyCorrectionParameters'] = [
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L1FastJet_AK7PF.txt',
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L2Relative_AK7PF.txt',
-        # '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L3Absolute_AK7PF.txt',
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L2L3Residual_AK7PF.txt'
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L1FastJet_AK7PF.txt',
+        # '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L2Relative_AK7PF.txt',
+        # '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L3Absolute_AK7PF.txt',
+        # '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L2L3Residual_AK7PF.txt'
     ]
     config['JsonFiles'] = [
         '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/json/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt'
