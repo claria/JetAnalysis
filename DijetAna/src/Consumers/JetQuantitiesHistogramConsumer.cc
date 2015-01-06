@@ -4,9 +4,11 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings)
 {
 	ConsumerBase<JetTypes>::Init( settings );
 	// Jet Quantity histograms
-	m_hjet1pt = TH1F("h_jet1pt", "h_jet1pt", 100., 0., 3000.);
-	m_hjet2pt = TH1F("h_jet2pt", "h_jet2pt", 100., 0., 3000.);
-	m_hincjetpt = TH1F("h_incjetpt", "h_incjetpt", 100., 0., 3000.);
+	double incjet_binning[42] = {48, 56, 64, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000}; 
+	double jet_binning[39] = {74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000}; 
+	m_hjet1pt = TH1F("h_jet1pt", "h_jet1pt", 38, jet_binning);
+	m_hjet2pt = TH1F("h_jet2pt", "h_jet2pt", 38, jet_binning);
+	m_hincjetpt = TH1F("h_incjetpt", "h_incjetpt", 41, incjet_binning);
 }
 
 void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event,
