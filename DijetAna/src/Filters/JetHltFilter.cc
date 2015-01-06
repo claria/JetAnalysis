@@ -11,11 +11,6 @@ bool JetHltFilter::DoesEventPass(JetEvent const& event, JetProduct const& produc
 	{
 		return false;
 	}
-	else
-	{
-		std::string hltPath = product.m_hltInfo.getHLTName(product.m_selectedHltName);
-		return event.m_eventMetadata->hltFired(hltPath, event.m_lumiMetadata);;
-	}
-
+	return true;
 }
 
