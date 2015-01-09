@@ -4,7 +4,7 @@
 #include "Artus/Utility/interface/RootFileHelper.h"
 #include "JetAnalysis/DijetAna/interface/JetTypes.h"
 
-class JetQuantitiesHistogramConsumer: public ConsumerBase<JetTypes> {
+class JetQuantitiesHistogramConsumer: public JetConsumerBase {
 
 public:
 
@@ -19,8 +19,9 @@ public:
 
 private:
 
-	TH1F m_hjet1pt;
-	TH1F m_hjet2pt;
-	TH1F m_hincjetpt;
+	TH1F m_h_jet1pt;
+	TH1F m_h_jet2pt;
+	TH1F m_h_incjetpt;
+	TH2F m_h_jet12rap;
 
 };
