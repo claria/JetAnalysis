@@ -2,10 +2,10 @@
 
 import os
 import sys
-from Artus.Configuration.artusWrapper import ArtusWrapper
 import argparse
 from ConfigParser import RawConfigParser
 
+from Artus.Configuration.artusWrapper import ArtusWrapper
 
 # Change envs for artus run
 artus_dir = os.path.join(os.path.expandvars('$CMSSW_BASE'), 'src/Artus')
@@ -29,23 +29,33 @@ def main():
     config = ArtusConfig(get_basic_config().items() + [(k,v) for (k,v) in config.items() if v])
     # Define standard pipeline
     config.add_pipeline('default', pipeline=get_default_pipeline())
+
     # Add Producers etc specific to data/MC
     if nick:
         # Read config for all nicknames/datasets
         samples_config = RawConfigParser()
         samples_config.read('/afs/desy.de/user/g/gsieber/dijetana/ana/CMSSW_7_1_5/src/JetAnalysis/DijetAna/data/samples.conf')
-        if nick in samples_config.sections():
-            sample_config = dict(samples_config.items(nick))
-        else:
+        if nick not in samples_config.sections():
             raise ValueError('Nickname {0} not found in samples config.'.format(nick))
 
-        nick_info = sample_config
-        if nick_info['is_data']:
+        is_data = samples_config.getboolean(nick, 'is_data')
+
+        if is_data:
             config['InputIsData'] = 'true'
-            set_data_specific(config, nick_info, nick=nick)
+            ilumi = samples_config.getfloat(nick, 'ilumi')
+            data_stream = samples_config.get(nick, 'data_stream')
+            set_data_specific(config,
+                              nick=nick,
+                              ilumi=ilumi,
+                              data_stream=data_stream)
         else:
+            sample_size = samples_config.getint(nick, 'sample_size')
+            crosssection = samples_config.getfloat(nick, 'crosssection')
             config['InputIsData'] = 'false'
-            set_mc_specific(config, nick_info, nick=nick)
+            set_mc_specific(config,
+                            nick=nick,
+                            sample_size=sample_size,
+                            crosssection=crosssection)
 
     # Expand all environment variables in config
     config.expand_envs()
@@ -59,20 +69,19 @@ def get_basic_config():
     config['ValidJetsInput'] = 'corrected'
     config['JetID'] = 'tight'
     config['JetIDVersion'] = '2014'
+    # Valid Jet Selection
     config['MinValidJetPt'] = '50.'
-    config['MaxValidJetAbsRap'] = '2.5'
+    config['MaxValidJetAbsRap'] = '3.0'
     # Global Cuts
-    config['MinValidJets'] = '1'
+    config['MinValidJets'] = '2'
     config['MinLeadingJetPt'] = '74.'
     # Define global cuts
-    # config['MinLeadingJetPt']  = '50.'
-    # config['MaxDijetsAbsRap'] = '2.5'
     # MET
     config['MaxMETSumEtRatio'] = 0.3
     config['MaxPrimaryVertexZ'] = 24.
     config['MaxPrimaryVertexRho'] = 2.
     config['MinPrimaryVertexFitnDOF'] = 4
-    # 
+
     config['TrackSummary'] = 'generalTracksSummary'
     config['MinPurityRatio'] = 'trackSummary'
     config['HCALNoiseSummary'] = 'hcalnoise'
@@ -81,15 +90,15 @@ def get_basic_config():
     config['EventMetadata'] = 'KEventMetadata'
     config['VertexSummary'] = 'offlinePrimaryVerticesSummary'
     config['Processors'] = [
-        'filter:HCALNoiseFilter',
         'producer:JetCorrectionsProducer',
         'producer:ValidJetsProducer',
+        'filter:HCALNoiseFilter',
         'filter:NJetsFilter',
         'filter:METSumEtFilter',
+        'filter:LeadingJetPtFilter',
         'filter:GoodPrimaryVertexFilter',
     ]
     config['Jets'] = 'AK7PFJets'
-    # config['Jets'] = 'AK7PFJets'
     config['JetArea'] = 'KT6Area'
     config['Met'] = 'PFMET'
     # No pipelines
@@ -145,7 +154,7 @@ def get_default_pipeline():
     return pipeline
 
 
-def set_mc_specific(config, nick_info=None, nick=''):
+def set_mc_specific(config, nick='', sample_size=-1, crosssection=-1.):
     config['GenLumiMetadata'] = 'KLumiMetadata'
     config['GenEventMetadata'] = 'KEventMetadata'
     config['GenJets'] = 'AK7GenJets'
@@ -160,26 +169,26 @@ def set_mc_specific(config, nick_info=None, nick=''):
     config['Processors'].append('producer:CrossSectionWeightProducer')
     config['Processors'].append('producer:GeneratorWeightProducer')
     config['Processors'].append('producer:NumberGeneratedEventsWeightProducer')
-    config['JetEnergyCorrectionParameters'] = ['$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L1FastJet_AK7PF.txt',
-                                               '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L2Relative_AK7PF.txt',
-                                               '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V26_L3Absolute_AK7PF.txt'
+    config['JetEnergyCorrectionParameters'] = ['$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L1FastJet_AK7PF.txt',
+                                               '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L2Relative_AK7PF.txt',
+                                               '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L3Absolute_AK7PF.txt'
                                                ]
-    config['NumberGeneratedEvents'] = nick_info.get('sample_size', -1)
-    config['CrossSection'] = nick_info.get('crosssection', -1)
+    config['NumberGeneratedEvents'] = sample_size
+    config['CrossSection'] = crosssection
 
 
-def set_data_specific(config, nick_info=None, nick=''):
-    config['LumiMetadata'] = 'KLumiMetadata'
-    config['EventMetadata'] = 'KEventMetadata'
-    config['TriggerInfos'] = 'KTriggerInfos',
-    config['BeamSpot'] = 'offlineBeamSpot',
+def set_data_specific(config, nick='', ilumi=-1., data_stream=''):
+    config['LumiMetadata']   = 'KLumiMetadata'
+    config['EventMetadata']  = 'KEventMetadata'
+    config['TriggerInfos']   = 'KTriggerInfos',
+    config['BeamSpot']       = 'offlineBeamSpot',
     config['TriggerObjects'] = 'KTriggerObjects'
-    config['TriggerInfos'] = 'KTriggerInfos'
+    config['TriggerInfos']   = 'KTriggerInfos'
     config['JetEnergyCorrectionParameters'] = [
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L1FastJet_AK7PF.txt',
-        # '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L2Relative_AK7PF.txt',
-        # '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L3Absolute_AK7PF.txt',
-        # '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/FT53_V21A_AN6_L2L3Residual_AK7PF.txt'
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L1FastJet_AK7PF.txt',
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L2Relative_AK7PF.txt',
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L3Absolute_AK7PF.txt',
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L2L3Residual_AK7PF.txt'
     ]
     config['JsonFiles'] = [
         '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/json/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt'
@@ -188,9 +197,9 @@ def set_data_specific(config, nick_info=None, nick=''):
     # Trigger Selection
     if nick == 'Jet_2012A_MON':
         config['HltPaths'] = ['HLT_PFJET40', 'HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
-    elif nick_info['data_stream'] == 'MON':
+    elif data_stream == 'MON':
         config['HltPaths'] = ['HLT_PFJET40', 'HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260']
-    elif nick_info['data_stream'] == 'HT':
+    elif data_stream == 'HT':
         config['HltPaths'] = ['HLT_PFJET320']
     else:
         raise ValueError('No stream supplied for dataset')
@@ -207,9 +216,8 @@ def set_data_specific(config, nick_info=None, nick=''):
     config['Pipelines']['default']['TriggerEfficiencyQuantity'] = 'jet1_pt'
     # config['Pipelines']['default']['Consumers'].append('TriggerResultsHistogramConsumer')
     config.add_processor('filter:JsonFilter', idx=0)
-    config.add_processor('producer:JetHltProducer')
+    config.add_processor('producer:JetHltProducer', after='filter:NJetsFilter')
     config.add_processor('filter:JetHltFilter', after='producer:JetHltProducer')
-    # config.add_processor('filter:JetHltEfficiencyFilter', after='filter:JetHltFilter')
 
 # def walk_dic(node, func):
 #    ''' Walks a dic containing dicts, lists or str and calls func on each leaf'''
@@ -280,7 +288,6 @@ class ArtusConfig(dict):
             processor_str = '{0}'.format(processor_name)
         else:
             processor_str = '{0}:{1}'.format(processor_type, processor_name)
-        print idx, processor_str
         processor_list.insert(idx, processor_str)
 
     def expand_envs(self, node=None):

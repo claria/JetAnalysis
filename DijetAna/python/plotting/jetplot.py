@@ -11,7 +11,7 @@ import ROOT
 
 from Artus.HarryPlotter.plot_modules.plotmpl import PlotMpl
 
-from Artus.Utility.mplhisto import MplHisto, MplGraph
+from Artus.HarryPlotter.utility.mplhisto import MplHisto, MplGraph
 
 import matplotlib
 import matplotlib.pyplot as plt
