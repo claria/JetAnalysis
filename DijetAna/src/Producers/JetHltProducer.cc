@@ -36,15 +36,15 @@ void JetHltProducer::Produce(KappaEvent const &event, KappaProduct &product,
 	auto const &jetSettings = static_cast<JetSettings const &>(settings);
 
 	LOG(DEBUG) << "Process: "
-	           << "run = " << event.m_eventMetadata->nRun << ", "
-	           << "lumi = " << event.m_eventMetadata->nLumi << ", "
-	           << "event = " << event.m_eventMetadata->nEvent;
+	           << "run = " << event.m_eventInfo->nRun << ", "
+	           << "lumi = " << event.m_eventInfo->nLumi << ", "
+	           << "event = " << event.m_eventInfo->nEvent;
 
-	assert(event.m_lumiMetadata);
-	assert(event.m_eventMetadata);
+	assert(event.m_lumiInfo);
+	assert(event.m_eventInfo);
 	assert(product.m_validJets.size() > 0);
 
-	product.m_hltInfo.setLumiMetadata(event.m_lumiMetadata);
+	product.m_hltInfo.setLumiInfo(event.m_lumiInfo);
 
 	double triggerEffQuantity = product.m_validJets.at(0)->p4.Pt();
 	for (std::vector<std::string>::const_iterator hltPath = jetSettings.GetHltPaths().begin();
@@ -53,7 +53,7 @@ void JetHltProducer::Produce(KappaEvent const &event, KappaProduct &product,
 		std::string hltName = product.m_hltInfo.getHLTName(*hltPath);
 		if (!hltName.empty())
 		{
-			if (event.m_eventMetadata->hltFired(hltName, event.m_lumiMetadata))
+			if (event.m_eventInfo->hltFired(hltName, event.m_lumiInfo))
 			{
 				// std::cout << "Trigger " << *hltPath << " fired." << std::endl;
 				if ((triggerEffQuantity >= triggerEffThresholds.at(*hltPath).first) &&

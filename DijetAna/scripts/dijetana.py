@@ -3,6 +3,7 @@
 import os
 import sys
 import argparse
+import copy
 from ConfigParser import RawConfigParser
 
 from Artus.Configuration.artusWrapper import ArtusWrapper
@@ -34,7 +35,7 @@ def main():
     if nick:
         # Read config for all nicknames/datasets
         samples_config = RawConfigParser()
-        samples_config.read('/afs/desy.de/user/g/gsieber/dijetana/ana/CMSSW_7_1_5/src/JetAnalysis/DijetAna/data/samples.conf')
+        samples_config.read('/afs/desy.de/user/g/gsieber/dijetana/ana/CMSSW_7_2_3/src/JetAnalysis/DijetAna/data/samples.conf')
         if nick not in samples_config.sections():
             raise ValueError('Nickname {0} not found in samples config.'.format(nick))
 
@@ -56,6 +57,15 @@ def main():
                             nick=nick,
                             sample_size=sample_size,
                             crosssection=crosssection)
+
+    jet1_bins = [(74,114), (114,196), (196,300), (300,468), (468, 790), (790, 3000)]
+
+    for bin in jet1_bins:
+        pipeline_name = '{0}_{1}'.format(*bin)
+        config['Pipelines'][pipeline_name] = copy.deepcopy(config['Pipelines']['default'])
+        config['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:LeadingJetPtFilter')
+        config['Pipelines'][pipeline_name]['MinLeadingJetPt'] = bin[0]
+        config['Pipelines'][pipeline_name]['MaxLeadingJetPt'] = bin[1]
 
     # Expand all environment variables in config
     config.expand_envs()
@@ -86,8 +96,8 @@ def get_basic_config():
     config['MinPurityRatio'] = 'trackSummary'
     config['HCALNoiseSummary'] = 'hcalnoise'
 
-    config['LumiMetadata'] = 'KLumiMetadata'
-    config['EventMetadata'] = 'KEventMetadata'
+    config['LumiMetadata'] = 'lumiInfo'
+    config['EventMetadata'] = 'eventInfo'
     config['VertexSummary'] = 'offlinePrimaryVerticesSummary'
     config['Processors'] = [
         'producer:JetCorrectionsProducer',
@@ -98,9 +108,9 @@ def get_basic_config():
         'filter:LeadingJetPtFilter',
         'filter:GoodPrimaryVertexFilter',
     ]
-    config['Jets'] = 'AK7PFJets'
-    config['JetArea'] = 'KT6Area'
-    config['Met'] = 'PFMET'
+    config['BasicJets'] = 'ak7PFJets'
+    config['PileupDensity'] = 'KT6Area'
+    config['Met'] = 'met'
     # No pipelines
     config['Pipelines'] = {}
 
@@ -120,17 +130,17 @@ def get_default_pipeline():
                               'JetQuantitiesHistogramConsumer',
                               ]
     pipeline['Quantities'] = [
-                              'run',
-                              'lumi',
-                              'event',
+                              # 'run',
+                              # 'lumi',
+                              # 'event',
                               'npv',
-                              'npu',
+                              # 'npu',
                               'weight',
                               'njets',
-                              'incjets_pt',
-                              'incjets_eta',
-                              'incjets_rap',
-                              'incjets_phi',
+                              # 'incjets_pt',
+                              # 'incjets_eta',
+                              # 'incjets_rap',
+                              # 'incjets_phi',
                               'jet1_pt',
                               'jet1_eta',
                               'jet1_rap',
@@ -139,30 +149,30 @@ def get_default_pipeline():
                               'jet2_eta',
                               'jet2_rap',
                               'jet2_phi',
-                              'dijet_mass',
-                              'dijet_ystar',
-                              'dijet_yboost',
-                              'trigweight',
-                              'puweight',
-                              'pathindex',
-                              'xsweight',
-                              'ngeneventsweight',
-                              'genweight',
-                              'met',
-                              'sumet',
+                              # 'dijet_mass',
+                              # 'dijet_ystar',
+                              # 'dijet_yboost',
+                              # 'trigweight',
+                              # 'puweight',
+                              # 'pathindex',
+                              # 'xsweight',
+                              # 'ngeneventsweight',
+                              # 'genweight',
+                              # 'met',
+                              # 'sumet',
                               ]
     return pipeline
 
 
 def set_mc_specific(config, nick='', sample_size=-1, crosssection=-1.):
-    config['GenLumiMetadata'] = 'KLumiMetadata'
-    config['GenEventMetadata'] = 'KEventMetadata'
-    config['GenJets'] = 'AK7GenJets'
-    config['Pipelines']['default']['Quantities'].append('genjet1_pt')
-    config['Pipelines']['default']['Quantities'].append('genjet1_phi')
-    config['Pipelines']['default']['Quantities'].append('genjet1_eta')
-    config['Pipelines']['default']['Quantities'].append('genjet1_rap')
-    config['Pipelines']['default']['Quantities'].append('gendijet_mass')
+    config['GenLumiMetadata'] = 'lumiInfo'
+    config['GenEventMetadata'] = 'eventInfo'
+    # config['GenJets'] = 'AK7GenJets'
+    # config['Pipelines']['default']['Quantities'].append('genjet1_pt')
+    # config['Pipelines']['default']['Quantities'].append('genjet1_phi')
+    # config['Pipelines']['default']['Quantities'].append('genjet1_eta')
+    # config['Pipelines']['default']['Quantities'].append('genjet1_rap')
+    # config['Pipelines']['default']['Quantities'].append('gendijet_mass')
     config[
         'PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup/pileup_weights_S10.root'
     config['Processors'].append('producer:PUWeightProducer')
@@ -178,12 +188,11 @@ def set_mc_specific(config, nick='', sample_size=-1, crosssection=-1.):
 
 
 def set_data_specific(config, nick='', ilumi=-1., data_stream=''):
-    config['LumiMetadata']   = 'KLumiMetadata'
-    config['EventMetadata']  = 'KEventMetadata'
-    config['TriggerInfos']   = 'KTriggerInfos',
+    config['LumiMetadata']   = 'lumiInfo'
+    config['EventMetadata']  = 'eventInfo'
     config['BeamSpot']       = 'offlineBeamSpot',
-    config['TriggerObjects'] = 'KTriggerObjects'
-    config['TriggerInfos']   = 'KTriggerInfos'
+    config['TriggerObjects'] = 'triggerObjects'
+    config['TriggerInfos']   = 'triggerObjectMetadata'
     config['JetEnergyCorrectionParameters'] = [
         '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L1FastJet_AK7PF.txt',
         '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L2Relative_AK7PF.txt',

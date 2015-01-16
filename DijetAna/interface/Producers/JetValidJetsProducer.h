@@ -14,6 +14,6 @@ private:
 	float minValidJetAbsRap;
 	float maxValidJetAbsRap;
 protected:
-	virtual bool AdditionalCriteria(KDataPFJet* jet, KappaEvent const& event, KappaProduct & product, KappaSettings const& settings) const override;
+	virtual bool AdditionalCriteria(KBasicJet* jet, KappaEvent const& event, KappaProduct & product, KappaSettings const& settings) const override;
 	virtual void Init(KappaSettings const& settings) override;
 };

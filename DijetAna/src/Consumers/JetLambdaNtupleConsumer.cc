@@ -24,7 +24,7 @@ void JetLambdaNtupleConsumer::Init(setting_type const& settings)
 	//////////////
 	LambdaNtupleConsumer<KappaTypes>::AddIntQuantity("evt", [](KappaEvent const& event, KappaProduct const& product)
 	{
-		return event.m_eventMetadata->nEvent;
+		return event.m_eventInfo->nEvent;
 	} );
 	/////////////
 	// Weights //

@@ -44,9 +44,9 @@ void TriggerResultsHistogramConsumer::ProcessFilteredEvent(event_type const& eve
 	auto const& specProduct = static_cast < JetProduct const&> (product);
 
 	LOG(DEBUG) << "Process: " <<
-	              "run = " << event.m_eventMetadata->nRun << ", " <<
-	              "lumi = " << event.m_eventMetadata->nLumi << ", " <<
-	              "event = " << event.m_eventMetadata->nEvent;
+	              "run = " << event.m_eventInfo->nRun << ", " <<
+	              "lumi = " << event.m_eventInfo->nLumi << ", " <<
+	              "event = " << event.m_eventInfo->nEvent;
 
 	// Quantity for which the histograms are filled
 	float triggerEffQuantity = specProduct.m_validJets.at(0)->p4.Pt();
@@ -61,14 +61,14 @@ void TriggerResultsHistogramConsumer::ProcessFilteredEvent(event_type const& eve
 		std::string hltName = product.m_hltInfo.getHLTName(m_hltPaths[i]);
 		size_t hltPosition = product.m_hltInfo.getHLTPosition(m_hltPaths[i]);
 		// std::cout << "Trigger " << hltName << " " << std::endl;
-		if (event.m_eventMetadata->hltFired(hltName, event.m_lumiMetadata)){
+		if (event.m_eventInfo->hltFired(hltName, event.m_lumiInfo)){
 			// std::cout << "Trigger " << hltName << " fired." << std::endl;
 			// Check if next trigger would have fired as well if it would not have been prescaled
 			int l1objIdx = -1;
 			int hltobjIdx = -1;
-			for (size_t filterIndex = event.m_triggerInfos->getMinFilterIndex(hltPosition); filterIndex < event.m_triggerInfos->getMaxFilterIndex(hltPosition); filterIndex++)
+			for (size_t filterIndex = event.m_triggerObjectMetadata->getMinFilterIndex(hltPosition); filterIndex < event.m_triggerObjectMetadata->getMaxFilterIndex(hltPosition); filterIndex++)
 			{
-				std::string filterName = event.m_triggerInfos->toFilter[filterIndex];
+				std::string filterName = event.m_triggerObjectMetadata->toFilter[filterIndex];
 				// std::cout << "Filtername " << filterIndex << " "  << filterName << std::endl;
 				if (boost::regex_search(filterName, m_patternL1Filter)) {
 					// Sorted by Pt, we just use the first one
@@ -112,9 +112,9 @@ double TriggerResultsHistogramConsumer::GetL1FilterThreshold(event_type const& e
 {
 	size_t hltPosition = product.m_hltInfo.getHLTPosition(path);
 	// std::cout << "TriggerResultsHistogramConsumer::GetL1FilterThreshold" << "hltposition" << hltPosition;
-	for (size_t filterIndex = event.m_triggerInfos->getMinFilterIndex(hltPosition); filterIndex < event.m_triggerInfos->getMaxFilterIndex(hltPosition); filterIndex++)
+	for (size_t filterIndex = event.m_triggerObjectMetadata->getMinFilterIndex(hltPosition); filterIndex < event.m_triggerObjectMetadata->getMaxFilterIndex(hltPosition); filterIndex++)
 	{
-		std::string filterName = event.m_triggerInfos->toFilter[filterIndex];
+		std::string filterName = event.m_triggerObjectMetadata->toFilter[filterIndex];
 		boost::smatch match;
 
 		if (boost::regex_search(filterName, match, m_patternL1Filter)) {
@@ -127,9 +127,9 @@ double TriggerResultsHistogramConsumer::GetL1FilterThreshold(event_type const& e
 double TriggerResultsHistogramConsumer::GetHltFilterThreshold(event_type const& event, product_type const& product, std::string path)
 {
 	size_t hltPosition = product.m_hltInfo.getHLTPosition(path);
-	for (size_t filterIndex = event.m_triggerInfos->getMinFilterIndex(hltPosition); filterIndex < event.m_triggerInfos->getMaxFilterIndex(hltPosition); filterIndex++)
+	for (size_t filterIndex = event.m_triggerObjectMetadata->getMinFilterIndex(hltPosition); filterIndex < event.m_triggerObjectMetadata->getMaxFilterIndex(hltPosition); filterIndex++)
 	{
-		std::string filterName = event.m_triggerInfos->toFilter[filterIndex];
+		std::string filterName = event.m_triggerObjectMetadata->toFilter[filterIndex];
 		// std::cout << "filtername" << filterName << std::endl;
 		boost::smatch match;
 
