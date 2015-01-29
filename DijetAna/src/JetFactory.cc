@@ -21,6 +21,7 @@
 #include "JetAnalysis/DijetAna/interface/Consumers/JetLambdaNtupleConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/TriggerResultsHistogramConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/JetQuantitiesHistogramConsumer.h"
+#include "JetAnalysis/DijetAna/interface/Consumers/JetGenQuantitiesHistogramConsumer.h"
 // #include "JetAnalysis/DijetAna/interface/Consumers/TriggerHistogramFitConsumer.h"
 
 
@@ -47,6 +48,8 @@ ConsumerBaseUntemplated * JetFactory::createConsumer ( std::string const& id )
 		return new TriggerResultsHistogramConsumer();
 	else if (JetQuantitiesHistogramConsumer().GetConsumerId() == id)
 		return new JetQuantitiesHistogramConsumer();
+	else if (JetGenQuantitiesHistogramConsumer().GetConsumerId() == id)
+		return new JetGenQuantitiesHistogramConsumer();
 	else
 		return KappaFactory::createConsumer( id );
 }
