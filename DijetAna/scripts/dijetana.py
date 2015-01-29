@@ -167,18 +167,18 @@ def get_default_pipeline():
 def set_mc_specific(config, nick='', sample_size=-1, crosssection=-1.):
     config['GenLumiMetadata'] = 'lumiInfo'
     config['GenEventMetadata'] = 'eventInfo'
-    # config['GenJets'] = 'AK7GenJets'
-    # config['Pipelines']['default']['Quantities'].append('genjet1_pt')
-    # config['Pipelines']['default']['Quantities'].append('genjet1_phi')
-    # config['Pipelines']['default']['Quantities'].append('genjet1_eta')
-    # config['Pipelines']['default']['Quantities'].append('genjet1_rap')
+    config['GenJets'] = 'ak7GenJets'
+    config['Pipelines']['default']['Quantities'].append('genjet1_pt')
+    config['Pipelines']['default']['Quantities'].append('genjet1_phi')
+    config['Pipelines']['default']['Quantities'].append('genjet1_eta')
+    config['Pipelines']['default']['Quantities'].append('genjet1_rap')
     # config['Pipelines']['default']['Quantities'].append('gendijet_mass')
-    config[
-        'PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup/pileup_weights_S10.root'
+    config['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup/pileup_weights_S10.root'
     config['Processors'].append('producer:PUWeightProducer')
     config['Processors'].append('producer:CrossSectionWeightProducer')
     config['Processors'].append('producer:GeneratorWeightProducer')
     config['Processors'].append('producer:NumberGeneratedEventsWeightProducer')
+    config['Pipelines']['default']['Consumers'].append('JetGenQuantitiesHistogramConsumer')
     config['JetEnergyCorrectionParameters'] = ['$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L1FastJet_AK7PF.txt',
                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L2Relative_AK7PF.txt',
                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L3Absolute_AK7PF.txt'
@@ -194,10 +194,10 @@ def set_data_specific(config, nick='', ilumi=-1., data_stream=''):
     config['TriggerObjects'] = 'triggerObjects'
     config['TriggerInfos']   = 'triggerObjectMetadata'
     config['JetEnergyCorrectionParameters'] = [
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L1FastJet_AK7PF.txt',
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L2Relative_AK7PF.txt',
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L3Absolute_AK7PF.txt',
-        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V5_DATA_L2L3Residual_AK7PF.txt'
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_L1FastJet_AK7PF.txt',
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_L2Relative_AK7PF.txt',
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_L3Absolute_AK7PF.txt',
+        '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_L2L3Residual_AK7PF.txt'
     ]
     config['JsonFiles'] = [
         '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/json/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt'
