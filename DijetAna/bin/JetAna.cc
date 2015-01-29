@@ -2,8 +2,6 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-#include <TFile.h>
-
 #include "Artus/Configuration/interface/ArtusConfig.h"
 #include "Artus/Configuration/interface/RootEnvironment.h"
 
