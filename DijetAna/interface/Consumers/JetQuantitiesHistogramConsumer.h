@@ -19,9 +19,9 @@ public:
 
 private:
 
-	TH1F* m_h_jet1pt = NULL;
-	TH1F* m_h_jet2pt = NULL;
-	TH1F* m_h_incjetpt = NULL;
-	TH2F* m_h_jet12rap = NULL;
+	TH1D* m_h_jet1pt = NULL;
+	TH1D* m_h_jet2pt = NULL;
+	TH1D* m_h_incjetpt = NULL;
+	TH2D* m_h_jet12rap = NULL;
 
 };

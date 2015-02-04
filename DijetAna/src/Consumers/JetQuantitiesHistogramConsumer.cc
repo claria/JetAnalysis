@@ -10,10 +10,14 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings)
 
 	RootFileHelper::SafeCd(settings.GetRootOutFile(), settings.GetRootFileFolder());
 
-	m_h_jet1pt = new TH1F("h_jet1pt", "h_jet1pt", 38, jet_binning);
-	m_h_jet2pt = new TH1F("h_jet2pt", "h_jet2pt", 38, jet_binning);
-	m_h_incjetpt = new TH1F("h_incjetpt", "h_incjetpt", 41, incjet_binning);
-	m_h_jet12rap = new TH2F("h_jet12rap", "h_jet12rap", 12, rap_binning, 12, rap_binning);
+	m_h_jet1pt = new TH1D("h_jet1pt", "h_jet1pt", 38, jet_binning);
+	m_h_jet1pt->Sumw2();
+	m_h_jet2pt = new TH1D("h_jet2pt", "h_jet2pt", 38, jet_binning);
+	m_h_jet2pt->Sumw2();
+	m_h_incjetpt = new TH1D("h_incjetpt", "h_incjetpt", 41, incjet_binning);
+	m_h_incjetpt->Sumw2();
+	m_h_jet12rap = new TH2D("h_jet12rap", "h_jet12rap", 12, rap_binning, 12, rap_binning);
+	m_h_jet12rap->Sumw2();
 }
 
 void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event,

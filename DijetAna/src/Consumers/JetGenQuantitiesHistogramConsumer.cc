@@ -8,6 +8,7 @@ void JetGenQuantitiesHistogramConsumer::Init(setting_type const& settings)
 
 	RootFileHelper::SafeCd(settings.GetRootOutFile(), settings.GetRootFileFolder());
 	m_h2GenVsRecoPt = new TH2D("h2GenVsRecoPt", "h2GenVsRecoPt", 50, 0.5, 1.5, 38, jet_binning);
+	m_h2GenVsRecoPt->Sumw2();
 }
 
 void JetGenQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product, setting_type const& settings)
