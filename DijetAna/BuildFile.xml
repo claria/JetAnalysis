@@ -2,6 +2,7 @@
 <Flags LDFLAGS="-rdynamic" />
 <Flags LDFLAGS="-Lsrc/KappaTools/lib -lKToolbox -lKRootTools" />
 <Flags LDFLAGS="-Lsrc/Kappa/lib -lKappa" />
+<Flags LDFLAGS="-Lsrc/RooUnfold/ -lRooUnfold" />
 
 <use name="root" />
 <use name="rootmath" />
