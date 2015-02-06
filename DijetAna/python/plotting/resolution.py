@@ -5,6 +5,7 @@ import Artus.Utility.logger as logger
 log = logging.getLogger(__name__)
 
 import ROOT
+from ROOT import TF1
 from array import array
 
 from Artus.HarryPlotter.analysisbase import AnalysisBase
@@ -63,6 +64,14 @@ class JetResolution(AnalysisBase):
 		yerr = array('d', sigmaerr)
 		graph = ROOT.TGraphErrors(len(x), x, y, xerr, yerr)
 
-		plotData.plotdict['nicks'].append("mygraph")
-		plotData.plotdict["root_objects"]["mygraph"] = graph
+		# Fit the graph using NCF formula
+		func = TF1("func", "sqrt(TMath::Sign(1,[0])*([0]**2/x**2) + [1]**2/x + [2]**2)",80, 3000)
+		func.SetParameters(1,1,0)
+		graph.Fit("func")
+		plotData.plotdict['nicks'].append("resolution")
+		plotData.plotdict["root_objects"]["resolution"] = graph
+		plotData.plotdict['nicks'].append("res_func")
+		plotData.plotdict["root_objects"]["res_func"] = func
+
+
 
