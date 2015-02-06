@@ -114,6 +114,10 @@ def get_basic_config():
     # No pipelines
     config['Pipelines'] = {}
 
+    #Default Level2 Pipeline
+    config.add_pipeline('epilog', level=2)
+
+
     return config
 
 def get_default_pipeline():
@@ -161,6 +165,8 @@ def get_default_pipeline():
                               # 'met',
                               # 'sumet',
                               ]
+    # Observable binning in leading jet pT
+    pipeline['ObservableBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
     return pipeline
 
 
@@ -179,12 +185,15 @@ def set_mc_specific(config, nick='', sample_size=-1, crosssection=-1.):
     config['Processors'].append('producer:GeneratorWeightProducer')
     config['Processors'].append('producer:NumberGeneratedEventsWeightProducer')
     config['Pipelines']['default']['Consumers'].append('JetGenQuantitiesHistogramConsumer')
+    config['Pipelines']['default']['Consumers'].append('JetUnfoldingResponseConsumer')
     config['JetEnergyCorrectionParameters'] = ['$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L1FastJet_AK7PF.txt',
                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L2Relative_AK7PF.txt',
                                                '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L3Absolute_AK7PF.txt'
                                                ]
     config['NumberGeneratedEvents'] = sample_size
     config['CrossSection'] = crosssection
+
+    # config['Pipelines']['epilog']['Consumers'].append('JetResolutionConsumer')
 
 
 def set_data_specific(config, nick='', ilumi=-1., data_stream=''):
