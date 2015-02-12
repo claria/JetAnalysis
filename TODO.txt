@@ -5,3 +5,6 @@ X next skim, MC -> START53_V27
 X goodvertex ndof > 4 or >= 4?
 X implement beam scraping filter
 X implement hcal noise filter
+
+
+rewrite send to batch
