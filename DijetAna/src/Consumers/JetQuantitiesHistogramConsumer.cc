@@ -4,20 +4,21 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings)
 {
 	ConsumerBase<JetTypes>::Init( settings );
 	// Jet Quantity histograms
-	double incjet_binning[42] = {48, 56, 64, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000}; 
-	double jet_binning[39] = {74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000}; 
+	double incjet_pt_binning[42] = {48, 56, 64, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000}; 
+	double pt_binning[39] = {74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000}; 
 	double rap_binning[13] = {-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0};
 
 	RootFileHelper::SafeCd(settings.GetRootOutFile(), settings.GetRootFileFolder());
 
-	m_h_jet1pt = new TH1D("h_jet1pt", "h_jet1pt", 38, jet_binning);
+	m_h_jet1pt = new TH1D("h_jet1pt", "h_jet1pt", 38, pt_binning);
 	m_h_jet1pt->Sumw2();
-	m_h_jet2pt = new TH1D("h_jet2pt", "h_jet2pt", 38, jet_binning);
+	m_h_jet2pt = new TH1D("h_jet2pt", "h_jet2pt", 38, pt_binning);
 	m_h_jet2pt->Sumw2();
-	m_h_incjetpt = new TH1D("h_incjetpt", "h_incjetpt", 41, incjet_binning);
+	m_h_incjetpt = new TH1D("h_incjetpt", "h_incjetpt", 41, incjet_pt_binning);
 	m_h_incjetpt->Sumw2();
 	m_h_jet12rap = new TH2D("h_jet12rap", "h_jet12rap", 12, rap_binning, 12, rap_binning);
 	m_h_jet12rap->Sumw2();
+	// m_h_jet12rap_all = new TH2D("hist_binning", "hist_binning", 6, pt_binning, 12, rap_binning);
 }
 
 void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event,

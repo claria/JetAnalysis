@@ -4,10 +4,10 @@ void JetUnfoldingResponseConsumer::Init(setting_type const& settings)
 {
 	ConsumerBase<JetTypes>::Init( settings );
 
-	double pt_binning[7] = {74, 114, 196, 300, 468, 790, 3000};
+	// double pt_binning[7] = {74, 114, 196, 300, 468, 790, 3000};
 	double rap_binning[13] = {-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0};
 
-	TH2D* hist_binning = new TH2D("hist_binning", "hist_binning", 6, pt_binning, 12, rap_binning);
+	TH2D* hist_binning = new TH2D("hist_binning", "hist_binning", 12, rap_binning, 12, rap_binning);
 	m_unfoldResponse = new RooUnfoldResponse(hist_binning, hist_binning, "response_matrix", "response_matrix");
 }
 
@@ -17,7 +17,7 @@ void JetUnfoldingResponseConsumer::ProcessEvent(event_type const& event, product
 
 	if (result.HasPassed()) 
 	{
-		m_unfoldResponse->Fill(product.m_validJets.at(0)->p4.Pt(),product.m_validJets.at(0)->p4.Rapidity(), event.m_genJets->at(0).p4.Pt(), event.m_genJets->at(0).p4.Rapidity(), eventWeight);
+		m_unfoldResponse->Fill(product.m_validJets.at(0)->p4.Rapidity(), product.m_validJets.at(1)->p4.Rapidity(), event.m_genJets->at(0).p4.Rapidity(), event.m_genJets->at(1).p4.Rapidity(), eventWeight);
 	}
 	// TODO Implement correctly the missed events
 	// else 
