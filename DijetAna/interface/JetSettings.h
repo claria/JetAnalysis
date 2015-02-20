@@ -44,4 +44,8 @@ public:
 	// IMPL_SETTING_STRINGLIST(HltFilterNames);
 	IMPL_SETTING_FLOATLIST(L1FilterThresholds);
 	IMPL_SETTING_FLOATLIST(HltFilterThresholds);
+	//Binnings
+	IMPL_SETTING_DOUBLELIST(RapidityBinning);
+	IMPL_SETTING_DOUBLELIST(PtBinning);
+	IMPL_SETTING_DOUBLELIST(TripleDiffPtBinning);
 };
