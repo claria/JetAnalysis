@@ -1,4 +1,5 @@
 from baseconfig import BaseConfig
+import copy
 
 class RunConfig(BaseConfig):
 
@@ -14,16 +15,16 @@ class RunConfig(BaseConfig):
                                   'JetQuantitiesHistogramConsumer',
                                   ]
         default_pipeline['Quantities'] = [
-                                  # 'run',
-                                  # 'lumi',
-                                  # 'event',
+                                  'run',
+                                  'lumi',
+                                  'event',
                                   'npv',
                                   # 'npu',
                                   'weight',
                                   'njets',
-                                  # 'incjets_pt',
+                                  'incjets_pt',
                                   # 'incjets_eta',
-                                  # 'incjets_rap',
+                                  'incjets_rap',
                                   # 'incjets_phi',
                                   'jet1_pt',
                                   'jet1_eta',
@@ -36,9 +37,9 @@ class RunConfig(BaseConfig):
                                   # 'dijet_mass',
                                   # 'dijet_ystar',
                                   # 'dijet_yboost',
-                                  # 'trigweight',
+                                  'trigweight',
                                   # 'puweight',
-                                  # 'pathindex',
+                                  'pathindex',
                                   # 'xsweight',
                                   # 'ngeneventsweight',
                                   # 'genweight',
