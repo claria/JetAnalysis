@@ -1,6 +1,7 @@
 #include <TH1.h>
 #include <TF1.h>
 #include "TROOT.h"
+#include "TMinuit.h"
 
 #include "Artus/Core/interface/Cpp11Support.h"
 #include "Artus/Utility/interface/RootFileHelper.h"
@@ -33,7 +34,7 @@ void JetResolutionConsumer::Process(setting_type const& settings)
 	{
 		size_t nObsBins = (*histo)->GetNbinsY();
 		std::cout << nObsBins << std::endl;
-		graph_resolution = new TGraphErrors(nObsBins);
+		// graph_resolution = new TGraphErrors(nObsBins);
 		for (size_t i=1; i<nObsBins; ++i) {
 			double obsbin_center = (*histo)->GetYaxis()->GetBinCenter(i);
 			std::cout << "Obs bin " << i << std::endl;
@@ -41,15 +42,16 @@ void JetResolutionConsumer::Process(setting_type const& settings)
 
 			TH1D* proj = (*histo)->ProjectionX("test", i, i);
 			proj->Fit("gaus");
-			TF1* gaussFunction = proj->GetFunction("gaus");
-			// double mu = gaussFunction->GetParameter(0);
-			std::cout << "Parameter 0 is " << gaussFunction->GetParameter(0) << std::endl;
-			std::cout << "Parameter 1 is " << gaussFunction->GetParameter(1) << std::endl;
-			std::cout << "Parameter 2 is " << gaussFunction->GetParameter(2) << std::endl;
-			double sigma = gaussFunction->GetParameter(2);
-			// double sigma_err = gaussFunction->GetParError(1);
-			graph_resolution->SetPoint(i, obsbin_center, sigma);
-			graph_resolution->SetPointError(i,(*histo)->GetYaxis()->GetBinWidth(i), gaussFunction->GetParError(1));
+			int status = gMinuit->GetStatus();
+			if (status == 0) {
+				std::cout << status << std::endl;
+				TF1* gaussFunction = proj->GetFunction("gaus");
+				// double mu = gaussFunction->GetParameter(0);
+				double sigma = gaussFunction->GetParameter(2);
+				// double sigma_err = gaussFunction->GetParError(1);
+				graph_resolution->SetPoint(i, obsbin_center, sigma);
+				graph_resolution->SetPointError(i,(*histo)->GetYaxis()->GetBinWidth(i), gaussFunction->GetParError(1));
+			}
 		}
 	}
 
