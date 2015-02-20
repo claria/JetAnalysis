@@ -27,12 +27,12 @@ class BaseConfig(dict):
                 self['InputIsData'] = 'true'
                 ilumi = samples_config.getfloat(nick, 'ilumi')
                 data_stream = samples_config.get(nick, 'data_stream')
-                self.add_data_settings(config, ilumi=ilumi, data_stream=data_stream)
+                self.add_data_settings(ilumi=ilumi, data_stream=data_stream)
             else:
                 self['InputIsData'] = 'false'
                 sample_size = samples_config.getint(nick, 'sample_size')
                 crosssection = samples_config.getfloat(nick, 'crosssection')
-                self.add_mc_settings(config, sample_size=sample_size, crosssection=crosssection)
+                self.add_mc_settings(sample_size=sample_size, crosssection=crosssection)
         else:
             self['nick'] = 'None'
 
@@ -79,6 +79,7 @@ class BaseConfig(dict):
         self['MinPurityRatio'] = 'trackSummary'
         self['HCALNoiseSummary'] = 'hcalnoise'
 
+
         self['LumiMetadata'] = 'lumiInfo'
         self['EventMetadata'] = 'eventInfo'
         self['VertexSummary'] = 'offlinePrimaryVerticesSummary'
@@ -116,8 +117,13 @@ class BaseConfig(dict):
         pipeline['Quantities'] = []
         # Observable binning in leading jet pT
         pipeline['ObservableBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
+        # Binnings
+        pipeline['RapidityBinning'] = [-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+        pipeline['PtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
+        pipeline['TripleDiffPtBinning'] = [74, 114, 196, 300, 468, 790, 3000]
 
-    def add_mc_settings(self, nick='', sample_size=-1, crosssection=-1.):
+
+    def add_mc_settings(self, sample_size=-1, crosssection=-1.):
         self['GenLumiMetadata'] = 'lumiInfo'
         self['GenEventMetadata'] = 'eventInfo'
         self['GenJets'] = 'ak7GenJets'
@@ -137,7 +143,7 @@ class BaseConfig(dict):
         # self['Pipelines']['epilog']['Consumers'].append('JetResolutionConsumer')
 
 
-    def add_data_settings(self, nick='', ilumi=-1., data_stream=''):
+    def add_data_settings(self, ilumi=-1., data_stream=''):
         self['LumiMetadata']   = 'lumiInfo'
         self['EventMetadata']  = 'eventInfo'
         self['BeamSpot']       = 'offlineBeamSpot',
@@ -154,7 +160,8 @@ class BaseConfig(dict):
         ]
 
         # Trigger Selection
-        if nick == 'Jet_2012A_MON':
+        print "Running on nick", self['nick']
+        if self['nick'] == 'Jet_2012A_MON':
             self['HltPaths'] = ['HLT_PFJET40', 'HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
         elif data_stream == 'MON':
             self['HltPaths'] = ['HLT_PFJET40', 'HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260']
@@ -165,7 +172,7 @@ class BaseConfig(dict):
 
         # Thresholds when a path gets efficient, need to be ordered increasingly
         self['TriggerEffPaths'] = ['HLT_PFJET40', 'HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
-        self['TriggerEffThresholds'] = [74., 133., 220., 300., 395., 507., 9999999.]
+        self['TriggerEffThresholds'] = [74., 133., 220., 300., 395., 507., 2500.]
 
         self['HltPathsBlacklist'] = []
         self['Pipelines']['default']['L1FilterThresholds'] = [16., 36., 68., 92., 128., 128.]
