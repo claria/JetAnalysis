@@ -12,11 +12,12 @@ public:
 	}
 
 	virtual void Init(setting_type const& settings) ARTUS_CPP11_OVERRIDE;
-	virtual void Process(setting_type const& settings) ARTUS_CPP11_OVERRIDE;
+	// virtual void Process(setting_type const& settings) ARTUS_CPP11_OVERRIDE;
+	virtual void ProcessFilteredEvent(event_type const& event, product_type const& product, setting_type const& settings) override;
+
 	virtual void Finish(setting_type const& settings) ARTUS_CPP11_OVERRIDE;
 
 protected:
-	std::vector<std::string> m_pipelineNames;
-	std::vector<TH2D*> m_h2GenVsRecoPt;
+	TH2D* m_hGenVsRecoPt = NULL;
 	TGraphErrors * graph_resolution = NULL;
 };
