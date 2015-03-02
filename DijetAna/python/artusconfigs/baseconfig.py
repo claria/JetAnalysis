@@ -129,6 +129,7 @@ class BaseConfig(dict):
         self['GenJets'] = 'ak7GenJets'
        # self['Pipelines']['default']['Quantities'].append('gendijet_mass')
         self['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup/pileup_weights_S10.root'
+        self['Processors'].append('producer:GenJetMatchingProducer')
         self['Processors'].append('producer:PUWeightProducer')
         self['Processors'].append('producer:CrossSectionWeightProducer')
         self['Processors'].append('producer:GeneratorWeightProducer')
@@ -155,6 +156,10 @@ class BaseConfig(dict):
             '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_L3Absolute_AK7PF.txt',
             '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_L2L3Residual_AK7PF.txt'
         ]
+        self['JetEnergyCorrectionUncertaintyParameters'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_UncertaintySources_AK7PF.txt'
+        self['JetEnergyCorrectionUncertaintySource'] = 'Total'
+        self['JetEnergyCorrectionUncertaintyShift'] = 0.0
+
         self['JsonFiles'] = [
             '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/json/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt'
         ]
