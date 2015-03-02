@@ -2,6 +2,7 @@
 
 // Producers
 #include "JetAnalysis/DijetAna/interface/Producers/JetQuantities.h"
+#include "JetAnalysis/DijetAna/interface/Producers/GenJetMatchingProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/JetHltProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/JetValidJetsProducer.h"
 
@@ -36,6 +37,8 @@ ProducerBaseUntemplated * JetFactory::createProducer ( std::string const& id )
 		return new JetQuantities();
 	else if (JetHltProducer().GetProducerId() == id)
 		return new JetHltProducer();
+	else if (GenJetMatchingProducer().GetProducerId() == id)
+		return new GenJetMatchingProducer();
 	else if (JetValidJetsProducer().GetProducerId() == id)
 		return new JetValidJetsProducer();
 	else
