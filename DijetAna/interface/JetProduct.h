@@ -8,6 +8,7 @@ public:
 
 	// std::map<std::string, bool> m_HltTrigger;
 	// std::map<std::string, double> m_weights;
+	std::vector<KLV*> m_matchedGenJets;
 
 	std::vector<double> m_incJetsPt;
 	std::vector<double> m_incJetsEta;
