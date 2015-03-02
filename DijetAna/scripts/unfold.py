@@ -1,5 +1,7 @@
 #! /usr/bin/env python2
 
+import os
+import sys
 import argparse
 
 import ROOT
@@ -30,13 +32,43 @@ def main():
     # response = responsefile.Get('default/response_matrix')
 
     unfold = ROOT.RooUnfoldBayes(response, hist, 4)
+    print unfold.NToys()
+    unfold.SetNToys(1000)
+    print unfold.NToys()
+    unfold.RunToy()
     hReco = unfold.Hreco()
+    hRecoCov = unfold.Ereco(3)
 
-    outputfile = TFile('unfolded.root', 'RECREATE')
-    outputfile.mkdir('default')
-    outputfile.cd('default')
+    hRecoCorr = hRecoCov.Clone('hrecocorr')
+    print type(hRecoCorr)
+    print dir(hRecoCorr)
+    print hRecoCorr.GetNrows()
+
+    for i in range(0, hRecoCorr.GetNrows()):
+        for j in range(i,hRecoCorr.GetNrows()):
+            tmp = (hRecoCov[i][i]*hRecoCov[j][j])
+            if tmp <= 0.:
+                hRecoCorr[i][j] = 0.
+            else:
+                hRecoCorr[i][j] = (hRecoCov[i][j] / (hRecoCov[i][i]*hRecoCov[j][j]))
+                if hRecoCorr[i][j] > 1.:
+                    print i, j, hRecoCorr[i][j]
+                hRecoCorr[i][j] = 0.0
+            hRecoCorr[j][i] = hRecoCorr[i][j]
+
+    # for i in range 
+
+    # outputfile = TFile('unfolded.root', 'RECREATE')
+    datafile.cd('/')
+    if datafile.GetDirectory('unf_default') != None:
+        datafile.Delete('unf_default;*')
+
+    datafile.mkdir('unf_default')
+    datafile.cd('unf_default')
     # datafile.cd()
     hReco.Write('unf_hjet12rap')
+    hRecoCov.Write('unf_hjet12rap_cov')
+    hRecoCorr.Write('unf_hjet12rap_corr')
 
 
 if __name__ == '__main__':
