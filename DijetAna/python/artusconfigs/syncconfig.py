@@ -13,7 +13,7 @@ class SyncConfig(RunConfig):
         self['MaxValidJetAbsRap'] = '2.5'
         # self['Processors'].insert(0,'filter:RunLumiEventFilter')
         # self['RunWhitelist'] = [190705]
-        # self['LumiWhitelist'] = [7]
+        # self['LumiWhitelist'] = [8]
 
     def expand_pipelines(self):
         pass
