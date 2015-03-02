@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 from matplotlib.ticker import MultipleLocator, FixedLocator
+from matplotlib.colors import LogNorm
 import numpy as np
 
 
@@ -54,10 +55,13 @@ def main():
             histos_sliced.append(xyslice)
 
         # histos_sliced = [histo.ProjectionZ("slice_{0}".format(i), i, i) for histo in histos]
-        plotproducer = TripleDiffRatioPlot(histos_sliced, output_fn='tdratio_{0}'.format(i))
+        plotproducer = TripleDiffRatioPlot(histos_sliced, output_fn='plots/tdratio_{0}'.format(i))
         plotproducer.do_plot()
-        tddistplot = TripleDiff3DPlot(histos_sliced[0], output_fn='td3dplot_{0}'.format(i))
+        tddistplot = TripleDiffHeatMapPlot(histos_sliced[0], output_fn='plots/tdhmplot_{0}'.format(i))
         tddistplot.do_plot()
+
+        # tddistplot = TripleDiff3DPlot(histos_sliced[0], output_fn='td3dplot_{0}'.format(i))
+        # tddistplot.do_plot()
 
 
 
@@ -104,6 +108,39 @@ class TripleDiff3DPlot(BasePlot):
         plt.close(self.fig)
         pass
 
+class TripleDiffHeatMapPlot(BasePlot):
+
+    def __init__(self, histo, *args, **kwargs):
+        super(TripleDiffHeatMapPlot, self).__init__(*args, **kwargs)
+
+        self.histo = histo
+
+    def prepare(self):
+        pass
+
+    def produce(self):
+
+        ax = self.fig.add_subplot(111)
+        hist = MplHisto(self.histo)
+        cmap = plt.cm.get_cmap('jet')
+        cmap.set_bad('black', alpha=None)
+        Z = np.ma.masked_array(hist.bincontents)
+        Z[Z <=0] = np.ma.masked
+        artist = ax.pcolormesh(hist.xbinedges, hist.ybinedges, Z,
+                               cmap=cmap,
+                               norm =LogNorm(vmin=Z.min(), vmax=Z.max()))
+
+        cbar = self.fig.colorbar(artist)
+        cbar.set_label('Events')
+
+        ax.set_xlabel('Leading jet rapidity')
+        ax.set_ylabel('Second jet rapidity')
+
+
+    def finalize(self):
+        self._save_fig()
+        plt.close(self.fig)
+        pass
 
 
 class TripleDiffRatioPlot(BasePlot):
@@ -125,9 +162,11 @@ class TripleDiffRatioPlot(BasePlot):
 
 
     def produce(self):
-        labels = ['Data', 'P8', 'QCDMGP6']
+
+        self.fig.text(x=-0.3, y=0.5, s='Ratio to Data', rotation='vertical', va='center')
+        labels = ['Data', 'QCDMGP6' 'P8']
         for i in range(1,self.nbins + 1):
-            ax = self.fig.add_subplot(12,1,i)
+            ax = self.fig.add_subplot(12,1,12+1-i)
             ax.axhline(y=1.0, color='black', lw=1.0, zorder=0)
             ax.spines['top'].set_visible(False)
             ax.spines['bottom'].set_visible(False)
@@ -137,7 +176,6 @@ class TripleDiffRatioPlot(BasePlot):
             ref_histo = None
             if (i==self.nbins +1):
                 ax.set_xlabel('Jet 1 Rapidity')
-            ax.set_ylabel(i)
             for j, histo in enumerate(self.histos):
                 hist_slice = histo.ProjectionY("slice_{0}".format(i),i,i)
                 if j==0:
@@ -147,17 +185,19 @@ class TripleDiffRatioPlot(BasePlot):
                 hist = MplHisto(hist_slice)
                 plot_errorbar(hist, label=labels[j])
 
+            ax.set_ylabel("${0} \leq y_2 < {1}$".format(histo.GetYaxis().GetBinLowEdge(i), histo.GetYaxis().GetBinLowEdge(i+1)),
+                          rotation='horizontal')
             ax.set_ylim(0.51, 1.49)
             ax.yaxis.set_major_locator(self.yaxis_major_locator)
             ax.xaxis.set_visible(False)
 
-            if i==1:
-                ax.legend(bbox_to_anchor=(1.02, 1.0), loc='upper left', borderaxespad=0.)
             if i==12:
+                ax.legend(bbox_to_anchor=(1.02, 1.0), loc='upper left', borderaxespad=0.)
+            if i==1:
                 ax.xaxis.set_visible(True)
-                ax.set_xlabel("Leading jet rapidity")
+                ax.set_xlabel("Leading jet rapidity $y_1$")
 
-        plt.subplots_adjust(hspace=.100)
+        plt.subplots_adjust(hspace=.200)
 
 
     def finalize(self):
