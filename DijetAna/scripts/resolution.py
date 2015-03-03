@@ -10,6 +10,7 @@ ROOT.gROOT.SetBatch(True)
 # import matplotlib.pyplot as plt
 
 import numpy as np
+import time
 
 def main():
 
@@ -22,6 +23,13 @@ def main():
 
     rap_bins = ['00_05','05_10','10_15','15_20','20_25','25_30']
 
+    rootfile = ROOT.TFile("res_results.root", "RECREATE")
+    rootfile.cd('/')
+    if rootfile.GetDirectory('res') != None:
+        rootfile.Delete('res;*')
+    rootfile.mkdir('res')
+    rootfile.cd('res')
+
     for rap_bin in rap_bins:
         histo = get_root_object(args['input_file'], '{0}/h2GenVsRecoPt'.format(rap_bin))
         n_ptbins = histo.GetNbinsY()
@@ -31,35 +39,25 @@ def main():
         print n_ptbins
 
         graph = ROOT.TGraphErrors(n_ptbins)
+        # ROOT.SetOwnership(graph, 0)
 
-        pt_bins = []
-        pt_bins_err = []
-
-        pt_res = []
-        pt_res_err = []
         for i in range(1, n_ptbins + 1):
             hslice = histo.ProjectionX("ptslice_{0}".format(i),i,i)
-            hslice.Fit("gaus")
-            fcn = hslice.GetFunction("gaus")
-
-            if (fcn != None):
+            res = hslice.Fit("gaus", "S")
+            print res != None
+            if res.Get() != None:
+                fcn = hslice.GetFunction("gaus")
                 graph.SetPoint(i, histo.GetYaxis().GetBinCenter(i), fcn.GetParameter(2))
                 graph.SetPointError(i, histo.GetYaxis().GetBinWidth(i), fcn.GetParError(2))
-                # pt_bins.append(histo.GetYaxis().GetBinCenter(i))
-                # pt_bins_err.append(histo.GetYaxis().GetBinWidth(i))
-                # pt_res.append(fcn.GetParameter(2))
-                # pt_res_err.append(fcn.GetParError(2))
-
-        graph.Draw()
 
         res_fcn = ROOT.TF1("res_fcn", "sqrt(([0]/x)**2+(([1]**2)/x)+[2]**2)")
         graph.Fit("res_fcn")
-        graph.DrawClone()
 
-        # print pt_bins
-        # print pt_bins_err
-        # print pt_res
-        # print pt_res_err
+        print "Save to " ,"{0}_resgraph".format(rap_bin)
+        rootfile.cd()
+        graph.SetName("{0}_resgraph".format(rap_bin))
+        graph.Write()
+
 
 
 
