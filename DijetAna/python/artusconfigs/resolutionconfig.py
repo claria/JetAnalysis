@@ -22,7 +22,7 @@ class ResolutionConfig(BaseConfig):
         pass
         rap_bins = [(0.0,0.5),(0.5,1.0),(1.0,1.5),(1.5,2.0),(2.0,2.5),(2.5,3.0)]
         for bin in rap_bins:
-            pipeline_name = '{0}_{1}'.format(*bin).replace('.','_')
+            pipeline_name = '{0}_{1}'.format(*bin).replace('.','')
             self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
             self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:LeadingJetRapFilter')
             self['Pipelines'][pipeline_name]['MinLeadingJetAbsRap'] = bin[0]
