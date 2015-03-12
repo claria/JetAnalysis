@@ -13,13 +13,17 @@ void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct & product
 	for (std::vector<KBasicJet*>::iterator validJet = product.m_validJets.begin();
 			validJet != product.m_validJets.end(); ++validJet)
 	{
-		double deltaR = 999.;
+		double minDeltaR = 999.;
 		product.m_matchedGenJets[validJet - product.m_validJets.begin()] = NULL;
 		for (std::vector<KLV>::iterator genJet = event.m_genJets->begin();
 				genJet != event.m_genJets->end(); ++genJet) {
-			if (ROOT::Math::VectorUtil::DeltaR((*validJet)->p4, genJet->p4) < deltaR) {
-				deltaR = ROOT::Math::VectorUtil::DeltaR((*validJet)->p4, genJet->p4);
-				product.m_matchedGenJets[validJet - product.m_validJets.begin()] = &(*genJet);
+			double deltaR = ROOT::Math::VectorUtil::DeltaR((*validJet)->p4, genJet->p4);
+			// TODO: Make deltaR configurable
+			if (deltaR < 0.3) {
+				if (deltaR < minDeltaR) {
+					minDeltaR = deltaR;
+					product.m_matchedGenJets[validJet - product.m_validJets.begin()] = &(*genJet);
+				}
 			}
 		}
 	}
