@@ -84,7 +84,8 @@ class BasePlot(object):
         matplotlib.rcParams['font.size'] = 20.
         matplotlib.rcParams['legend.fontsize'] = 14.
         matplotlib.rcParams['text.usetex'] = True
-        matplotlib.rc('text.latex', preamble=r'\usepackage{helvet},\usepackage{sfmath}')
+        # matplotlib.rc('text.latex', preamble=r'\usepackage{helvet},\usepackage{sfmath}')
+        matplotlib.rc('text.latex', preamble=r'\usepackage{helvet}')
         # Axes
         matplotlib.rcParams['axes.linewidth'] = 2
         matplotlib.rcParams['axes.labelsize'] = 20
