@@ -58,6 +58,13 @@ class BaseConfig(dict):
         self['OutputPath'] = 'output.root'
         self['Pipelines'] = {}
 
+        # Observable binning in leading jet pT
+        self['ObservableBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
+        # Binnings
+        self['RapidityBinning'] = [-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+        self['PtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
+        self['TripleDiffPtBinning'] = [74, 114, 196, 300, 468, 790, 3000]
+
         # Valid Jet Selection
         self['ValidJetsInput'] = 'corrected'
         self['JetID'] = 'tight'
@@ -115,13 +122,6 @@ class BaseConfig(dict):
                                   ]
         pipeline['Consumers'] =  []
         pipeline['Quantities'] = []
-        # Observable binning in leading jet pT
-        pipeline['ObservableBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
-        # Binnings
-        pipeline['RapidityBinning'] = [-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
-        pipeline['PtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
-        pipeline['TripleDiffPtBinning'] = [74, 114, 196, 300, 468, 790, 3000]
-
 
     def add_mc_settings(self, sample_size=-1, crosssection=-1.):
         self['GenLumiMetadata'] = 'lumiInfo'
