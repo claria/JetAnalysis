@@ -23,7 +23,7 @@
 #include "JetAnalysis/DijetAna/interface/Consumers/JetResolutionConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/TriggerResultsHistogramConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/JetQuantitiesHistogramConsumer.h"
-#include "JetAnalysis/DijetAna/interface/Consumers/JetGenQuantitiesHistogramConsumer.h"
+#include "JetAnalysis/DijetAna/interface/Consumers/GenJetQuantitiesHistogramConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/JetUnfoldingResponseConsumer.h"
 // #include "JetAnalysis/DijetAna/interface/Consumers/TriggerHistogramFitConsumer.h"
 
@@ -55,8 +55,8 @@ ConsumerBaseUntemplated * JetFactory::createConsumer ( std::string const& id )
 		return new JetQuantitiesHistogramConsumer();
 	else if (JetResolutionConsumer().GetConsumerId() == id)
 		return new JetResolutionConsumer();
-	else if (JetGenQuantitiesHistogramConsumer().GetConsumerId() == id)
-		return new JetGenQuantitiesHistogramConsumer();
+	else if (GenJetQuantitiesHistogramConsumer().GetConsumerId() == id)
+		return new GenJetQuantitiesHistogramConsumer();
 	else if (JetUnfoldingResponseConsumer().GetConsumerId() == id)
 		return new JetUnfoldingResponseConsumer();
 	else
