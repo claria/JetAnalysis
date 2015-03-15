@@ -50,19 +50,20 @@ class RunConfig(BaseConfig):
         if self.is_data is True:
             pass
         elif self.is_data is False:
-            default_pipeline['Consumers'].append('JetGenQuantitiesHistogramConsumer')
+            default_pipeline['Consumers'].append('GenJetQuantitiesHistogramConsumer')
             default_pipeline['Quantities'].append('genjet1_pt')
             default_pipeline['Quantities'].append('genjet1_phi')
             default_pipeline['Quantities'].append('genjet1_eta')
             default_pipeline['Quantities'].append('genjet1_rap')
  
     def expand_pipelines(self):
-        jet1_bins = [(74,114), (114,196), (196,300), (300,468), (468, 790), (790, 3000)]
-
-        for bin in jet1_bins:
-            pipeline_name = '{0}_{1}'.format(*bin)
-            self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
-            self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:LeadingJetPtFilter')
-            self['Pipelines'][pipeline_name]['MinLeadingJetPt'] = bin[0]
-            self['Pipelines'][pipeline_name]['MaxLeadingJetPt'] = bin[1]
-
+        pass
+#         jet1_bins = [(74,114), (114,196), (196,300), (300,468), (468, 790), (790, 3000)]
+#
+#         for bin in jet1_bins:
+#             pipeline_name = '{0}_{1}'.format(*bin)
+#             self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
+#             self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:LeadingJetPtFilter')
+#             self['Pipelines'][pipeline_name]['MinLeadingJetPt'] = bin[0]
+#             self['Pipelines'][pipeline_name]['MaxLeadingJetPt'] = bin[1]
+#
