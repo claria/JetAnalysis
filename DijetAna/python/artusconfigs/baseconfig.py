@@ -64,6 +64,7 @@ class BaseConfig(dict):
         self['RapidityBinning'] = [-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
         self['PtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         self['TripleDiffPtBinning'] = [74, 114, 196, 300, 468, 790, 3000]
+        self['TripleDiffGenPtBinning'] = [74, 114, 196, 300, 468, 790, 3000]
 
         # Valid Jet Selection
         self['ValidJetsInput'] = 'corrected'
@@ -75,6 +76,8 @@ class BaseConfig(dict):
         # Global Cuts
         self['MinValidJets'] = '2'
         self['MinLeadingJetPt'] = '74.'
+        # Gen Jet Matching
+        self['MaxDeltaR'] = 0.3
         # Define global cuts
         # MET
         self['MaxMETSumEtRatio'] = 0.3
@@ -96,7 +99,7 @@ class BaseConfig(dict):
             'filter:HCALNoiseFilter',
             'filter:NJetsFilter',
             'filter:METSumEtFilter',
-            'filter:LeadingJetPtFilter',
+            # 'filter:LeadingJetPtFilter',
             'filter:GoodPrimaryVertexFilter',
         ]
         self['BasicJets'] = 'ak7PFJets'
@@ -135,9 +138,9 @@ class BaseConfig(dict):
         self['Processors'].append('producer:GeneratorWeightProducer')
         self['Processors'].append('producer:NumberGeneratedEventsWeightProducer')
         self['JetEnergyCorrectionParameters'] = ['$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L1FastJet_AK7PF.txt',
-                                                   '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L2Relative_AK7PF.txt',
-                                                   '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L3Absolute_AK7PF.txt'
-                                                   ]
+                                                 '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L2Relative_AK7PF.txt',
+                                                 '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L3Absolute_AK7PF.txt'
+                                                ]
         self['NumberGeneratedEvents'] = sample_size
         self['CrossSection'] = crosssection
 
