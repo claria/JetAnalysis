@@ -21,7 +21,15 @@ public:
 private:
 
 	// Gen vs. reco pt for each pt bin
-	TH2D* m_h2GenVsRecoPt = NULL;
-
+	TH1D* m_h_genjet1pt = NULL;
+	TH1D* m_h_genjet1rap = NULL;
+	TH1D* m_h_genjet1phi = NULL;
+	TH1D* m_h_genjet2pt = NULL;
+	TH1D* m_h_genjet2rap = NULL;
+	TH1D* m_h_genjet2phi = NULL;
+	TH1D* m_h_incgenjetpt = NULL;
+	TH2D* m_h_genjet12rap = NULL;
 	TH3D* m_h3_genjet12rap = NULL;
+
+	TH2D* m_h2GenVsRecoPt = NULL;
 };
