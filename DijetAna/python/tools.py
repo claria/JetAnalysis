@@ -3,12 +3,16 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 ROOT.gROOT.SetBatch(True)
 
 
-def get_root_object(filename, objectpath, option="READ"):
+def get_root_object(filename, object_path='', option="READ"):
+
+    if ':' in filename and not object_path:
+        filename, object_path = filename.split(':')
+
     rootfile = get_root_file(filename, option=option)
-    obj = rootfile.Get(objectpath)
+    obj = rootfile.Get(object_path)
     ROOT.SetOwnership(obj, 0)
     if obj == None:
-        raise Exception("Requested object {0} not found in rootfile {1}.".format(objectpath, filename))
+        raise Exception("Requested object {0} not found in rootfile {1}.".format(object_path, filename))
     return obj
 
 
