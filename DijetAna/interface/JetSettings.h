@@ -49,6 +49,7 @@ public:
 	//Binnings
 	IMPL_SETTING_DOUBLELIST(RapidityBinning);
 	IMPL_SETTING_DOUBLELIST(PtBinning);
+	IMPL_SETTING_DOUBLELIST(GenPtBinning);
 	IMPL_SETTING_DOUBLELIST(TripleDiffPtBinning);
 	IMPL_SETTING_DOUBLELIST(TripleDiffGenPtBinning);
 };
