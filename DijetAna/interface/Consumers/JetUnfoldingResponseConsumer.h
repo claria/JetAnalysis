@@ -21,5 +21,6 @@ public:
 
 private:
 	RooUnfoldResponse* m_unfoldResponse = NULL;
+	RooUnfoldResponse* m_unfoldResponseLeadJetPt = NULL;
 
 };
