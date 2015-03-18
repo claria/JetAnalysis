@@ -8,9 +8,15 @@ class RunConfig(BaseConfig):
 
 
     def modify_settings(self):
+
+        # Same leading jet Pt cut in MC as induced by first HLT path
+        if self.is_data is False:
+            self['Processors'].append('filter:LeadingJetPtFilter')
+            self['MinLeadingJetPt'] = '74.'
+
         default_pipeline = self.get_default_pipeline()
         default_pipeline['Consumers'] =  [
-                                  # 'KappaLambdaNtupleConsumer',
+                                  'KappaLambdaNtupleConsumer',
                                   'cutflow_histogram',
                                   'JetQuantitiesHistogramConsumer',
                                   ]
@@ -38,11 +44,11 @@ class RunConfig(BaseConfig):
                                   # 'dijet_ystar',
                                   # 'dijet_yboost',
                                   'trigweight',
-                                  # 'puweight',
+                                  'puweight',
                                   'pathindex',
-                                  # 'xsweight',
-                                  # 'ngeneventsweight',
-                                  # 'genweight',
+                                  'xsweight',
+                                  'ngeneventsweight',
+                                  'genweight',
                                   # 'met',
                                   # 'sumet',
                                   ]
