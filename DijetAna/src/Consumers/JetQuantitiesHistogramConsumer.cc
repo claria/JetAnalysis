@@ -41,15 +41,20 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings)
 	                                                       settings.GetRapidityBinning().size()-1, &settings.GetRapidityBinning()[0],
 	                                                       settings.GetTripleDiffPtBinning().size()-1, &settings.GetTripleDiffPtBinning()[0]);
 	m_h3_jet12rap->Sumw2();
+
+	m_h_neutralHadronFraction = new TH1D("h_neutralHadronFraction","h_neutralHadronFraction", 50, 0., 2.);
+	m_h_chargedHadronFraction = new TH1D("h_chargedHadronFraction","h_chargedHadronFraction", 50, 0., 1.);
+	m_h_photonFraction = new TH1D("h_photonFraction","h_photonFraction", 50, 0., 2.);
+	m_h_electronFraction = new TH1D("h_electronFraction","h_electronFraction", 50, 0., 1.);
+	m_h_muonFraction = new TH1D("h_muonFraction","h_muonFraction", 50, 0., 1.);
+	m_h_hfHadronFraction = new TH1D("h_hfHadronFraction","h_hfHadronFraction", 50, 0., 1.);
+	m_h_hfEMFraction = new TH1D("h_hfEMFraction","h_hfEMFraction", 50, 0., 1.);
+	m_h_nConstituents = new TH1D("h_nConstituents","h_nConstituents", 250, -0.5, 249.5);
+	m_h_nCharged = new TH1D("h_nCharged","h_nCharged", 250, -0.5, 249.5);
 }
 
-void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event,
-		product_type const& product,
-		setting_type const& settings)
+void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product, setting_type const& settings)
 {
-	// auto const& jetEvent = static_cast < JetEvent const&> (event);
-	// auto const& jetProduct = static_cast < JetProduct const&> (product);
-
 	double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
 
 	// 1+ jet quantities
@@ -70,6 +75,16 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
 	}
 	for ( auto jet = product.m_validJets.begin(); jet != product.m_validJets.end(); jet++ ) {
 		m_h_incjetpt->Fill((*jet)->p4.Pt(), eventWeight);
+
+		m_h_neutralHadronFraction->Fill( (*jet)->neutralHadronFraction + (*jet)->hfHadronFraction, eventWeight);
+		m_h_chargedHadronFraction->Fill( (*jet)->chargedHadronFraction, eventWeight);
+		m_h_photonFraction->Fill( (*jet)->photonFraction + (*jet)->hfEMFraction, eventWeight);
+		m_h_electronFraction->Fill((*jet)->electronFraction, eventWeight);
+		m_h_hfHadronFraction->Fill((*jet)->hfHadronFraction, eventWeight);
+		m_h_hfEMFraction->Fill( (*jet)->hfEMFraction, eventWeight);
+		m_h_muonFraction->Fill( (*jet)->muonFraction, eventWeight);
+		m_h_nConstituents->Fill( (*jet)->nConstituents, eventWeight);
+		m_h_nCharged->Fill( (*jet)->nCharged, eventWeight);
 	}
 }
 
@@ -87,5 +102,16 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings)
 	m_h_incjetpt->Write(m_h_incjetpt->GetName());
 	m_h_jet12rap->Write(m_h_jet12rap->GetName());
 	m_h3_jet12rap->Write(m_h3_jet12rap->GetName());
+
+	m_h_neutralHadronFraction->Write(m_h_neutralHadronFraction->GetName());
+	m_h_chargedHadronFraction->Write(m_h_chargedHadronFraction->GetName());
+	m_h_photonFraction->Write(m_h_photonFraction->GetName());
+	m_h_electronFraction->Write(m_h_electronFraction->GetName());
+	m_h_hfHadronFraction->Write(m_h_hfHadronFraction->GetName());
+	m_h_hfEMFraction->Write(m_h_hfEMFraction->GetName());
+	m_h_muonFraction->Write(m_h_muonFraction->GetName());
+	m_h_nConstituents->Write(m_h_nConstituents->GetName());
+	m_h_nCharged->Write(m_h_nCharged->GetName());
+
 }
 

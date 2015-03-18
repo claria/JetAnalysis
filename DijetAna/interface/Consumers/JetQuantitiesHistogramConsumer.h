@@ -28,4 +28,16 @@ private:
 	TH1D* m_h_incjetpt = NULL;
 	TH2D* m_h_jet12rap = NULL;
 	TH3D* m_h3_jet12rap = NULL;
+
+	TH1D* m_h_neutralHadronFraction = NULL;
+	TH1D* m_h_chargedHadronFraction = NULL;
+	TH1D* m_h_photonFraction = NULL;
+	TH1D* m_h_electronFraction = NULL;
+	TH1D* m_h_muonFraction = NULL;
+	TH1D* m_h_nConstituents = NULL;
+	TH1D* m_h_nCharged = NULL;
+	TH1D* m_h_hfHadronFraction = NULL;
+	TH1D* m_h_hfEMFraction = NULL;
+	TH1D* m_h_area = NULL;
+
 };
