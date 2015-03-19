@@ -4,11 +4,15 @@ import os
 import sys
 import argparse
 import copy
-import importlib
-import fileinput
 from datetime import datetime
+import importlib
+import json
+import fileinput
+import glob
 import shutil
+import subprocess
 import tempfile
+import hashlib
 
 from ConfigParser import RawConfigParser
 
@@ -33,52 +37,84 @@ def main():
     parser.add_argument("-i", "--input-files", nargs="+", required=True,
                         help="Input root files.")
     parser.add_argument("-o", "--output-file", default="output.root",
-                        help="Name of output file."
-    parser.add_argument("-P", "--print-config", default=False, action="store_true",
+                        help="Name of output file.")
+    parser.add_argument("-p", "--print-config", default=False, action="store_true",
                         help="Print out the JSON config before running Artus.")
     parser.add_argument('-f', '--fast', type=int, default=None,
                         help="limit number of input files or grid-control jobs. 3=files[0:3].")
     parser.add_argument("--no-run", default=False, action="store_true",
                         help="Exit before running Artus to only check the configs.")
+    parser.add_argument("-d", "--dry-run", default=False, action="store_true",
+                        help="Exit before running Artus to only check the configs.")
+    parser.add_argument("-b", "--batch", default=False, action="store_true",
+                        help="Submit to batch system using gc.")
+    parser.add_argument("--log-level", default="info",
+                        help="Log level.")
+
     args = vars(parser.parse_args())
 
-    # Prepare input files
-    args['input files'] = expand_glob(args['input files'])
-    if args['fast'] is not None:
-        args['input files'] = args['input files'][:args['fast']
-    print args['input files']
+    # Set log level
+    log_level = getattr(logging, args['log_level'].upper(), None)
+    if not isinstance(log_level, int):
+        raise ValueError('Invalid log level: %s' % loglevel)
+    logging.basicConfig(format='%(message)s',
+                        level=log_level)
 
+    # Prepare input files
+    args['input_files'] = expand_glob(args['input_files'])
+    if args['fast'] is not None:
+        args['input_files'] = args['input_files'][:args['fast']]
+
+    # Unique list of nicknames of all input files
     nicknames = get_nicknames(args['input_files'])
 
     # If batch mode then no need to create configs no
     if args['batch']:
         wrapper.prepare_gc_input()
 
-    runwrapper = RunWrapper()
-
-    if args['config']
-    if len(nicknames > 1):
-    configs = {}
-
+    # Prepare list of all configs
+    configs = []
     for nickname in nicknames:
-        config = get_config(args['inputconfig'], nick=nickname)
-        config['InputFiles'] = get_filelist(args
-        configs[nickname] = config
+        config = get_config(args['config'], nick=nickname)
+        config['InputFiles'] = [filename for filename in args['input_files'] if extract_nickname(filename) == nickname]
+        config['OutputFile'] = "{0}_{1}".format(args['output_file'], nickname)
+        config['nickname'] = nickname
+        configs.append(config)
 
-    if args['batch']:
-        pass
-        wrapper.prepare_gc_input()
+    # Run over each config or send to batch system
+    if not args['batch']:
+        for config in configs:
+            path = save_config(config)
+            run("JetAna", arguments=path)
     else:
-        for nickname in wrapper.nicknames:
-            config = dict(get_config(args['inputconfig'], nick=nickname).items() + config.items())
-            wrapper.setConfig(config)
-            wrapper.run()
+        wrapper.prepare_gc_input()
 
+
+def run(executable, arguments=''):
+    """Execute and wait for command to complete. Returns returncode attribute."""
+    cmd = '{0} {1}'.format(executable, arguments)
+    log.debug("Executing command: \"{0}\"".format(cmd))
+    rc = subprocess.call(cmd.split())
+    return rc
+
+def save_config(config, path=None, indent=4):
+    """Save json config to file."""
+    if path is None:
+        basename = "artus_{0}.json".format(get_hash(str(config)))
+        filepath = os.path.join(tempfile.gettempdir(), basename)
+    with open(filepath, "w") as f:
+        json.dump(config, f, indent=indent, sort_keys=True)
+
+    log.debug("Config written to \"{0}\"".format(filepath))
+    return filepath
+
+
+def get_hash(s, truncate=12):
+    """Return a (truncated) hash of the input string."""
+    return hashlib.md5(s).hexdigest()[0:truncate]
 
 def get_config(config_name, *args, **kwargs):
     """ Get config from templates by name."""
-    if os.path.isfile(config_name): 
-        config = ArtusConfig(
     from JetAnalysis.DijetAna import artusconfigs
     try:
         config_class = getattr(artusconfigs, config_name)
@@ -100,22 +136,22 @@ def get_nicknames(filelist):
 
 
 def extract_nickname(s):
-    """Returns nickname of syntac PREFIX_NICKNAME_SUFFIX."""
+    """Returns nickname of syntax PREFIX_NICKNAME_SUFFIX."""
+    s = os.path.basename(s)
     return '_'.join(s.split('_')[1:-1])
 
 def expand_glob(l):
-    
+    """Expand and glob input list and return flattened list."""
     if (isinstance(l, basestring)):
         l = [l]
     expanded = []
     for item in l:
         if os.path.isdir(item):
-            expanded.append(glob.glob(os.path.expandvars(item + '/*.root'))
+            expanded.append(glob.glob(os.path.expandvars(item + '/*.root')))
         else:
             expanded.append(glob.glob(os.path.expandvars(item)))
-    flattened = [val for sublist in expanded for val in sublist]
-
-    return flattened
+    # Flatten list of lists and return
+    return [val for sublist in expanded for val in sublist]
 
 
 
@@ -125,7 +161,7 @@ class RunWrapper(object):
 
     def __init__(self):
 
-        self._config = 
+        # self._config = 
         self.executable = 'JetAna'
         self.work_directory = '/nfs/dust/cms/user/gsieber/ARTUS'
         self.cmssw_directory = os.getenv('CMSSW_BASE')
