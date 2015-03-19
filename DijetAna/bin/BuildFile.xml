@@ -16,3 +16,8 @@
    <use   name="roottmva"/>
    <use   name="CondFormats/JetMETObjects"/>
 </bin>
+
+<bin   name="jethadd" file="jethadd.cc">
+   <use   name="root"/>
+   <Flags LDFLAGS="-Lsrc/RooUnfold/ -lRooUnfold" />
+</bin>

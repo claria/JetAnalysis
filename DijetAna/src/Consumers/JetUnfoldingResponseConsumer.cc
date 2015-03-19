@@ -1,14 +1,22 @@
 #include "JetAnalysis/DijetAna/interface/Consumers/JetUnfoldingResponseConsumer.h"
+#include "TH3.h"
 
 void JetUnfoldingResponseConsumer::Init(setting_type const& settings)
 {
-	ConsumerBase<JetTypes>::Init( settings );
+	ConsumerBase<JetTypes>::Init(settings);
 
-	double pt_binning[7] = {74, 114, 196, 300, 468, 790, 3000};
-	double rap_binning[13] = {-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0};
+	// Define truth and reco binnings for response matrix
+	TH3D meas_binning("meas_binning", "meas_binning", settings.GetRapidityBinning().size() - 1, &settings.GetRapidityBinning()[0],
+	                                                  settings.GetRapidityBinning().size() - 1, &settings.GetRapidityBinning()[0], 
+	                                                  settings.GetTripleDiffPtBinning().size() -1, &settings.GetTripleDiffPtBinning()[0]);
+	TH3D truth_binning("gen_binning", "gen_binning", settings.GetRapidityBinning().size() - 1, &settings.GetRapidityBinning()[0],
+	                                                 settings.GetRapidityBinning().size() - 1, &settings.GetRapidityBinning()[0], 
+	                                                 settings.GetTripleDiffGenPtBinning().size() -1, &settings.GetTripleDiffGenPtBinning()[0]);
+	TH1D pt_binning("pt_binning", "pt_binning", settings.GetPtBinning().size() -1, &settings.GetPtBinning()[0]);
+	TH1D genpt_binning("genpt_binning", "genpt_binning", settings.GetGenPtBinning().size() -1, &settings.GetGenPtBinning()[0]);
 
-	TH2D* hist_binning = new TH2D("hist_binning", "hist_binning", 6, pt_binning, 12, rap_binning);
-	m_unfoldResponse = new RooUnfoldResponse(hist_binning, hist_binning, "response_matrix", "response_matrix");
+	m_unfoldResponse = new RooUnfoldResponse(&meas_binning, &truth_binning, "response_matrix", "response_matrix");
+	m_unfoldResponseLeadJetPt = new RooUnfoldResponse(&pt_binning, &genpt_binning, "pt_response_matrix", "pt_response_matrix");
 }
 
 void JetUnfoldingResponseConsumer::ProcessEvent(event_type const& event, product_type const& product, setting_type const& settings, FilterResult& result)
@@ -17,13 +25,29 @@ void JetUnfoldingResponseConsumer::ProcessEvent(event_type const& event, product
 
 	if (result.HasPassed()) 
 	{
-		m_unfoldResponse->Fill(product.m_validJets.at(0)->p4.Pt(),product.m_validJets.at(0)->p4.Rapidity(), event.m_genJets->at(0).p4.Pt(), event.m_genJets->at(0).p4.Rapidity(), eventWeight);
+		// if (product.m_matchedRecoJets.at(0) != NULL && product.m_matchedRecoJets.at(1) != NULL) {
+		if (product.m_matchedGenJets.at(0) != NULL) {
+			m_unfoldResponse->Fill(product.m_validJets.at(0)->p4.Rapidity(), 
+					               product.m_validJets.at(1)->p4.Rapidity(),
+					               product.m_validJets.at(0)->p4.Pt(), 
+					               product.m_validJets.at(0)->p4.Rapidity(), 
+					               product.m_validJets.at(1)->p4.Rapidity(),
+					               // event.m_genJets->at(0).p4.Rapidity(), 
+					               // event.m_genJets->at(1).p4.Rapidity(), 
+					               product.m_matchedGenJets.at(0)->p4.Pt(), 
+					               eventWeight);
+			m_unfoldResponseLeadJetPt->Fill(product.m_validJets.at(0)->p4.Pt(), 
+					                        product.m_matchedGenJets.at(0)->p4.Pt(), 
+											eventWeight);
+
+		}
+		else {
+			// m_unfoldResponse->Miss(event.m_genJets->at(0).p4.Rapidity(), 
+					               // event.m_genJets->at(1).p4.Rapidity(), 
+					               // event.m_genJets->at(0).p4.Pt(), 
+					               // eventWeight);
+		}
 	}
-	// TODO Implement correctly the missed events
-	// else 
-	// {
-		// m_unfoldResponse->Miss(event.m_genJets->at(0).p4.Pt(), event.m_genJets->at(0).p4.Rapidity(), eventWeight);
-	// }
 }
 
 void JetUnfoldingResponseConsumer::Finish(setting_type const& settings)
@@ -31,5 +55,6 @@ void JetUnfoldingResponseConsumer::Finish(setting_type const& settings)
 
 	RootFileHelper::SafeCd(settings.GetRootOutFile(), settings.GetRootFileFolder());
 	m_unfoldResponse->Write(m_unfoldResponse->GetName());
+	m_unfoldResponseLeadJetPt->Write(m_unfoldResponseLeadJetPt->GetName());
 }
 

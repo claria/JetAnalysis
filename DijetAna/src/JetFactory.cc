@@ -2,6 +2,7 @@
 
 // Producers
 #include "JetAnalysis/DijetAna/interface/Producers/JetQuantities.h"
+#include "JetAnalysis/DijetAna/interface/Producers/GenJetMatchingProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/JetHltProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/JetValidJetsProducer.h"
 
@@ -22,7 +23,7 @@
 #include "JetAnalysis/DijetAna/interface/Consumers/JetResolutionConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/TriggerResultsHistogramConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/JetQuantitiesHistogramConsumer.h"
-#include "JetAnalysis/DijetAna/interface/Consumers/JetGenQuantitiesHistogramConsumer.h"
+#include "JetAnalysis/DijetAna/interface/Consumers/GenJetQuantitiesHistogramConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/JetUnfoldingResponseConsumer.h"
 // #include "JetAnalysis/DijetAna/interface/Consumers/TriggerHistogramFitConsumer.h"
 
@@ -36,6 +37,8 @@ ProducerBaseUntemplated * JetFactory::createProducer ( std::string const& id )
 		return new JetQuantities();
 	else if (JetHltProducer().GetProducerId() == id)
 		return new JetHltProducer();
+	else if (GenJetMatchingProducer().GetProducerId() == id)
+		return new GenJetMatchingProducer();
 	else if (JetValidJetsProducer().GetProducerId() == id)
 		return new JetValidJetsProducer();
 	else
@@ -52,8 +55,8 @@ ConsumerBaseUntemplated * JetFactory::createConsumer ( std::string const& id )
 		return new JetQuantitiesHistogramConsumer();
 	else if (JetResolutionConsumer().GetConsumerId() == id)
 		return new JetResolutionConsumer();
-	else if (JetGenQuantitiesHistogramConsumer().GetConsumerId() == id)
-		return new JetGenQuantitiesHistogramConsumer();
+	else if (GenJetQuantitiesHistogramConsumer().GetConsumerId() == id)
+		return new GenJetQuantitiesHistogramConsumer();
 	else if (JetUnfoldingResponseConsumer().GetConsumerId() == id)
 		return new JetUnfoldingResponseConsumer();
 	else
