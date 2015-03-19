@@ -7,9 +7,10 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 from JetAnalysis.DijetAna.plotting.baseplot import BasePlot
 from JetAnalysis.DijetAna.plotting.baseplot import plot_errorbar, steppify_bin
+from JetAnalysis.DijetAna.tools import *
 from Artus.HarryPlotter.utility.mplhisto import MplHisto, MplGraph
-from Artus.HarryPlotter.utility.roottools import RootTools
-import Artus.HarryPlotter.plot_modules.plotmpl as mplplot
+# from Artus.HarryPlotter.utility.roottools import RootTools
+# import Artus.HarryPlotter.plot_modules.plotmpl as mplplot
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -22,29 +23,21 @@ import numpy as np
 
 def main():
 
-
     parser = argparse.ArgumentParser(description='Unfold distribution with a given response matrix')
-    parser.add_argument('--inputfiles', nargs='+', required=True,
+    parser.add_argument('--inputfiles', nargs='+', default=['DATA.root:default/h3_jet12rap',],
                         help='Path to root file with the distribution with the syntax file.root:path/to/histo')
-
     args = vars(parser.parse_args())
-
-    print args
-
-    # inputfiles = ['DATA.root', 'unfolded.root']
-    # objectpaths = ['default/h3_jet12rap', 'default/unf_hjet12rap']
 
     histos = []
     for inputhisto in args['inputfiles']:
         histos.append(get_root_object(*inputhisto.split(':')))
 
-    # rootfiles = [ROOT.TFile(inputfile, "READ") for inputfile in inputfiles]
-    # histos = [rootfile.Get('default/h3_jet12rap') for rootfile in rootfiles]
-    # histos = [get_root_object(filename, objectpath) for filename, objectpath in zip(inputfiles, objectpaths)]
     for i, histo in enumerate(histos):
         histo.SetName("{0}_{1}".format(histo.GetName(), i))
+
     n_zbins = histos[0].GetNbinsZ()
 
+    # slice 3d histogram in 2d histograms
     for i in range(1, n_zbins+1):
         print "zbin " , i
         histos_sliced = []
@@ -52,18 +45,17 @@ def main():
             print histo.GetName()
             histo.GetZaxis().SetRange(i,i)
             xyslice = histo.Project3D("xy")
+            # normalize_to_binwidth(xyslice)
             histos_sliced.append(xyslice)
 
         # histos_sliced = [histo.ProjectionZ("slice_{0}".format(i), i, i) for histo in histos]
         plotproducer = TripleDiffRatioPlot(histos_sliced, output_fn='plots/tdratio_{0}'.format(i))
         plotproducer.do_plot()
-        tddistplot = TripleDiffHeatMapPlot(histos_sliced[0], output_fn='plots/tdhmplot_{0}'.format(i))
-        tddistplot.do_plot()
+        # tddistplot = TripleDiffHeatMapPlot(histos_sliced[0], output_fn='plots/tdhmplot_{0}'.format(i))
+        # tddistplot.do_plot()
 
         # tddistplot = TripleDiff3DPlot(histos_sliced[0], output_fn='td3dplot_{0}'.format(i))
         # tddistplot.do_plot()
-
-
 
 def get_root_object(filename, objectpath):
     rootfile = ROOT.TFile(filename, "READ")
@@ -164,7 +156,10 @@ class TripleDiffRatioPlot(BasePlot):
     def produce(self):
 
         self.fig.text(x=-0.3, y=0.5, s='Ratio to Data', rotation='vertical', va='center')
-        labels = ['Data', 'QCDMGP6' 'P8']
+        labels = ['Data', 'Pythia 8']
+        # for histo in self.histos:
+            # histo.Scale(1./histo.Integral())
+
         for i in range(1,self.nbins + 1):
             ax = self.fig.add_subplot(12,1,12+1-i)
             ax.axhline(y=1.0, color='black', lw=1.0, zorder=0)
@@ -177,10 +172,11 @@ class TripleDiffRatioPlot(BasePlot):
             if (i==self.nbins +1):
                 ax.set_xlabel('Jet 1 Rapidity')
             for j, histo in enumerate(self.histos):
-                hist_slice = histo.ProjectionY("slice_{0}".format(i),i,i)
+                hist_slice = histo.ProjectionX("slice_{0}".format(i),i,i)
                 if j==0:
-                    ref_histo = hist_slice.Clone('xyz')
-                hist_slice.Scale(ref_histo.Integral()/hist_slice.Integral())
+                    ref_histo = hist_slice.Clone('ref_histo')
+                # if hist_slice.Integral() > 0.:
+                    # hist_slice.Scale(ref_histo.Integral()/hist_slice.Integral())
                 hist_slice.Divide(ref_histo)
                 hist = MplHisto(hist_slice)
                 plot_errorbar(hist, label=labels[j])
@@ -192,7 +188,7 @@ class TripleDiffRatioPlot(BasePlot):
             ax.xaxis.set_visible(False)
 
             if i==12:
-                ax.legend(bbox_to_anchor=(1.02, 1.0), loc='upper left', borderaxespad=0.)
+                ax.legend(bbox_to_anchor=(1.00, 1.02), loc='lower right', borderaxespad=0.)
             if i==1:
                 ax.xaxis.set_visible(True)
                 ax.set_xlabel("Leading jet rapidity $y_1$")

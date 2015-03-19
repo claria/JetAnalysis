@@ -14,24 +14,35 @@ def main():
 
     parser = argparse.ArgumentParser(description='Unfold distribution with a given response matrix')
 
-    parser.add_argument('--recohisto', help='Path to root file with the distribution')
-    parser.add_argument('--response', help='Path to root file with the response matrix')
-    parser.add_argument('--niters', help='Number of iterations in unfolding' type=int)
+    parser.add_argument('--measured-histo', help='Path to root file with the distribution.')
+    parser.add_argument('--response-matrix', help='Path to root file with the response matrix')
+    parser.add_argument('--niters', type=int, default=4, help='Number of iterations in Bayes Unfolding.')
+    parser.add_argument('--ntoys', type=int, default=1, help='Number of toys in cov determination.')
 
     args = vars(parser.parse_args())
 
+    measured_histo = get_root_object(args['measured_histo'], option='UPDATE')
+    response_matrix = get_root_object(args['response_matrix'])
 
-    hist = get_root_object(args['inputhisto'], option='UPDATE')
-    response = get_root_object(args['responsehisto'])
+    unfold = ROOT.RooUnfoldBayes(response_matrix, measured_histo, args['niters'])
 
-    unfold = ROOT.RooUnfoldBayes(response, hist, 4)
-    print unfold.NToys()
-    unfold.SetNToys(2)
-    print unfold.NToys()
+    # Unfold distribution
+    recotruth_histo = unfold.Hreco()
+    # Run Toys
+    unfold.SetNToys(args['ntoys'])
     unfold.RunToy()
-    hReco = unfold.Hreco()
-    hRecoCov = unfold.Ereco(3)
+    recotruth_cov = unfold.Ereco(3)
 
+    input_path = measured_histo.GetDirectory().GetPath()
+    print input_path
+    output_file = input_path.split(':')[0]
+    output_path = input_path.split(':')[1].split('/')
+    output_path[-1] = "unf_{0}".format(output_path[-1])
+    output_path = '/'.join(output_path)
+
+    print output_path
+
+    # ROOT.gDirectory.cd(output_path)
     #hRecoCorr = hRecoCov.Clone('hrecocorr')
     #print type(hRecoCorr)
     #print dir(hRecoCorr)
@@ -53,16 +64,15 @@ def main():
 
     # outputfile = TFile('unfolded.root', 'RECREATE')
 
-    datafile.cd('/')
-    if datafile.GetDirectory('unf_default') != None:
-        datafile.Delete('unf_default;*')
+    if ROOT.gDirectory.GetDirectory(output_path) != None:
+        ROOT.gDirectory.Delete('unf_default;*')
 
-    datafile.mkdir('unf_default')
-    datafile.cd('unf_default')
+    ROOT.gDirectory.mkdir(output_path)
+    ROOT.gDirectory.cd(output_path)
     # datafile.cd()
     hReco.Write('unf_hjet12rap')
     hRecoCov.Write('unf_hjet12rap_cov')
-    hRecoCorr.Write('unf_hjet12rap_corr')
+#     hRecoCorr.Write('unf_hjet12rap_corr')
 
 
 if __name__ == '__main__':

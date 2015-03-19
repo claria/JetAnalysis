@@ -58,13 +58,14 @@ def fit_resolution(inputfile):
         for i in range(1, n_ptbins + 1):
             hslice = histo.ProjectionX("ptslice_{0}".format(i),i,i)
             res = hslice.Fit("gaus", "S")
-            if res.Get() != None:
+            if res.Get() != None and res.Status() == 0:
                 fcn = hslice.GetFunction("gaus")
                 graph.SetPoint(i, histo.GetYaxis().GetBinCenter(i), fcn.GetParameter(2))
                 graph.SetPointError(i, histo.GetYaxis().GetBinWidth(i)/2., fcn.GetParError(2))
 
-        res_fcn = ROOT.TF1("res_fcn", "sqrt(TMath::Sign(1,[0])*(([0]/x)**2) + (([1]**2)/x) + [2]**2)")
-        # res_fcn.SetParameters(10., -0.7, 0.001, 0.0)
+        res_fcn = ROOT.TF1("res_fcn", "sqrt(TMath::Sign(1,[0])*(([0]/x)**2) + (([1]**2)/x)*(x**[2]) + [3]**2)")
+        # res_fcn = ROOT.TF1("res_fcn", "sqrt(([0]/x)**2 + (([1]**2)/x)*(x**[2]) + [3]**2)")
+        res_fcn.SetParameters(10., 0.1, 0.1, 0.0)
         graph.Fit("res_fcn", "", "", 100., 3000.)
         # resolution_pars['N'].append(res_fcn.GetParameter(1))
         # resolution_pars['S'].append(res_fcn.GetParameter(2))
@@ -78,9 +79,9 @@ def fit_resolution(inputfile):
     for graph in resolution_graphs:
         print graph.GetName()
         fcn = graph.GetFunction("res_fcn")
-        print "N:", fcn.GetParameter(1)
-        print "S:", fcn.GetParameter(2)
-        # print "s:", fcn.GetParameter(3)
+        print "N:", fcn.GetParameter(0)
+        print "S:", fcn.GetParameter(1)
+        print "s:", fcn.GetParameter(2)
         print "C:", fcn.GetParameter(3)
 
     return resolution_graphs
@@ -117,7 +118,7 @@ class JetResolutionPlot(BasePlot):
     def finalize(self):
         self.ax.set_xlabel('Gen jet $p_\mathrm{{T}}$ (GeV)')
         self.ax.set_ylabel(r'$\langle p_\mathrm{{T,reco}} / p_\mathrm{{T,gen}} \rangle$')
-        self.ax.set_ylim(0.0, 0.15)
+        self.ax.set_ylim(0.0, 0.25)
         self.ax.set_xlim(50, 3000.)
         self.ax.set_xscale('log')
         self.ax.xaxis.set_minor_formatter(plt.FuncFormatter(self.log_locator_filter))
