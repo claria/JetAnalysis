@@ -1,0 +1,8 @@
+<tool name="RooUnfold" version="1.0">
+  <lib name="RooUnfold"/>
+  <client>
+    <environment name="ROOUNFOLD_BASE" default="$CMSSW_BASE/src/RooUnfold"/>
+    <environment name="LIBDIR" default="$ROOUNFOLD_BASE/"/>
+    <environment name="INCLUDE" default="$ROOUNFOLD_BASE/src"/>
+  </client>
+</tool>

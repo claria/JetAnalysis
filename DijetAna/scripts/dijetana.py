@@ -68,9 +68,10 @@ def main():
     # Unique list of nicknames of all input files
     nicknames = get_nicknames(args['input_files'])
 
-    # If batch mode then no need to create configs no
     if args['batch']:
-        wrapper.prepare_gc_input()
+        work_directory = '/nfs/dust/cms/user/gsieber/ARTUS'
+        prepare_gc_input(args['input_files'], work_directory)
+
 
     # Prepare list of all configs
     configs = []
@@ -86,15 +87,18 @@ def main():
         for config in configs:
             path = save_config(config)
             run("JetAna", arguments=path)
-    else:
-        wrapper.prepare_gc_input()
+
 
 
 def run(executable, arguments=''):
     """Execute and wait for command to complete. Returns returncode attribute."""
     cmd = '{0} {1}'.format(executable, arguments)
     log.debug("Executing command: \"{0}\"".format(cmd))
-    rc = subprocess.call(cmd.split())
+    try:
+        rc = subprocess.call(cmd.split())
+    except KeyboardInterrupt:
+        log.critical("Received Interrupt")
+        return 1
     return rc
 
 def save_config(config, path=None, indent=4):
@@ -157,72 +161,61 @@ def expand_glob(l):
 
 
 
-class RunWrapper(object):
+def write_dbsfile(filelist, path=None, work_directory=None):
+    """Write filenames ordered by nicknames to dbs file."""
+    nicknames = get_nicknames(filelist)
 
-    def __init__(self):
+    if path is None:
+        path = "datasets_{0}.dbs".format(get_hash(str(config)))
+        path = os.path.join(work_directory, path)
 
-        # self._config = 
-        self.executable = 'JetAna'
-        self.work_directory = '/nfs/dust/cms/user/gsieber/ARTUS'
-        self.cmssw_directory = os.getenv('CMSSW_BASE')
-        self.jetana_directory = os.path.join(self.cmssw_directory, 'src/JetAnalysis/DijetAna')
-
-        self.nicknames = self.get_nicknames()
-        self.date_now = datetime.now().strftime("%Y-%m-%d_%H-%M")
- 
-
-
-    def write_dbsfile(self, filename=None):
-        """Write filenames ordered by nicknames to dbs file."""
-        if filename is None:
-            filename = "datasets_{0}.dbs".format(hashlib.md5(str(self._config)).hexdigest())
-            filename = os.path.join(self.projectPath, dbsFileBasename)
-
-        with open(filename, "w") as f:
-            for nickname in self.nicknames:
-                f.write("[{0}]\n".format(nickname))
-                f.write("nickname = {0}\n".format(nickname))
-                for filename in self._config["InputFiles"]:
-                    if JetAnaWrapper.extract_nickname(filename) == nickname:
-                        f.write("{0}\n".format(filename))
+    with open(path, "w") as f:
+        for nickname in nicknames:
+            f.write("[{0}]\n".format(nickname))
+            f.write("nickname = {0}\n".format(nickname))
+            for filename in filelist:
+                if extract_nickname(filename) == nickname:
+                    f.write("{0}\n".format(filename))
+    log.debug('Wrote dbs file to \"{0}\"'.format(path))
 
 
-    def prepare_gc_input(self):
-        """Prepare gridcontrol configs and work directory."""
+def prepare_gc_input(filelist, work_directory):
+    """Prepare gridcontrol configs and work directory."""
 
-        project_directory = os.path.join(self.work_directory, 'artus_{0}'.format(self.date_now))
-        if not os.path.exists(project_directory):
-            os.makedirs(project_directory)
-
-        # Copy gc config template to project directory
-        shutil.copy(os.path.join(self.jetana_directory, 'data/gc_template.conf'),
-                    os.path.join(project_directory, 'jetana.conf'))
-
-        # Copy run script to project directory
-        shutil.copy(os.path.join(self.jetana_directory, 'data/run_jetana.sh'),
-                    os.path.join(project_directory, 'run_jetana.conf'))
+    date_now = datetime.now().strftime("%Y-%m-%d_%H-%M")
+    cmssw_directory = os.getenv('CMSSW_BASE')
+    jetana_directory = os.path.join(cmssw_directory, 'src/JetAnalysis/DijetAna')
 
 
-        # Write dbs file to project directory.
-        dbs_filepath = os.path.join(project_directory, 'datasets.dbs')
-        self.write_dbsfile(filename=dbs_filepath)
+    project_directory = os.path.join(work_directory, 'artus_{0}'.format(date_now))
+    if not os.path.exists(project_directory):
+        os.makedirs(project_directory)
+    log.debug('Created work directory \"{0}\"'.format(project_directory))
 
-    def run_gc(self):
-        pass
+    # Copy gc config template to project directory
+    shutil.copy(os.path.join(jetana_directory, 'data/gc_template.conf'),
+                os.path.join(project_directory, 'jetana.conf'))
+    log.debug('Copied gc template file to work directory.')
 
-    def run_local(self):
-        pass
+    # Copy run script to project directory
+    shutil.copy(os.path.join(jetana_directory, 'data/run_jetana.sh'),
+                os.path.join(project_directory, 'run_jetana.conf'))
+    log.debug('Copied run script to work directory.')
 
-    @staticmethod
-    def replace(source_file_path, replace_dict):
-        fh, target_file_path = tempfile.mkstemp()
-        with open(target_file_path, 'w') as target_file:
-            with open(source_file_path, 'r') as source_file:
-                for line in source_file:
-                    for pattern in replace_dict:
-                        target_file.write(line.replace(pattern, replace_dict[pattern]))
-        os.remove(source_file_path)
-        shutil.move(target_file_path, source_file_path)
+
+    # Write dbs file to project directory.
+    dbs_filepath = os.path.join(project_directory, 'datasets.dbs')
+    write_dbsfile(filelist, path=dbs_filepath)
+
+def replace(source_file_path, replace_dict):
+    fh, target_file_path = tempfile.mkstemp()
+    with open(target_file_path, 'w') as target_file:
+        with open(source_file_path, 'r') as source_file:
+            for line in source_file:
+                for pattern in replace_dict:
+                    target_file.write(line.replace(pattern, replace_dict[pattern]))
+    os.remove(source_file_path)
+    shutil.move(target_file_path, source_file_path)
 
 
 
