@@ -23,16 +23,16 @@ import logging
 log = logging.getLogger(__name__)
 
 # Change envs for artus run
-artus_dir = os.path.join(os.path.expandvars('$CMSSW_BASE'), 'src/Artus')
-os.environ['PATH'] += ':{0}/grid-control'.format(os.path.expandvars('$HOME'))
-os.environ['ARTUS_WORK_BASE'] = '/nfs/dust/cms/user/gsieber/ARTUS'
-os.environ['ARTUSPATH'] = artus_dir
+# artus_dir = os.path.join(os.path.expandvars('$CMSSW_BASE'), 'src/Artus')
+# os.environ['PATH'] += ':{0}/grid-control'.format(os.path.expandvars('$HOME'))
+# os.environ['ARTUS_WORK_BASE'] = '/nfs/dust/cms/user/gsieber/ARTUS'
+# os.environ['ARTUSPATH'] = artus_dir
 
 
 def main():
 
     parser = argparse.ArgumentParser(description='JetAnalysis config creation and run script.', add_help=True)
-    parser.add_argument('--config', type=str, default='RunConfig',
+    parser.add_argument('-c', '--config', type=str, default='RunConfig',
                         help='Config file name or template name to load config from.')
     parser.add_argument("-i", "--input-files", nargs="+", required=True,
                         help="Input root files.")
@@ -70,20 +70,20 @@ def main():
 
     if args['batch']:
         work_directory = '/nfs/dust/cms/user/gsieber/ARTUS'
-        prepare_gc_input(args['input_files'], work_directory)
+        project_directory = prepare_gc_input(args['input_files'], 
+                                             config=args['config'], 
+                                             work_directory=work_directory)
 
-
-    # Prepare list of all configs
-    configs = []
-    for nickname in nicknames:
-        config = get_config(args['config'], nick=nickname)
-        config['InputFiles'] = [filename for filename in args['input_files'] if extract_nickname(filename) == nickname]
-        config['OutputFile'] = "{0}_{1}".format(args['output_file'], nickname)
-        config['nickname'] = nickname
-        configs.append(config)
-
-    # Run over each config or send to batch system
-    if not args['batch']:
+    if args['batch'] is not True:
+        # Prepare list of all configs
+        configs = []
+        for nickname in nicknames:
+            config = get_config(args['config'], nick=nickname)
+            config['InputFiles'] = [filename for filename in args['input_files'] if extract_nickname(filename) == nickname]
+            config['OutputFile'] = "{0}_{1}".format(args['output_file'], nickname)
+            config['nickname'] = nickname
+            configs.append(config)
+    # Run over each config
         for config in configs:
             path = save_config(config)
             run("JetAna", arguments=path)
@@ -175,11 +175,11 @@ def write_dbsfile(filelist, path=None, work_directory=None):
             f.write("nickname = {0}\n".format(nickname))
             for filename in filelist:
                 if extract_nickname(filename) == nickname:
-                    f.write("{0}\n".format(filename))
-    log.debug('Wrote dbs file to \"{0}\"'.format(path))
+                    f.write("{0} = 1\n".format(filename))
+    log.debug('Wrote dbs file to work directory.')
 
 
-def prepare_gc_input(filelist, work_directory):
+def prepare_gc_input(filelist, config, work_directory):
     """Prepare gridcontrol configs and work directory."""
 
     date_now = datetime.now().strftime("%Y-%m-%d_%H-%M")
@@ -193,13 +193,14 @@ def prepare_gc_input(filelist, work_directory):
     log.debug('Created work directory \"{0}\"'.format(project_directory))
 
     # Copy gc config template to project directory
-    shutil.copy(os.path.join(jetana_directory, 'data/gc_template.conf'),
-                os.path.join(project_directory, 'jetana.conf'))
+    gc_config_path = os.path.join(project_directory, 'jetana.conf') 
+    shutil.copy(os.path.join(jetana_directory, 'data/gc_template.conf'), gc_config_path)
     log.debug('Copied gc template file to work directory.')
+
 
     # Copy run script to project directory
     shutil.copy(os.path.join(jetana_directory, 'data/run_jetana.sh'),
-                os.path.join(project_directory, 'run_jetana.conf'))
+                os.path.join(project_directory, 'run_jetana.sh'))
     log.debug('Copied run script to work directory.')
 
 
@@ -207,13 +208,23 @@ def prepare_gc_input(filelist, work_directory):
     dbs_filepath = os.path.join(project_directory, 'datasets.dbs')
     write_dbsfile(filelist, path=dbs_filepath)
 
+    # Replace variables in gc template
+    replace_dict = {}
+    replace_dict['CMSSW_BASE'] = cmssw_directory
+    replace_dict['DBS_PATH'] = dbs_filepath
+    replace_dict['CONFIG'] = config
+    replace(gc_config_path, replace_dict)
+
+    return project_directory
+
 def replace(source_file_path, replace_dict):
     fh, target_file_path = tempfile.mkstemp()
     with open(target_file_path, 'w') as target_file:
         with open(source_file_path, 'r') as source_file:
             for line in source_file:
                 for pattern in replace_dict:
-                    target_file.write(line.replace(pattern, replace_dict[pattern]))
+                    line = line.replace('@{0}@'.format(pattern), replace_dict[pattern])
+                target_file.write(line)
     os.remove(source_file_path)
     shutil.move(target_file_path, source_file_path)
 
