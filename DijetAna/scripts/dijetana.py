@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 
-import os
-import sys
 import argparse
 import copy
 from datetime import datetime
-import importlib
-import json
 import fileinput
 import glob
+import importlib
+import json
+import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import hashlib
 
@@ -22,21 +22,14 @@ from Artus.Utility import jsonTools
 import logging
 log = logging.getLogger(__name__)
 
-# Change envs for artus run
-# artus_dir = os.path.join(os.path.expandvars('$CMSSW_BASE'), 'src/Artus')
-# os.environ['PATH'] += ':{0}/grid-control'.format(os.path.expandvars('$HOME'))
-# os.environ['ARTUS_WORK_BASE'] = '/nfs/dust/cms/user/gsieber/ARTUS'
-# os.environ['ARTUSPATH'] = artus_dir
-
 
 def main():
-
     parser = argparse.ArgumentParser(description='JetAnalysis config creation and run script.', add_help=True)
     parser.add_argument('-c', '--config', type=str, default='RunConfig',
                         help='Config file name or template name to load config from.')
-    parser.add_argument("-i", "--input-files", nargs="+", required=True,
+    parser.add_argument("-i", "--input-files", nargs="+", required=False,
                         help="Input root files.")
-    parser.add_argument("-o", "--output-file", default="output.root",
+    parser.add_argument("-o", "--output-file", default=None,
                         help="Name of output file.")
     parser.add_argument("-p", "--print-config", default=False, action="store_true",
                         help="Print out the JSON config before running Artus.")
@@ -52,7 +45,6 @@ def main():
                         help="Log level.")
 
     args = vars(parser.parse_args())
-
     # Set log level
     log_level = getattr(logging, args['log_level'].upper(), None)
     if not isinstance(log_level, int):
@@ -76,11 +68,15 @@ def main():
 
     if args['batch'] is not True:
         # Prepare list of all configs
+        # TODO Fix output filename
         configs = []
         for nickname in nicknames:
             config = get_config(args['config'], nick=nickname)
             config['InputFiles'] = [filename for filename in args['input_files'] if extract_nickname(filename) == nickname]
-            config['OutputFile'] = "{0}_{1}".format(args['output_file'], nickname)
+            if args['output_file'] is None: 
+                config['OutputFile'] = "{0}_{1}".format('output', nickname)
+            else:
+                config['OutputFile'] = args['output_file']
             config['nickname'] = nickname
             configs.append(config)
     # Run over each config
@@ -123,7 +119,7 @@ def get_config(config_name, *args, **kwargs):
     try:
         config_class = getattr(artusconfigs, config_name)
     except AttributeError:
-        print "The config {0} does not exist or is not a valid config.".format(config_name)
+        log.critical( "The config {0} does not exist or is not a valid config.".format(config_name))
         sys.exit(1)
 
     return config_class(*args, **kwargs)
@@ -150,6 +146,7 @@ def expand_glob(l):
         l = [l]
     expanded = []
     for item in l:
+        item = item.strip().strip(',')
         if os.path.isdir(item):
             expanded.append(glob.glob(os.path.expandvars(item + '/*.root')))
         else:

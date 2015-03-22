@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-source $MY_LANDINGZONE/gc-run.lib || exit 101
+# source $MY_LANDINGZONE/gc-run.lib || exit 101
 
 echo "---------------------"
 echo "Prepare to run JetAna"
@@ -18,7 +18,7 @@ echo
 echo "---------------------------------"
 echo "Running with the following config"
 echo "---------------------------------"
-
-JetAna $ARTUSCONFIG || exit $?
+# $FILE_NAMES=echo "${FILE_NAMES//\"}"
+dijetana.py -i ${FILE_NAMES//\"} -c $CONFIG --log-level debug || exit $?
 
 exit 0
