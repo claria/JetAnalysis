@@ -28,17 +28,19 @@ def main():
 
     # Unfold distribution
     recotruth_histo = unfold.Hreco()
+    # recotruth_histo.SetName(measured_histo.GetName())
     # Run Toys
     unfold.SetNToys(args['ntoys'])
     unfold.RunToy()
     recotruth_cov = unfold.Ereco(3)
+    # recotruth_cov.SetName("cov_{0}".format(measured_histo.GetName()))
 
     input_path = measured_histo.GetDirectory().GetPath()
     print input_path
     output_file = input_path.split(':')[0]
     output_path = input_path.split(':')[1].split('/')
     output_path[-1] = "unf_{0}".format(output_path[-1])
-    output_path = '/'.join(output_path)
+    output_path = '/'.join(output_path).lstrip('/')
 
     print output_path
 
@@ -64,14 +66,20 @@ def main():
 
     # outputfile = TFile('unfolded.root', 'RECREATE')
 
-    if ROOT.gDirectory.GetDirectory(output_path) != None:
-        ROOT.gDirectory.Delete('unf_default;*')
+    ROOT.gDirectory.cd(measured_histo.GetDirectory().GetPath())
+    ROOT.gDirectory.cd('/')
 
+    if ROOT.gDirectory.GetDirectory(output_path) != None:
+        print "Delete existing folder" + output_path
+        ROOT.gDirectory.Delete('{0};*'.format(output_path))
     ROOT.gDirectory.mkdir(output_path)
     ROOT.gDirectory.cd(output_path)
+ 
     # datafile.cd()
-    hReco.Write('unf_hjet12rap')
-    hRecoCov.Write('unf_hjet12rap_cov')
+    recotruth_histo.Write(measured_histo.GetName())
+    response_matrix.Hmeasured().Write(response_matrix.Hmeasured().GetName())
+    response_matrix.Htruth().Write(response_matrix.Htruth().GetName())
+    recotruth_cov.Write('cov_{0}'.format(measured_histo.GetName()))
 #     hRecoCorr.Write('unf_hjet12rap_corr')
 
 
