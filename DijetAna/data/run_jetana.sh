@@ -19,6 +19,6 @@ echo "---------------------------------"
 echo "Running with the following config"
 echo "---------------------------------"
 # $FILE_NAMES=echo "${FILE_NAMES//\"}"
-dijetana.py -i ${FILE_NAMES//\"} -c $CONFIG --log-level debug || exit $?
+dijetana.py -i ${FILE_NAMES//\"} --save-config config.json -c $CONFIG --log-level debug || exit $?
 
 exit 0
