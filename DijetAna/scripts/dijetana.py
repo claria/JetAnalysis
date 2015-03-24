@@ -39,6 +39,8 @@ def main():
                         help="Exit before running Artus to only check the configs.")
     parser.add_argument("-d", "--dry-run", default=False, action="store_true",
                         help="Exit before running Artus to only check the configs.")
+    parser.add_argument("-s", "--save-config", default=None,
+                        help="Write config to file. If not specified temp file is used.")
     parser.add_argument("-b", "--batch", default=False, action="store_true",
                         help="Submit to batch system using gc.")
     parser.add_argument("--log-level", default="info",
@@ -57,6 +59,10 @@ def main():
     if args['fast'] is not None:
         args['input_files'] = args['input_files'][:args['fast']]
 
+    # Empty filelist
+    if not args['input_files']:
+        raise ValueError("Input file list is empty.")
+
     # Unique list of nicknames of all input files
     nicknames = get_nicknames(args['input_files'])
 
@@ -65,6 +71,12 @@ def main():
         project_directory = prepare_gc_input(args['input_files'], 
                                              config=args['config'], 
                                              work_directory=work_directory)
+
+        gc_command = os.path.expandvars('$HOME/grid-control/go.py')
+        arguments = '-Gc {0}'.format(os.path.join(project_directory, 'jetana.conf'))
+        run(gc_command, arguments=arguments)
+        print 'grid-control was invoked with cmd: \"{0} {1}\"'.format(gc_command, arguments)
+        print 'Output was written to \"{0}\"'.format(project_directory)
 
     if args['batch'] is not True:
         # Prepare list of all configs
@@ -79,10 +91,15 @@ def main():
                 config['OutputFile'] = args['output_file']
             config['nickname'] = nickname
             configs.append(config)
-    # Run over each config
+        # Run over each config
         for config in configs:
-            path = save_config(config)
-            run("JetAna", arguments=path)
+            if args['print_config']:
+                print json.dumps(config, sort_keys=True, indent=4)
+                continue
+            path = save_config(config, path=args['save_config'])
+            rc = run("JetAna", arguments=path)
+            if rc != 0:
+                raise Exception("Error in called program")
 
 
 
@@ -101,12 +118,12 @@ def save_config(config, path=None, indent=4):
     """Save json config to file."""
     if path is None:
         basename = "artus_{0}.json".format(get_hash(str(config)))
-        filepath = os.path.join(tempfile.gettempdir(), basename)
-    with open(filepath, "w") as f:
+        path = os.path.join(tempfile.gettempdir(), basename)
+    with open(path, "w") as f:
         json.dump(config, f, indent=indent, sort_keys=True)
 
-    log.debug("Config written to \"{0}\"".format(filepath))
-    return filepath
+    log.debug("Config written to \"{0}\"".format(path))
+    return path
 
 
 def get_hash(s, truncate=12):
@@ -210,6 +227,7 @@ def prepare_gc_input(filelist, config, work_directory):
     replace_dict['CMSSW_BASE'] = cmssw_directory
     replace_dict['DBS_PATH'] = dbs_filepath
     replace_dict['CONFIG'] = config
+    replace_dict['PROJECT_DIR'] = project_directory
     replace(gc_config_path, replace_dict)
 
     return project_directory
