@@ -19,35 +19,36 @@ void JetUnfoldingResponseConsumer::Init(setting_type const& settings)
 	m_unfoldResponseLeadJetPt = new RooUnfoldResponse(&pt_binning, &genpt_binning, "pt_response_matrix", "pt_response_matrix");
 }
 
-void JetUnfoldingResponseConsumer::ProcessEvent(event_type const& event, product_type const& product, setting_type const& settings, FilterResult& result)
+void JetUnfoldingResponseConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product, setting_type const& settings)
 {
 	double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
 
-	if (result.HasPassed()) 
-	{
-		// if (product.m_matchedRecoJets.at(0) != NULL && product.m_matchedRecoJets.at(1) != NULL) {
-		if (product.m_matchedGenJets.at(0) != NULL) {
+		if (product.m_matchedGenJets.at(0) != NULL &&
+			product.m_matchedGenJets.at(1) != NULL) {
 			m_unfoldResponse->Fill(product.m_validJets.at(0)->p4.Rapidity(), 
-					               product.m_validJets.at(1)->p4.Rapidity(),
-					               product.m_validJets.at(0)->p4.Pt(), 
-					               product.m_validJets.at(0)->p4.Rapidity(), 
-					               product.m_validJets.at(1)->p4.Rapidity(),
-					               // event.m_genJets->at(0).p4.Rapidity(), 
-					               // event.m_genJets->at(1).p4.Rapidity(), 
-					               product.m_matchedGenJets.at(0)->p4.Pt(), 
+			                       product.m_validJets.at(1)->p4.Rapidity(),
+			                       product.m_validJets.at(0)->p4.Pt(), 
+			                       product.m_matchedGenJets.at(0)->p4.Rapidity(),
+			                       product.m_matchedGenJets.at(1)->p4.Rapidity(),
+			                       product.m_matchedGenJets.at(0)->p4.Pt(), 
+			                       eventWeight);
+		}
+		else {
+			m_unfoldResponse->Miss(event.m_genJets->at(0).p4.Rapidity(), 
+					               event.m_genJets->at(1).p4.Rapidity(), 
+					               event.m_genJets->at(0).p4.Pt(), 
 					               eventWeight);
+		}
+		// Control Leading jet simple spectrum
+		if (product.m_matchedGenJets.at(0)) {
 			m_unfoldResponseLeadJetPt->Fill(product.m_validJets.at(0)->p4.Pt(), 
-					                        product.m_matchedGenJets.at(0)->p4.Pt(), 
-											eventWeight);
+			                                product.m_matchedGenJets.at(0)->p4.Pt(), 
+			                                eventWeight);
 
 		}
 		else {
-			// m_unfoldResponse->Miss(event.m_genJets->at(0).p4.Rapidity(), 
-					               // event.m_genJets->at(1).p4.Rapidity(), 
-					               // event.m_genJets->at(0).p4.Pt(), 
-					               // eventWeight);
+			m_unfoldResponseLeadJetPt->Fill(event.m_genJets->at(0).p4.Pt(), eventWeight);
 		}
-	}
 }
 
 void JetUnfoldingResponseConsumer::Finish(setting_type const& settings)
