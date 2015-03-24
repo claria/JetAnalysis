@@ -11,10 +11,16 @@ class UnfoldingResponseConfig(BaseConfig):
             raise Exception("This config only works on MC")
 
     def modify_settings(self):
+        self['Processors'].append('filter:LeadingJetPtFilter')
+        self['MinLeadingJetPt'] = '74.'
+
         # self['PtBinning'] = [34, 42, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         self['PtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
+        self['GenPtBinning'] = [36, 44, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
+        self['TripleDiffPtBinning'] = [74, 114, 196, 300, 468, 790, 3000]
+        self['TripleDiffGenPtBinning'] = [46, 60, 74, 114, 196, 300, 468, 790, 3000]
         self['MinValidJetPt'] = '20.'
-        self['MaxDeltaR'] = 0.1
+        self['MaxDeltaR'] = 0.3
         # Define global cuts
 
         default_pipeline = self.get_default_pipeline()
