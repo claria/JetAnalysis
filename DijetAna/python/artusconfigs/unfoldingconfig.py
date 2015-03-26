@@ -20,6 +20,7 @@ class UnfoldingResponseConfig(BaseConfig):
         self['TripleDiffPtBinning'] = [74, 114, 196, 300, 468, 790, 3000]
         self['TripleDiffGenPtBinning'] = [46, 60, 74, 114, 196, 300, 468, 790, 3000]
         self['MinValidJetPt'] = '20.'
+        # Just use minimum deltaR
         self['MaxDeltaR'] = 0.3
         # Define global cuts
 
