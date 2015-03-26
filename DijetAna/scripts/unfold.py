@@ -5,6 +5,7 @@ import sys
 import argparse
 
 import ROOT
+from math import sqrt
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 from JetAnalysis.DijetAna.tools import *
 
@@ -18,6 +19,7 @@ def main():
     parser.add_argument('--response-matrix', help='Path to root file with the response matrix')
     parser.add_argument('--niters', type=int, default=4, help='Number of iterations in Bayes Unfolding.')
     parser.add_argument('--ntoys', type=int, default=1, help='Number of toys in cov determination.')
+    parser.add_argument('--output-file', help='Unfolded distributions will be written to that file if specified.')
 
     args = vars(parser.parse_args())
 
@@ -32,7 +34,7 @@ def main():
     # Run Toys
     unfold.SetNToys(args['ntoys'])
     unfold.RunToy()
-    recotruth_cov = unfold.Ereco(3)
+    recotruth_cov = unfold.Ereco(2)
     # recotruth_cov.SetName("cov_{0}".format(measured_histo.GetName()))
 
     input_path = measured_histo.GetDirectory().GetPath()
@@ -45,42 +47,38 @@ def main():
     print output_path
 
     # ROOT.gDirectory.cd(output_path)
-    #hRecoCorr = hRecoCov.Clone('hrecocorr')
-    #print type(hRecoCorr)
-    #print dir(hRecoCorr)
-    #print hRecoCorr.GetNrows()
+    recotruth_corr = recotruth_cov.Clone("recotruth_corr")
+    for i in range(0, recotruth_corr.GetNrows()):
+        for j in range(i,recotruth_corr.GetNrows()):
+            tmp = (recotruth_cov[i][i]*recotruth_cov[j][j])
+            if tmp <= 0.:
+                recotruth_corr[i][j] = 0.
+            else:
+                recotruth_corr[i][j] = (recotruth_cov[i][j] / (sqrt(recotruth_cov[i][i])*sqrt(recotruth_cov[j][j])))
+                # if recotruth_corr[i][j] > 1.:
+                    # print i, j, recotruth_corr[i][j]
+                    # recotruth_corr[i][j] = 0.0
+                recotruth_corr[j][i] = recotruth_corr[i][j]
 
-    #for i in range(0, hRecoCorr.GetNrows()):
-    #    for j in range(i,hRecoCorr.GetNrows()):
-    #        tmp = (hRecoCov[i][i]*hRecoCov[j][j])
-    #        if tmp <= 0.:
-    #            hRecoCorr[i][j] = 0.
-    #        else:
-    #            hRecoCorr[i][j] = (hRecoCov[i][j] / (hRecoCov[i][i]*hRecoCov[j][j]))
-    #            if hRecoCorr[i][j] > 1.:
-    #                print i, j, hRecoCorr[i][j]
-    #            hRecoCorr[i][j] = 0.0
-    #        hRecoCorr[j][i] = hRecoCorr[i][j]
+    if args['output_file']:
+        out_file = ROOT.TFile(args['output_file'], 'RECREATE')
+        out_file.cd("")
+    else:
+        ROOT.gDirectory.cd(measured_histo.GetDirectory().GetPath())
+        ROOT.gDirectory.cd('/')
 
-    # for i in range 
-
-    # outputfile = TFile('unfolded.root', 'RECREATE')
-
-    ROOT.gDirectory.cd(measured_histo.GetDirectory().GetPath())
-    ROOT.gDirectory.cd('/')
-
-    if ROOT.gDirectory.GetDirectory(output_path) != None:
-        print "Delete existing folder" + output_path
-        ROOT.gDirectory.Delete('{0};*'.format(output_path))
-    ROOT.gDirectory.mkdir(output_path)
-    ROOT.gDirectory.cd(output_path)
+        if ROOT.gDirectory.GetDirectory(output_path) != None:
+            print "Folder {0} exists. Will be overwritten".format(output_path)
+            ROOT.gDirectory.Delete('{0};*'.format(output_path))
+        ROOT.gDirectory.mkdir(output_path)
+        ROOT.gDirectory.cd(output_path)
  
     # datafile.cd()
     recotruth_histo.Write(measured_histo.GetName())
     response_matrix.Hmeasured().Write(response_matrix.Hmeasured().GetName())
     response_matrix.Htruth().Write(response_matrix.Htruth().GetName())
     recotruth_cov.Write('cov_{0}'.format(measured_histo.GetName()))
-#     hRecoCorr.Write('unf_hjet12rap_corr')
+    recotruth_corr.Write('corr_{0}'.format(measured_histo.GetName()))
 
 
 if __name__ == '__main__':
