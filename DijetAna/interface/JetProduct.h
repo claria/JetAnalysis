@@ -16,30 +16,40 @@ public:
 	std::vector<double> m_incJetsRap;
 	std::vector<double> m_incJetsPhi;
 
-	float m_jet1Pt;
-	float m_jet1Eta;
-	float m_jet1Rap;
-	float m_jet1Phi;
-	float m_jet2Pt;
-	float m_jet2Eta;
-	float m_jet2Rap;
-	float m_jet2Phi;
+	// Main observables to be set in the JetQuantities Producer
+	double obs1;
+	double obs2;
+	double obs3;
+	// Main observables to be set in the GenJetQuantities Producer
+	double genobs1;
+	double genobs2;
+	double genobs3;
 
-	float m_dijet_mass;
-	float m_dijet_yMax;
-	float m_dijet_deltaPhi;
-	float m_dijet_cosThetaStar;
-	float m_dijet_yBoost;
-	float m_dijet_yStar;
-	float m_dijet_chi;
 
-	float m_genjet1Pt;
-	float m_genjet1Eta;
-	float m_genjet1Rap;
-	float m_genjet1Phi;
-	float m_genjet2Pt;
-	float m_genjet2Eta;
-	float m_genjet2Rap;
-	float m_genjet2Phi;
-	float m_gendijet_mass;
+// 	double m_jet1Pt;
+// 	double m_jet1Eta;
+// 	double m_jet1Rap;
+// 	double m_jet1Phi;
+// 	double m_jet2Pt;
+// 	double m_jet2Eta;
+// 	double m_jet2Rap;
+// 	double m_jet2Phi;
+//
+// 	double m_dijet_mass;
+// 	double m_dijet_yMax;
+// 	double m_dijet_deltaPhi;
+// 	double m_dijet_cosThetaStar;
+// 	double m_dijet_yBoost;
+// 	double m_dijet_yStar;
+// 	double m_dijet_chi;
+//
+// 	double m_genjet1Pt;
+// 	double m_genjet1Eta;
+// 	double m_genjet1Rap;
+// 	double m_genjet1Phi;
+// 	double m_genjet2Pt;
+// 	double m_genjet2Eta;
+// 	double m_genjet2Rap;
+// 	double m_genjet2Phi;
+// 	double m_gendijet_mass;
 };

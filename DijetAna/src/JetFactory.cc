@@ -1,7 +1,8 @@
 #include "JetAnalysis/DijetAna/interface/JetFactory.h"
 
 // Producers
-#include "JetAnalysis/DijetAna/interface/Producers/JetQuantities.h"
+#include "JetAnalysis/DijetAna/interface/Producers/JetQuantitiesProducer.h"
+#include "JetAnalysis/DijetAna/interface/Producers/GenJetQuantitiesProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/GenJetMatchingProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/JetHltProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/JetValidJetsProducer.h"
@@ -33,8 +34,10 @@ JetFactory::~JetFactory() {}
 
 ProducerBaseUntemplated * JetFactory::createProducer ( std::string const& id )
 {
-	if ( JetQuantities().GetProducerId() == id )
-		return new JetQuantities();
+	if ( JetQuantitiesProducer().GetProducerId() == id )
+		return new JetQuantitiesProducer();
+	else if (GenJetQuantitiesProducer().GetProducerId() == id)
+		return new GenJetQuantitiesProducer();
 	else if (JetHltProducer().GetProducerId() == id)
 		return new JetHltProducer();
 	else if (GenJetMatchingProducer().GetProducerId() == id)
