@@ -28,6 +28,7 @@ private:
 	TH1D* m_h_incjetpt = NULL;
 	TH2D* m_h_jet12rap = NULL;
 	TH3D* m_h3_jet12rap = NULL;
+	TH3D* m_h3_jet12rapsign = NULL;
 
 	TH1D* m_h_neutralHadronFraction = NULL;
 	TH1D* m_h_chargedHadronFraction = NULL;

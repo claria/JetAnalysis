@@ -1,4 +1,6 @@
 #include "JetAnalysis/DijetAna/interface/Consumers/JetQuantitiesHistogramConsumer.h"
+// #include "Artus/Utility/interface/Utility.h"
+#include <boost/math/special_functions/sign.hpp>
 
 void JetQuantitiesHistogramConsumer::Init(setting_type const& settings)
 {
@@ -41,6 +43,11 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings)
 	                                                       settings.GetRapidityBinning().size()-1, &settings.GetRapidityBinning()[0],
 	                                                       settings.GetTripleDiffPtBinning().size()-1, &settings.GetTripleDiffPtBinning()[0]);
 	m_h3_jet12rap->Sumw2();
+	m_h3_jet12rapsign = new TH3D("h3_jet12rapsign", "h3_jet12rapsign", settings.GetRapidityBinning().size()-1, &settings.GetRapidityBinning()[0],
+	                                                       settings.GetRapidityBinning().size()-1, &settings.GetRapidityBinning()[0],
+	                                                       settings.GetTripleDiffPtBinning().size()-1, &settings.GetTripleDiffPtBinning()[0]);
+	m_h3_jet12rapsign->Sumw2();
+
 
 	m_h_neutralHadronFraction = new TH1D("h_neutralHadronFraction","h_neutralHadronFraction", 50, 0., 2.);
 	m_h_chargedHadronFraction = new TH1D("h_chargedHadronFraction","h_chargedHadronFraction", 50, 0., 1.);
@@ -70,8 +77,18 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
 		m_h_jet2rap->Fill(product.m_validJets.at(1)->p4.Rapidity(), eventWeight);
 		m_h_jet2phi->Fill(product.m_validJets.at(1)->p4.Phi(), eventWeight);
 
-		m_h_jet12rap->Fill(product.m_validJets.at(0)->p4.Rapidity(), product.m_validJets.at(1)->p4.Rapidity(), eventWeight);
-		m_h3_jet12rap->Fill(product.m_validJets.at(0)->p4.Rapidity(), product.m_validJets.at(1)->p4.Rapidity(), product.m_validJets.at(0)->p4.Pt(), eventWeight);
+		m_h_jet12rap->Fill(product.m_validJets.at(0)->p4.Rapidity(), 
+		                   product.m_validJets.at(1)->p4.Rapidity(),
+		                   eventWeight);
+		m_h3_jet12rap->Fill(product.m_validJets.at(0)->p4.Rapidity(),
+		                    product.m_validJets.at(1)->p4.Rapidity(),
+		                    product.m_validJets.at(0)->p4.Pt(),
+		                    eventWeight);
+		m_h3_jet12rapsign->Fill(boost::math::sign(product.m_validJets.at(0)->p4.Rapidity()-product.m_validJets.at(1)->p4.Rapidity())*product.m_validJets.at(0)->p4.Rapidity(),
+		                    boost::math::sign(product.m_validJets.at(0)->p4.Rapidity()-product.m_validJets.at(1)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(),
+		                    product.m_validJets.at(0)->p4.Pt(),
+		                    eventWeight);
+
 	}
 	for ( auto jet = product.m_validJets.begin(); jet != product.m_validJets.end(); jet++ ) {
 		m_h_incjetpt->Fill((*jet)->p4.Pt(), eventWeight);
@@ -102,6 +119,7 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings)
 	m_h_incjetpt->Write(m_h_incjetpt->GetName());
 	m_h_jet12rap->Write(m_h_jet12rap->GetName());
 	m_h3_jet12rap->Write(m_h3_jet12rap->GetName());
+	m_h3_jet12rapsign->Write(m_h3_jet12rapsign->GetName());
 
 	m_h_neutralHadronFraction->Write(m_h_neutralHadronFraction->GetName());
 	m_h_chargedHadronFraction->Write(m_h_chargedHadronFraction->GetName());
