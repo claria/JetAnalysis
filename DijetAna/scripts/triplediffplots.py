@@ -26,6 +26,8 @@ def main():
     parser = argparse.ArgumentParser(description='Unfold distribution with a given response matrix')
     parser.add_argument('--inputfiles', nargs='+', default=['DATA.root:default/h3_jet12rap',],
                         help='Path to root file with the distribution with the syntax file.root:path/to/histo')
+    parser.add_argument('--labels', nargs='+', help='Legend labels for each plot')
+
     args = vars(parser.parse_args())
 
     histos = []
@@ -49,7 +51,7 @@ def main():
             histos_sliced.append(xyslice)
 
         # histos_sliced = [histo.ProjectionZ("slice_{0}".format(i), i, i) for histo in histos]
-        plotproducer = TripleDiffRatioPlot(histos_sliced, output_fn='plots/tdratio_{0}'.format(i))
+        plotproducer = TripleDiffRatioPlot(histos_sliced, output_fn='plots/tdratio_{0}'.format(i), labels=args['labels'])
         plotproducer.do_plot()
         # tddistplot = TripleDiffHeatMapPlot(histos_sliced[0], output_fn='plots/tdhmplot_{0}'.format(i))
         # tddistplot.do_plot()
@@ -69,10 +71,11 @@ def get_root_object(filename, objectpath):
 
 class TripleDiff3DPlot(BasePlot):
 
-    def __init__(self, histo, *args, **kwargs):
+    def __init__(self, histo, labels=None, *args, **kwargs):
         super(TripleDiff3DPlot, self).__init__(*args, **kwargs)
 
         self.histo = histo
+        self.labels = labels
 
     def prepare(self):
         pass
@@ -137,9 +140,10 @@ class TripleDiffHeatMapPlot(BasePlot):
 
 class TripleDiffRatioPlot(BasePlot):
 
-    def __init__(self, histos, *args, **kwargs):
+    def __init__(self, histos, labels=None, *args, **kwargs):
         super(TripleDiffRatioPlot, self).__init__(*args, **kwargs)
         self.histos = histos
+        self.labels = labels
         # for i in range(1, len(histos)):
             # histos[i].Scale(histos[i].GetEntries()/histos[0].GetEntries())
         self.nbins = self.histos[0].GetNbinsX()
@@ -156,7 +160,11 @@ class TripleDiffRatioPlot(BasePlot):
     def produce(self):
 
         self.fig.text(x=-0.3, y=0.5, s='Ratio to Data', rotation='vertical', va='center')
-        labels = ['Data', 'Pythia 8']
+        if self.labels:
+            labels = self.labels
+        else:
+            labels = [histo.GetName() for histo in self.histos]
+        # labels = ['Data', 'Pythia 8']
         # for histo in self.histos:
             # histo.Scale(1./histo.Integral())
 
@@ -179,7 +187,7 @@ class TripleDiffRatioPlot(BasePlot):
                     # hist_slice.Scale(ref_histo.Integral()/hist_slice.Integral())
                 hist_slice.Divide(ref_histo)
                 hist = MplHisto(hist_slice)
-                plot_errorbar(hist, label=labels[j])
+                plot_errorbar(hist, label=self.ensure_latex(labels[j]))
 
             ax.set_ylabel("${0} \leq y_2 < {1}$".format(histo.GetYaxis().GetBinLowEdge(i), histo.GetYaxis().GetBinLowEdge(i+1)),
                           rotation='horizontal')
