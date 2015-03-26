@@ -74,7 +74,10 @@ def main():
 
         gc_command = os.path.expandvars('$HOME/grid-control/go.py')
         arguments = '-Gc {0}'.format(os.path.join(project_directory, 'jetana.conf'))
-        run(gc_command, arguments=arguments)
+        try:
+            run(gc_command, arguments=arguments)
+        except KeyboardInterrupt:
+            pass
         print 'grid-control was invoked with cmd: \"{0} {1}\"'.format(gc_command, arguments)
         print 'Output was written to \"{0}\"'.format(project_directory)
 
