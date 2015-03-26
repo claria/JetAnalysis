@@ -235,6 +235,28 @@ class BasePlot(object):
                 setattr(obj, attr, val)
 
 
+    @staticmethod
+    def ensure_latex(inp_str):
+        """
+        Return string with escaped latex incompatible characters.
+        :param inp_str:
+        :return:
+        """
+        chars = {
+            '&': r'\&',
+            '%': r'\%',
+            '$': r'\$',
+            '#': r'\#',
+            '_': r'\_',
+            '{': r'\letteropenbrace{}',
+            '}': r'\letterclosebrace{}',
+            '~': r'\lettertilde{}',
+            '^': r'\letterhat{}',
+            '\\': r'\letterbackslash{}',
+        }
+        return ''.join([chars.get(char, char) for char in inp_str])
+
+
 class GenericPlot(BasePlot):
     """
     Very simple generic plotting script
