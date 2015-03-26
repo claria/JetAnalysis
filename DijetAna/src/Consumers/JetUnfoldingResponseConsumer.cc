@@ -34,7 +34,7 @@ void JetUnfoldingResponseConsumer::ProcessFilteredEvent(event_type const& event,
 			                       eventWeight);
 		}
 		else {
-			m_unfoldResponse->Miss(event.m_genJets->at(0).p4.Rapidity(), 
+			m_unfoldResponse->Fake(event.m_genJets->at(0).p4.Rapidity(), 
 					               event.m_genJets->at(1).p4.Rapidity(), 
 					               event.m_genJets->at(0).p4.Pt(), 
 					               eventWeight);
@@ -47,7 +47,7 @@ void JetUnfoldingResponseConsumer::ProcessFilteredEvent(event_type const& event,
 
 		}
 		else {
-			m_unfoldResponseLeadJetPt->Fill(event.m_genJets->at(0).p4.Pt(), eventWeight);
+			m_unfoldResponseLeadJetPt->Fake(event.m_genJets->at(0).p4.Pt(), eventWeight);
 		}
 }
 
