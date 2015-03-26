@@ -3,7 +3,7 @@
 #include "Artus/Core/interface/Cpp11Support.h"
 #include "../JetTypes.h"
 
-class JetQuantities : public JetProducerBase {
+class GenJetQuantitiesProducer : public JetProducerBase {
 
 public:
 	virtual std::string GetProducerId() const override;
