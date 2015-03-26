@@ -119,7 +119,7 @@ class BaseConfig(dict):
         pipeline = self['Pipelines']['default']
         pipeline['EventWeight'] = 'EventWeight'
         pipeline['Processors'] = [
-                                  'producer:JetQuantities',
+                                  'producer:JetQuantitiesProducer',
                                   'producer:EventWeightProducer'
                                   ]
         pipeline['Consumers'] =  []
@@ -132,6 +132,7 @@ class BaseConfig(dict):
        # self['Pipelines']['default']['Quantities'].append('gendijet_mass')
         self['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup/pileup_weights_S10.root'
         self['Processors'].append('producer:GenJetMatchingProducer')
+        self['Processors'].append('producer:GenJetQuantitiesProducer')
         self['Processors'].append('producer:PUWeightProducer')
         self['Processors'].append('producer:CrossSectionWeightProducer')
         self['Processors'].append('producer:GeneratorWeightProducer')
