@@ -48,6 +48,8 @@ public:
 	IMPL_SETTING_DOUBLELIST(HltFilterThresholds);
 	//Binnings
 	IMPL_SETTING_DOUBLELIST(RapidityBinning);
+	IMPL_SETTING_DOUBLELIST(Jet1RapidityBinning);
+	IMPL_SETTING_DOUBLELIST(Jet2RapidityBinning);
 	IMPL_SETTING_DOUBLELIST(PtBinning);
 	IMPL_SETTING_DOUBLELIST(GenPtBinning);
 	IMPL_SETTING_DOUBLELIST(TripleDiffPtBinning);
