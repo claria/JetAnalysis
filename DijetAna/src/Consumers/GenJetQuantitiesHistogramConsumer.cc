@@ -27,23 +27,23 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings)
 	m_h_incgenjetpt->Sumw2();
 
 	// Triple differential histogram
-	m_h_genjet12rap = new TH2D("h_genjet12rap", "h_genjet12rap", settings.GetJet1RapidityBinning().size()-1, &settings.GetJet1RapidityBinning()[0],
-	                                                             settings.GetJet2RapidityBinning().size()-1, &settings.GetJet2RapidityBinning()[0]);
+	m_h_genjet12rap = new TH2D("h_genjet12rap", "h_genjet12rap", settings.GetRapidityBinning().size()-1, &settings.GetRapidityBinning()[0],
+	                                                             settings.GetRapidityBinning().size()-1, &settings.GetRapidityBinning()[0]);
 	m_h_genjet12rap->Sumw2();
 
 
 	m_h2GenVsRecoPt = new TH2D("h2GenVsRecoPt", "h2GenVsRecoPt", 50, 0.5, 1.5, settings.GetGenPtBinning().size()-1, &settings.GetGenPtBinning()[0]);
 	m_h2GenVsRecoPt->Sumw2();
 	// Triple-differential distribution of y1, y2 and genjet pT
-	m_h3_genjet12rap = new TH3D("h3_genjet12rap", "h3_genjet12rap", settings.GetJet1RapidityBinning().size()-1, &settings.GetJet1RapidityBinning()[0],
-	                                                                settings.GetJet2RapidityBinning().size()-1, &settings.GetJet2RapidityBinning()[0],
+	m_h3_genjet12rap = new TH3D("h3_genjet12rap", "h3_genjet12rap", settings.GetRapidityBinning().size()-1, &settings.GetRapidityBinning()[0],
+	                                                                settings.GetRapidityBinning().size()-1, &settings.GetRapidityBinning()[0],
 	                                                                settings.GetTripleDiffGenPtBinning().size()-1, &settings.GetTripleDiffGenPtBinning()[0]);
 	m_h3_genjet12rap->Sumw2();
 
 	m_h3_genjet12rapsign = new TH3D("h3_genjet12rapsign", "h3_genjet12rapsign", settings.GetJet1RapidityBinning().size()-1, &settings.GetJet1RapidityBinning()[0],
 	                                                                            settings.GetJet2RapidityBinning().size()-1, &settings.GetJet2RapidityBinning()[0],
 	                                                                            settings.GetTripleDiffGenPtBinning().size()-1, &settings.GetTripleDiffGenPtBinning()[0]);
-	m_h3_genjet12rap->Sumw2();
+	m_h3_genjet12rapsign->Sumw2();
 
 
 }
@@ -69,10 +69,14 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
 		m_h_genjet12rap->Fill(event.m_genJets->at(0).p4.Rapidity(),
 		                      event.m_genJets->at(1).p4.Rapidity(),
 		                      eventWeight);
+		m_h3_genjet12rap->Fill(event.m_genJets->at(0).p4.Rapidity(),
+		                       event.m_genJets->at(1).p4.Rapidity(),
+		                       event.m_genJets->at(0).p4.Pt(),
+		                       eventWeight);
 		m_h3_genjet12rapsign->Fill(std::abs(event.m_genJets->at(0).p4.Rapidity()),
-		                      boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
-		                      event.m_genJets->at(0).p4.Pt(),
-		                      eventWeight);
+		                           boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
+		                           event.m_genJets->at(0).p4.Pt(),
+		                           eventWeight);
 	}
 	for ( auto jet = event.m_genJets->begin(); jet != event.m_genJets->end(); jet++ ) {
 		m_h_incgenjetpt->Fill((*jet).p4.Pt(), eventWeight);
@@ -99,5 +103,6 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings)
 	m_h_incgenjetpt->Write(m_h_incgenjetpt->GetName());
 	m_h_genjet12rap->Write(m_h_genjet12rap->GetName());
 	m_h3_genjet12rap->Write(m_h3_genjet12rap->GetName());
+	m_h3_genjet12rapsign->Write(m_h3_genjet12rapsign->GetName());
 }
 

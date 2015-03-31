@@ -35,17 +35,17 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings)
 	m_h_incjetpt->Sumw2();
 
 	// Triple differential histogram
-	m_h_jet12rap = new TH2D("h_jet12rap", "h_jet12rap", settings.GetJet1RapidityBinning().size()-1, &settings.GetJet1RapidityBinning()[0],
-	                                                    settings.GetJet2RapidityBinning().size()-1, &settings.GetJet2RapidityBinning()[0]);
+	m_h_jet12rap = new TH2D("h_jet12rap", "h_jet12rap", settings.GetRapidityBinning().size()-1, &settings.GetRapidityBinning()[0],
+	                                                    settings.GetRapidityBinning().size()-1, &settings.GetRapidityBinning()[0]);
 	m_h_jet12rap->Sumw2();
 	// 3-dimensional histogram of rap1, rap2 and pt
-	m_h3_jet12rap = new TH3D("h3_jet12rap", "h3_jet12rap", settings.GetJet1RapidityBinning().size()-1, &settings.GetJet1RapidityBinning()[0],
-	                                                       settings.GetJet2RapidityBinning().size()-1, &settings.GetJet2RapidityBinning()[0],
+	m_h3_jet12rap = new TH3D("h3_jet12rap", "h3_jet12rap", settings.GetRapidityBinning().size()-1, &settings.GetRapidityBinning()[0],
+	                                                       settings.GetRapidityBinning().size()-1, &settings.GetRapidityBinning()[0],
 	                                                       settings.GetTripleDiffPtBinning().size()-1, &settings.GetTripleDiffPtBinning()[0]);
 	m_h3_jet12rap->Sumw2();
 	m_h3_jet12rapsign = new TH3D("h3_jet12rapsign", "h3_jet12rapsign", settings.GetJet1RapidityBinning().size()-1, &settings.GetJet1RapidityBinning()[0],
-	                                                       settings.GetJet2RapidityBinning().size()-1, &settings.GetJet2RapidityBinning()[0],
-	                                                       settings.GetTripleDiffPtBinning().size()-1, &settings.GetTripleDiffPtBinning()[0]);
+	                                                                   settings.GetJet2RapidityBinning().size()-1, &settings.GetJet2RapidityBinning()[0],
+	                                                                   settings.GetTripleDiffPtBinning().size()-1, &settings.GetTripleDiffPtBinning()[0]);
 	m_h3_jet12rapsign->Sumw2();
 
 
