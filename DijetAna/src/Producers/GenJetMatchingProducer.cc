@@ -18,18 +18,15 @@ void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct & product
 	for (std::vector<KBasicJet*>::iterator validJet = product.m_validJets.begin();
 			validJet != product.m_validJets.end(); ++validJet)
 	{
-		double minDeltaR = 999.;
+		double minDeltaR = maxDeltaR;
 		product.m_matchedGenJets[validJet - product.m_validJets.begin()] = NULL;
 		for (std::vector<KLV>::iterator genJet = event.m_genJets->begin();
 				genJet != event.m_genJets->end(); ++genJet) 
 		{
 			double deltaR = ROOT::Math::VectorUtil::DeltaR((*validJet)->p4, genJet->p4);
-			// TODO: Make deltaR configurable
-			if (deltaR < maxDeltaR) {
-				if (deltaR < minDeltaR) {
-					minDeltaR = deltaR;
-					product.m_matchedGenJets[validJet - product.m_validJets.begin()] = &(*genJet);
-				}
+			if (deltaR < minDeltaR) {
+				minDeltaR = deltaR;
+				product.m_matchedGenJets[validJet - product.m_validJets.begin()] = &(*genJet);
 			}
 		}
 	}
@@ -38,19 +35,16 @@ void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct & product
 	for (std::vector<KLV>::iterator genJet = event.m_genJets->begin();
 				genJet != event.m_genJets->end(); ++genJet)
 	{
-		double minDeltaR = 999.;
+		double minDeltaR = maxDeltaR;
 		product.m_matchedRecoJets[genJet - event.m_genJets->begin()] = NULL;
 		for (std::vector<KBasicJet*>::iterator validJet = product.m_validJets.begin();
 				validJet != product.m_validJets.end(); ++validJet)
 		{
 			double deltaR = ROOT::Math::VectorUtil::DeltaR((*validJet)->p4, genJet->p4);
-			// TODO: Make deltaR configurable
-			if (deltaR < maxDeltaR) {
-				if (deltaR < minDeltaR) 
-				{
-					minDeltaR = deltaR;
-					product.m_matchedRecoJets[genJet - event.m_genJets->begin()] = *validJet;
-				}
+			if (deltaR < minDeltaR) 
+			{
+				minDeltaR = deltaR;
+				product.m_matchedRecoJets[genJet - event.m_genJets->begin()] = *validJet;
 			}
 		}
 	}
