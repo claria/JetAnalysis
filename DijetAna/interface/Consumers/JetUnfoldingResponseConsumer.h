@@ -20,7 +20,8 @@ public:
 	virtual void Finish(setting_type const& settings) override;
 
 private:
-	RooUnfoldResponse* m_unfoldResponse = NULL;
-	RooUnfoldResponse* m_unfoldResponseLeadJetPt = NULL;
+	RooUnfoldResponse* m_unfoldResponse_jet12rap = NULL;
+	RooUnfoldResponse* m_unfoldResponse_jet12rapsign = NULL;
+	RooUnfoldResponse* m_unfoldResponse_pt = NULL;
 
 };
