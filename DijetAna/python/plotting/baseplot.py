@@ -204,7 +204,7 @@ class BasePlot(object):
         if len(s) == 4:
             return ''
         if s[0] in ('2', '5'):
-            return s
+            return '${0}$'.format(s)
         return ''
 
     @staticmethod
