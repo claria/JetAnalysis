@@ -74,12 +74,12 @@ class BaseConfig(dict):
         self['JetID'] = 'tight'
         self['JetIDVersion'] = '2014'
         # Valid Jet Selection
-        self['MinValidJetPt'] = '20.'
+        self['MinValidJetPt'] = '50.'
         self['MaxValidJetAbsRap'] = '3.0'
         # Global Cuts
         self['MinValidJets'] = '2'
         # Gen Jet Matching
-        self['MaxDeltaR'] = 0.1
+        self['MaxDeltaR'] = 99.
         # Define global cuts
         # MET
         self['MaxMETSumEtRatio'] = 0.3
