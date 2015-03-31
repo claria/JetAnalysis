@@ -56,13 +56,13 @@ void JetUnfoldingResponseConsumer::ProcessFilteredEvent(event_type const& event,
 
 	}
 	else {
-		m_unfoldResponse_jet12rap->Fake(event.m_genJets->at(0).p4.Rapidity(), 
-				event.m_genJets->at(1).p4.Rapidity(), 
-				event.m_genJets->at(0).p4.Pt(), 
+		m_unfoldResponse_jet12rap->Fake(product.m_validJets.at(0)->p4.Rapidity(), 
+				product.m_validJets.at(1)->p4.Rapidity(), 
+				product.m_validJets.at(0)->p4.Pt(), 
 				eventWeight);
-		m_unfoldResponse_jet12rapsign->Fake(std::abs(event.m_genJets->at(0).p4.Rapidity()), 
-				boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(), 
-				event.m_genJets->at(0).p4.Pt(), 
+		m_unfoldResponse_jet12rapsign->Fake(std::abs(product.m_validJets.at(0)->p4.Rapidity()), 
+				boost::math::sign(product.m_validJets.at(0)->p4.Rapidity()*product.m_validJets.at(1)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(), 
+				product.m_validJets.at(0)->p4.Pt(), 
 				eventWeight);
 
 	}
@@ -74,7 +74,7 @@ void JetUnfoldingResponseConsumer::ProcessFilteredEvent(event_type const& event,
 
 	}
 	else {
-		m_unfoldResponse_pt->Fake(event.m_genJets->at(0).p4.Pt(), eventWeight);
+		m_unfoldResponse_pt->Fake(product.m_validJets.at(0)->p4.Pt(), eventWeight);
 	}
 }
 
