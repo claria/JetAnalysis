@@ -61,25 +61,28 @@ class BaseConfig(dict):
         # Observable binning in leading jet pT
         # self['ObservableBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         # Binnings
-        self['RapidityBinning'] = [-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
-        self['Jet1RapidityBinning'] = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
-        self['Jet2RapidityBinning'] = [-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+        # self['RapidityBinning'] = [-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+        # self['Jet1RapidityBinning'] = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5]
+        # self['Jet2RapidityBinning'] = [-3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5]
+        self['RapidityBinning'] = [-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0]
+        self['Jet1RapidityBinning'] = [0.0, 1.0, 2.0, 3.0]
+        self['Jet2RapidityBinning'] = [-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0]
         self['PtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         self['GenPtBinning'] = [36, 44, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         self['TripleDiffPtBinning'] = [74, 114, 196, 300, 468, 790, 3000]
-        self['TripleDiffGenPtBinning'] = [46, 60, 74, 114, 196, 300, 468, 790, 3000]
+        self['TripleDiffGenPtBinning'] = [74, 114, 196, 300, 468, 790, 3000]
 
         # Valid Jet Selection
         self['ValidJetsInput'] = 'corrected'
         self['JetID'] = 'tight'
         self['JetIDVersion'] = '2014'
         # Valid Jet Selection
-        self['MinValidJetPt'] = '50.'
+        self['MinValidJetPt'] = '0.'
         self['MaxValidJetAbsRap'] = '3.0'
         # Global Cuts
         self['MinValidJets'] = '2'
         # Gen Jet Matching
-        self['MaxDeltaR'] = 99.
+        self['MaxDeltaR'] = 0.1
         # Define global cuts
         # MET
         self['MaxMETSumEtRatio'] = 0.3
