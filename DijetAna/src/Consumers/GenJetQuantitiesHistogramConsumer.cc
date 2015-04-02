@@ -31,6 +31,10 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings)
 	                                                             settings.GetRapidityBinning().size()-1, &settings.GetRapidityBinning()[0]);
 	m_h_genjet12rap->Sumw2();
 
+	m_h_jet1DeltaR = new TH1D("h_jet1DeltaR", "h_jet1DeltaR", 100, 0.0, 1.0);
+	m_h_jet1DeltaR->Sumw2();
+	m_h_jet2DeltaR = new TH1D("h_jet2DeltaR", "h_jet2DeltaR", 100, 0.0, 1.0);
+	m_h_jet2DeltaR->Sumw2();
 
 	m_h2GenVsRecoPt = new TH2D("h2GenVsRecoPt", "h2GenVsRecoPt", 50, 0.5, 1.5, settings.GetGenPtBinning().size()-1, &settings.GetGenPtBinning()[0]);
 	m_h2GenVsRecoPt->Sumw2();
@@ -85,6 +89,10 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
 		m_h2GenVsRecoPt->Fill(product.m_matchedRecoJets.at(0)->p4.Pt()/event.m_genJets->at(0).p4.Pt(), 
 		                      event.m_genJets->at(0).p4.Pt(),
 		                      eventWeight);
+		m_h_jet1DeltaR->Fill(ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(0)->p4,event.m_genJets->at(0).p4),eventWeight); 
+	}
+	if (product.m_matchedRecoJets.at(1) != NULL) {
+		m_h_jet2DeltaR->Fill(ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(1)->p4,event.m_genJets->at(1).p4),eventWeight); 
 	}
 
 }
@@ -104,5 +112,7 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings)
 	m_h_genjet12rap->Write(m_h_genjet12rap->GetName());
 	m_h3_genjet12rap->Write(m_h3_genjet12rap->GetName());
 	m_h3_genjet12rapsign->Write(m_h3_genjet12rapsign->GetName());
+	m_h_jet1DeltaR->Write(m_h_jet1DeltaR->GetName());
+	m_h_jet2DeltaR->Write(m_h_jet2DeltaR->GetName());
 }
 
