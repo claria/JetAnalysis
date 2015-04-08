@@ -35,8 +35,6 @@ def main():
                         help="Print out the JSON config before running Artus.")
     parser.add_argument('-f', '--fast', type=int, default=None,
                         help="limit number of input files or grid-control jobs. 3=files[0:3].")
-    parser.add_argument("--no-run", default=False, action="store_true",
-                        help="Exit before running Artus to only check the configs.")
     parser.add_argument("-d", "--dry-run", default=False, action="store_true",
                         help="Exit before running Artus to only check the configs.")
     parser.add_argument("-s", "--save-config", default=None,
@@ -74,12 +72,16 @@ def main():
 
         gc_command = os.path.expandvars('$HOME/grid-control/go.py')
         arguments = '-Gc {0}'.format(os.path.join(project_directory, 'jetana.conf'))
-        try:
-            run(gc_command, arguments=arguments)
-        except KeyboardInterrupt:
+        log.info('grid-control was invoked with cmd: \"{0} {1}\"'.format(gc_command, arguments))
+        log.info('Output was written to \"{0}\"'.format(project_directory))
+        if args['dry_run']:
+            log.debug('Exit since only dry run requested.')
             pass
-        print 'grid-control was invoked with cmd: \"{0} {1}\"'.format(gc_command, arguments)
-        print 'Output was written to \"{0}\"'.format(project_directory)
+        else:
+            try:
+                run(gc_command, arguments=arguments)
+            except:
+                pass
 
     if args['batch'] is not True:
         # Prepare list of all configs
@@ -100,9 +102,14 @@ def main():
                 print json.dumps(config, sort_keys=True, indent=4)
                 continue
             path = save_config(config, path=args['save_config'])
-            rc = run("JetAna", arguments=path)
-            if rc != 0:
-                raise Exception("Error in called program")
+            if args['dry_run']:
+                log.info("Config written to \"{0}\"".format(path))
+                log.debug('Exit since only dry run requested.')
+                pass
+            else:
+                rc = run("JetAna", arguments=path)
+                if rc != 0:
+                    raise Exception("Error in called program")
 
 
 
