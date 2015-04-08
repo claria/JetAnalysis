@@ -8,6 +8,7 @@ std::string GenJetMatchingProducer::GetProducerId() const {
 
 void GenJetMatchingProducer::Init(JetSettings const& settings) {
 	maxDeltaR = settings.GetMaxDeltaR();
+	maxDeltaPtRel = settings.GetMaxDeltaPtRel();
 }
 
 void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct & product, JetSettings const& settings) const
@@ -20,8 +21,10 @@ void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct & product
 	for (auto jet : product.m_validJets)
 		validJets.push_back(*jet);
 
-	std::vector<int> match_result_genjets = matchSort_Matrix<KLV, KBasicJet>(*(event.m_genJets), event.m_genJets->size(), validJets, validJets.size(), maxDeltaR);
-	std::vector<int> match_result_recojets = matchSort_Matrix<KBasicJet, KLV>(validJets, validJets.size(), *(event.m_genJets), event.m_genJets->size(), maxDeltaR);
+	static matchSort_deltaRdeltaPtRel metric(maxDeltaR, maxDeltaPtRel);
+
+	std::vector<int> match_result_genjets = matchSort_Matrix<KLV, KBasicJet>(*(event.m_genJets), event.m_genJets->size(), validJets, validJets.size(), metric);
+	std::vector<int> match_result_recojets = matchSort_Matrix<KBasicJet, KLV>(validJets, validJets.size(), *(event.m_genJets), event.m_genJets->size(), metric);
 
 	// List of indices of matched genjets to each reco, size=recojet.size()
 	product.m_match_result_genjets = match_result_genjets;
