@@ -30,52 +30,68 @@ void JetUnfoldingResponseConsumer::Init(setting_type const& settings)
 
 	m_unfoldResponse_jet12rap = new RooUnfoldResponse(&meas_binning_jet12rap, &truth_binning_jet12rap, "res_matrix_jet12rap", "res_matrix_jet12rap");
 	m_unfoldResponse_jet12rapsign = new RooUnfoldResponse(&meas_binning_jet12rapsign, &truth_binning_jet12rapsign, "res_matrix_jet12rapsign", "res_matrix_jet12rapsign");
+	// m_unfoldResponse_jet12rapsign = new RooUnfoldResponse(&meas_binning_jet12rapsign, &truth_binning_jet12rapsign, "res_matrix_jet12rapsign", "res_matrix_jet12rapsign");
 	m_unfoldResponse_pt = new RooUnfoldResponse(&meas_binning_pt, &truth_binning_pt, "res_matrix_pt", "res_matrix_pt");
 }
 
-void JetUnfoldingResponseConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product, setting_type const& settings)
+void JetUnfoldingResponseConsumer::ProcessEvent(event_type const& event, product_type const& product, setting_type const& settings, FilterResult & result)
 {
 	double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
+	if (result.HasPassed()) 
+	{
+		if (product.m_matchedRecoJets.at(0) != NULL) {
+			m_unfoldResponse_pt->Fill(product.m_matchedRecoJets.at(0)->p4.Pt(), 
+					event.m_genJets->at(0).p4.Pt(), 
+					eventWeight);
+		}
 
-	if (product.m_matchedGenJets.at(0) != NULL &&
-			product.m_matchedGenJets.at(1) != NULL) {
-		m_unfoldResponse_jet12rap->Fill(product.m_validJets.at(0)->p4.Rapidity(), 
-				product.m_validJets.at(1)->p4.Rapidity(),
-				product.m_validJets.at(0)->p4.Pt(), 
-				product.m_matchedGenJets.at(0)->p4.Rapidity(),
-				product.m_matchedGenJets.at(1)->p4.Rapidity(),
-				product.m_matchedGenJets.at(0)->p4.Pt(), 
-				eventWeight);
-		m_unfoldResponse_jet12rapsign->Fill(std::abs(product.m_validJets.at(0)->p4.Rapidity()), 
-				boost::math::sign(product.m_validJets.at(0)->p4.Rapidity()*product.m_validJets.at(1)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(),
-				product.m_validJets.at(0)->p4.Pt(), 
-				std::abs(product.m_matchedGenJets.at(0)->p4.Rapidity()),
-				boost::math::sign(product.m_matchedGenJets.at(0)->p4.Rapidity()*product.m_matchedGenJets.at(1)->p4.Rapidity())*product.m_matchedGenJets.at(1)->p4.Rapidity(),
-				product.m_matchedGenJets.at(0)->p4.Pt(), 
+		if (product.m_match_result_recojets[0] != -1 &&
+				product.m_match_result_recojets[1] != -1) 
+		{
+			m_unfoldResponse_jet12rapsign->Fill(
+					// std::abs(product.m_validJets.at(0)->p4.Rapidity()), 
+					// boost::math::sign(product.m_validJets.at(0)->p4.Rapidity()*product.m_validJets.at(1)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(), 
+					// product.m_validJets.at(0)->p4.Pt(), 
+					// std::abs(event.m_genJets->at(0).p4.Rapidity()),
+					// boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
+					// event.m_genJets->at(0).p4.Pt(),
+					std::abs(product.m_matchedRecoJets.at(0)->p4.Rapidity()), 
+					boost::math::sign(product.m_matchedRecoJets.at(0)->p4.Rapidity()*product.m_matchedRecoJets.at(1)->p4.Rapidity())*product.m_matchedRecoJets.at(1)->p4.Rapidity(),
+					product.m_matchedRecoJets.at(0)->p4.Pt(), 
+					std::abs(event.m_genJets->at(0).p4.Rapidity()),
+					boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
+					event.m_genJets->at(0).p4.Pt(),
+					eventWeight);
+		}
+		else
+		{
+			// m_unfoldResponse_jet12rapsign->Miss(
+			// 		std::abs(event.m_genJets->at(0).p4.Rapidity()),
+			// 		boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
+			// 		event.m_genJets->at(0).p4.Pt(),
+			// 		eventWeight);
+
+			// m_unfoldResponse_jet12rapsign->Fake(std::abs(product.m_validJets.at(0)->p4.Rapidity()), 
+			// 		boost::math::sign(product.m_validJets.at(0)->p4.Rapidity()*product.m_validJets.at(1)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(), 
+			// 		product.m_validJets.at(0)->p4.Pt(), 
+			// 		eventWeight);
+
+		}
+	}
+	else
+	{
+		m_unfoldResponse_jet12rapsign->Miss(
+				std::abs(event.m_genJets->at(0).p4.Rapidity()),
+				boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
+				event.m_genJets->at(0).p4.Pt(),
 				eventWeight);
 
+		m_unfoldResponse_pt->Miss(event.m_genJets->at(0).p4.Pt(), eventWeight);
 	}
-	else {
-		m_unfoldResponse_jet12rap->Fake(product.m_validJets.at(0)->p4.Rapidity(), 
-				product.m_validJets.at(1)->p4.Rapidity(), 
-				product.m_validJets.at(0)->p4.Pt(), 
-				eventWeight);
-		m_unfoldResponse_jet12rapsign->Fake(std::abs(product.m_validJets.at(0)->p4.Rapidity()), 
-				boost::math::sign(product.m_validJets.at(0)->p4.Rapidity()*product.m_validJets.at(1)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(), 
-				product.m_validJets.at(0)->p4.Pt(), 
-				eventWeight);
 
-	}
-	// Control Leading jet simple spectrum
-	if (product.m_matchedGenJets.at(0)) {
-		m_unfoldResponse_pt->Fill(product.m_validJets.at(0)->p4.Pt(), 
-				product.m_matchedGenJets.at(0)->p4.Pt(), 
-				eventWeight);
-
-	}
-	else {
-		m_unfoldResponse_pt->Fake(product.m_validJets.at(0)->p4.Pt(), eventWeight);
-	}
+}
+void JetUnfoldingResponseConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product, setting_type const& settings)
+{
 }
 
 void JetUnfoldingResponseConsumer::Finish(setting_type const& settings)
