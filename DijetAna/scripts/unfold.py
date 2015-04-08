@@ -17,7 +17,9 @@ def main():
 
     parser.add_argument('--measured-histo', help='Path to root file with the distribution.')
     parser.add_argument('--response-matrix', help='Path to root file with the response matrix')
-    parser.add_argument('--niters', type=int, default=4, help='Number of iterations in Bayes Unfolding.')
+    parser.add_argument('--algo', default='iterative', choices=['iterative', 'binbybin', 'svd'], 
+                        help='Unfolding alogrithm.')
+    parser.add_argument('--reg-parameter', type=int, default=4, help='Number of iterations in Bayes Unfolding.')
     parser.add_argument('--ntoys', type=int, default=1, help='Number of toys in cov determination.')
     parser.add_argument('--output-file', help='Unfolded distributions will be written to that file if specified.')
 
@@ -26,10 +28,17 @@ def main():
     measured_histo = get_root_object(args['measured_histo'], option='UPDATE')
     response_matrix = get_root_object(args['response_matrix'])
 
-    unfold = ROOT.RooUnfoldBayes(response_matrix, measured_histo, args['niters'])
+    if args['algo'] == 'iterative':
+        unfold = ROOT.RooUnfoldBayes(response_matrix, measured_histo, args['reg_parameter'])
+    elif args['algo'] == 'svd':
+        unfold = ROOT.RooUnfoldSvd(response_matrix, measured_histo, args['reg_parameter'])
+    elif args['algo'] == 'binbybin':
+        unfold = ROOT.RooUnfoldBinByBin(response_matrix, measured_histo)
+    else:
+        raise ValueError()
 
     # Unfold distribution
-    recotruth_histo = unfold.Hreco()
+    recotruth_histo = unfold.Hreco(2)
     # recotruth_histo.SetName(measured_histo.GetName())
     # Run Toys
     unfold.SetNToys(args['ntoys'])
