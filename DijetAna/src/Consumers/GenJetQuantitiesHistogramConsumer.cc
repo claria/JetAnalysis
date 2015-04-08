@@ -6,7 +6,7 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings)
 	// Jet Quantity histograms
 	RootFileHelper::SafeCd(settings.GetRootOutFile(), settings.GetRootFileFolder());
 
-	// Leading Jet histograms
+	// Leading Jet histogram
 	m_h_genjet1pt = new TH1D("h_genjet1pt", "h_genjet1pt", settings.GetGenPtBinning().size()-1, &settings.GetGenPtBinning()[0]);
 	m_h_genjet1pt->Sumw2();
 	m_h_genjet1rap = new TH1D("h_genjet1rap", "h_genjet1rap", 36, -3.0, 3.0);
@@ -48,24 +48,22 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings)
 	                                                                            settings.GetJet2RapidityBinning().size()-1, &settings.GetJet2RapidityBinning()[0],
 	                                                                            settings.GetTripleDiffGenPtBinning().size()-1, &settings.GetTripleDiffGenPtBinning()[0]);
 	m_h3_genjet12rapsign->Sumw2();
-
-
 }
 
-void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product, setting_type const& settings)
+void GenJetQuantitiesHistogramConsumer::ProcessEvent(event_type const& event, product_type const& product, setting_type const& settings, FilterResult & result)
 {
+	// if (result.HasPassed()) {
 	double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
 	// std::cout << "event" << std::endl;
+	// std::cout << "genJet size: " <<  event.m_genJets->size() << std::endl;
 	// 1+ jet quantities
 	if (event.m_genJets->size() > 0) {
-		// std::cout << "Leading jet pt:" << event.m_genJetsat(0)->p4.Pt() << std::endl;
 		m_h_genjet1pt->Fill(event.m_genJets->at(0).p4.Pt(), eventWeight);
 		m_h_genjet1rap->Fill(event.m_genJets->at(0).p4.Rapidity(), eventWeight);
 		m_h_genjet1phi->Fill(event.m_genJets->at(0).p4.Phi(), eventWeight);
 	}
 	// 2+ jet quantities
 	if (event.m_genJets->size() > 1) {
-		// std::cout << event.m_genJets->size() << std::endl;
 		m_h_genjet2pt->Fill(event.m_genJets->at(1).p4.Pt(), eventWeight);
 		m_h_genjet2rap->Fill(event.m_genJets->at(1).p4.Rapidity(), eventWeight);
 		m_h_genjet2phi->Fill(event.m_genJets->at(1).p4.Phi(), eventWeight);
@@ -94,6 +92,12 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
 	if (product.m_matchedRecoJets.at(1) != NULL) {
 		m_h_jet2DeltaR->Fill(ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(1)->p4,event.m_genJets->at(1).p4),eventWeight); 
 	}
+
+	// }
+}
+
+void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product, setting_type const& settings)
+{
 
 }
 
