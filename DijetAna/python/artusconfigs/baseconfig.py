@@ -61,28 +61,29 @@ class BaseConfig(dict):
         # Observable binning in leading jet pT
         # self['ObservableBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         # Binnings
-        # self['RapidityBinning'] = [-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
-        # self['Jet1RapidityBinning'] = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5]
-        # self['Jet2RapidityBinning'] = [-3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5]
-        self['RapidityBinning'] = [-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0]
-        self['Jet1RapidityBinning'] = [0.0, 1.0, 2.0, 3.0]
-        self['Jet2RapidityBinning'] = [-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0]
+        self['RapidityBinning'] = [-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+        self['Jet1RapidityBinning'] = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+        self['Jet2RapidityBinning'] = [-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+        # self['RapidityBinning'] = [-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0]
+        # self['Jet1RapidityBinning'] = [0.0, 1.0, 2.0, 3.0]
+        # self['Jet2RapidityBinning'] = [-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0]
         self['PtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         self['GenPtBinning'] = [36, 44, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         self['TripleDiffPtBinning'] = [74, 114, 196, 300, 468, 790, 3000]
-        self['TripleDiffGenPtBinning'] = [74, 114, 196, 300, 468, 790, 3000]
+        self['TripleDiffGenPtBinning'] = [46, 60, 74, 114, 196, 300, 468, 790, 3000]
 
         # Valid Jet Selection
         self['ValidJetsInput'] = 'corrected'
         self['JetID'] = 'tight'
         self['JetIDVersion'] = '2014'
         # Valid Jet Selection
-        self['MinValidJetPt'] = '0.'
+        self['MinValidJetPt'] = '25.'
         self['MaxValidJetAbsRap'] = '3.0'
         # Global Cuts
         self['MinValidJets'] = '2'
         # Gen Jet Matching
-        self['MaxDeltaR'] = 0.1
+        self['MaxDeltaR'] = 0.3
+        self['MaxDeltaPtRel'] = 1E9
         # Define global cuts
         # MET
         self['MaxMETSumEtRatio'] = 0.3
@@ -102,9 +103,6 @@ class BaseConfig(dict):
             'producer:JetCorrectionsProducer',
             'producer:ValidJetsProducer',
             # 'filter:HCALNoiseFilter',
-            'filter:NJetsFilter',
-            'filter:METSumEtFilter',
-            'filter:GoodPrimaryVertexFilter',
         ]
         self['BasicJets'] = 'ak7PFJets'
         self['PileupDensity'] = 'KT6Area'
@@ -125,7 +123,10 @@ class BaseConfig(dict):
         pipeline['EventWeight'] = 'EventWeight'
         pipeline['Processors'] = [
                                   'producer:JetQuantitiesProducer',
-                                  'producer:EventWeightProducer'
+                                  'producer:EventWeightProducer',
+                                  'filter:NJetsFilter',
+                                  'filter:METSumEtFilter',
+                                  'filter:GoodPrimaryVertexFilter',
                                   ]
         pipeline['Consumers'] =  []
         pipeline['Quantities'] = []
@@ -136,12 +137,12 @@ class BaseConfig(dict):
         self['GenJets'] = 'ak7GenJets'
        # self['Pipelines']['default']['Quantities'].append('gendijet_mass')
         self['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup/pileup_weights_S10.root'
-        self['Processors'].append('producer:GenJetMatchingProducer')
-        self['Processors'].append('producer:GenJetQuantitiesProducer')
-        self['Processors'].append('producer:PUWeightProducer')
-        self['Processors'].append('producer:CrossSectionWeightProducer')
-        self['Processors'].append('producer:GeneratorWeightProducer')
-        self['Processors'].append('producer:NumberGeneratedEventsWeightProducer')
+        self.add_processor('producer:GenJetMatchingProducer', after='producer:ValidJetsProducer')
+        self.add_processor('producer:GenJetQuantitiesProducer', after='producer:ValidJetsProducer')
+        self.add_processor('producer:PUWeightProducer', after='producer:ValidJetsProducer')
+        self.add_processor('producer:CrossSectionWeightProducer', after='producer:ValidJetsProducer')
+        self.add_processor('producer:GeneratorWeightProducer', after='producer:ValidJetsProducer')
+        self.add_processor('producer:NumberGeneratedEventsWeightProducer', after='producer:ValidJetsProducer')
         self['JetEnergyCorrectionParameters'] = ['$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L1FastJet_AK7PF.txt',
                                                  '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L2Relative_AK7PF.txt',
                                                  '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L3Absolute_AK7PF.txt'
@@ -151,6 +152,11 @@ class BaseConfig(dict):
 
         # self['Pipelines']['epilog']['Consumers'].append('JetResolutionConsumer')
 
+    def producer_before_filter(self, pipeline=None):
+        if pipeline is None:
+            pipeline = self
+        sort_list = pipeline['Processors']
+        pipeline['Processors'] = [item for item in sort_list if item.split(':')[0].lower() == 'filter'] + [item for item in sort_list if item.split(':')[0].lower() == 'producer']
 
     def add_data_settings(self, ilumi=-1., data_stream=''):
         self['LumiMetadata']   = 'lumiInfo'
