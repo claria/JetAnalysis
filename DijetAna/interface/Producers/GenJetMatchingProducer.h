@@ -11,4 +11,5 @@ public:
 	virtual void Init(JetSettings const& settings) override;
 private:
 	double maxDeltaR;
+	double maxDeltaPtRel;
 };

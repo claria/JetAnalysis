@@ -32,6 +32,7 @@ public:
 
 	// GenJetMatcher
 	IMPL_SETTING_DEFAULT(double, MaxDeltaR, std::numeric_limits<double>::max())
+	IMPL_SETTING_DEFAULT(double, MaxDeltaPtRel, std::numeric_limits<double>::max())
 
 	IMPL_SETTING_STRINGLIST(PipelineNames);
 	IMPL_SETTING_DEFAULT(std::string, TriggerEfficiencyQuantity, "");
