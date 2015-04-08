@@ -45,36 +45,36 @@ void JetUnfoldingResponseConsumer::ProcessEvent(event_type const& event, product
 					eventWeight);
 		}
 
-		if (product.m_match_result_recojets[0] != -1 &&
-				product.m_match_result_recojets[1] != -1) 
+		if (product.m_match_result_recojets[0] == 0 &&
+				product.m_match_result_recojets[1] == 1) 
 		{
 			m_unfoldResponse_jet12rapsign->Fill(
-					// std::abs(product.m_validJets.at(0)->p4.Rapidity()), 
-					// boost::math::sign(product.m_validJets.at(0)->p4.Rapidity()*product.m_validJets.at(1)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(), 
-					// product.m_validJets.at(0)->p4.Pt(), 
-					// std::abs(event.m_genJets->at(0).p4.Rapidity()),
-					// boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
-					// event.m_genJets->at(0).p4.Pt(),
-					std::abs(product.m_matchedRecoJets.at(0)->p4.Rapidity()), 
-					boost::math::sign(product.m_matchedRecoJets.at(0)->p4.Rapidity()*product.m_matchedRecoJets.at(1)->p4.Rapidity())*product.m_matchedRecoJets.at(1)->p4.Rapidity(),
-					product.m_matchedRecoJets.at(0)->p4.Pt(), 
+					std::abs(product.m_validJets.at(0)->p4.Rapidity()), 
+					boost::math::sign(product.m_validJets.at(0)->p4.Rapidity()*product.m_validJets.at(1)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(), 
+					product.m_validJets.at(0)->p4.Pt(), 
 					std::abs(event.m_genJets->at(0).p4.Rapidity()),
 					boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
 					event.m_genJets->at(0).p4.Pt(),
+					// std::abs(product.m_matchedRecoJets.at(0)->p4.Rapidity()), 
+					// boost::math::sign(product.m_matchedRecoJets.at(0)->p4.Rapidity()*product.m_matchedRecoJets.at(1)->p4.Rapidity())*product.m_matchedRecoJets.at(1)->p4.Rapidity(),
+					// product.m_matchedRecoJets.at(0)->p4.Pt(), 
+					// std::abs(event.m_genJets->at(0).p4.Rapidity()),
+					// boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
+					// event.m_genJets->at(0).p4.Pt(),
 					eventWeight);
 		}
 		else
 		{
-			// m_unfoldResponse_jet12rapsign->Miss(
-			// 		std::abs(event.m_genJets->at(0).p4.Rapidity()),
-			// 		boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
-			// 		event.m_genJets->at(0).p4.Pt(),
-			// 		eventWeight);
+			m_unfoldResponse_jet12rapsign->Miss(
+					std::abs(event.m_genJets->at(0).p4.Rapidity()),
+					boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
+					event.m_genJets->at(0).p4.Pt(),
+					eventWeight);
 
-			// m_unfoldResponse_jet12rapsign->Fake(std::abs(product.m_validJets.at(0)->p4.Rapidity()), 
-			// 		boost::math::sign(product.m_validJets.at(0)->p4.Rapidity()*product.m_validJets.at(1)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(), 
-			// 		product.m_validJets.at(0)->p4.Pt(), 
-			// 		eventWeight);
+			m_unfoldResponse_jet12rapsign->Fake(std::abs(product.m_validJets.at(0)->p4.Rapidity()), 
+					boost::math::sign(product.m_validJets.at(0)->p4.Rapidity()*product.m_validJets.at(1)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(), 
+					product.m_validJets.at(0)->p4.Pt(), 
+					eventWeight);
 
 		}
 	}
