@@ -23,6 +23,11 @@ void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct & product
 	std::vector<int> match_result_genjets = matchSort_Matrix<KLV, KBasicJet>(*(event.m_genJets), event.m_genJets->size(), validJets, validJets.size(), maxDeltaR);
 	std::vector<int> match_result_recojets = matchSort_Matrix<KBasicJet, KLV>(validJets, validJets.size(), *(event.m_genJets), event.m_genJets->size(), maxDeltaR);
 
+	// List of indices of matched genjets to each reco, size=recojet.size()
+	product.m_match_result_genjets = match_result_genjets;
+	// List of indices of matched recojets to each genjet, size=genjets.size()
+	product.m_match_result_recojets = match_result_recojets;
+
 	product.m_matchedGenJets.resize(product.m_validJets.size());
 	product.m_matchedRecoJets.resize(event.m_genJets->size());
 

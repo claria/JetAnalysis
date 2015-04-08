@@ -16,6 +16,8 @@ public:
 	std::vector<double> m_incJetsRap;
 	std::vector<double> m_incJetsPhi;
 
+	std::vector<int> m_match_result_genjets;
+	std::vector<int> m_match_result_recojets;
 	// Main observables to be set in the JetQuantities Producer
 	double obs1;
 	double obs2;
