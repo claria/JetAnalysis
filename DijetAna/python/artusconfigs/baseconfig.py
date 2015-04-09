@@ -95,6 +95,8 @@ class BaseConfig(dict):
         self['MinPurityRatio'] = 'trackSummary'
         # self['HCALNoiseSummary'] = 'hcalnoise'
 
+        # Event weight
+        self['EventWeight'] = 'EventWeight'
 
         self['LumiMetadata'] = 'lumiInfo'
         self['EventMetadata'] = 'eventInfo'
@@ -102,6 +104,9 @@ class BaseConfig(dict):
         self['Processors'] = [
             'producer:JetCorrectionsProducer',
             'producer:ValidJetsProducer',
+            'filter:NJetsFilter',
+            'filter:METSumEtFilter',
+            'filter:GoodPrimaryVertexFilter',
             # 'filter:HCALNoiseFilter',
         ]
         self['BasicJets'] = 'ak7PFJets'
@@ -120,13 +125,7 @@ class BaseConfig(dict):
         self['Pipelines']['default'] = {}
 
         pipeline = self['Pipelines']['default']
-        pipeline['EventWeight'] = 'EventWeight'
         pipeline['Processors'] = [
-                                  'producer:JetQuantitiesProducer',
-                                  'producer:EventWeightProducer',
-                                  'filter:NJetsFilter',
-                                  'filter:METSumEtFilter',
-                                  'filter:GoodPrimaryVertexFilter',
                                   ]
         pipeline['Consumers'] =  []
         pipeline['Quantities'] = []
@@ -139,10 +138,12 @@ class BaseConfig(dict):
         self['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup/pileup_weights_S10.root'
         self.add_processor('producer:GenJetMatchingProducer', after='producer:ValidJetsProducer')
         self.add_processor('producer:GenJetQuantitiesProducer', after='producer:ValidJetsProducer')
+        self.add_processor('producer:JetQuantitiesProducer', after='producer:ValidJetsProducer')
         self.add_processor('producer:PUWeightProducer', after='producer:ValidJetsProducer')
         self.add_processor('producer:CrossSectionWeightProducer', after='producer:ValidJetsProducer')
         self.add_processor('producer:GeneratorWeightProducer', after='producer:ValidJetsProducer')
         self.add_processor('producer:NumberGeneratedEventsWeightProducer', after='producer:ValidJetsProducer')
+        self.add_processor('EventWeightProducer', after='producer:GenJetMatchingProducer')
         self['JetEnergyCorrectionParameters'] = ['$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L1FastJet_AK7PF.txt',
                                                  '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L2Relative_AK7PF.txt',
                                                  '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L3Absolute_AK7PF.txt'
@@ -156,7 +157,7 @@ class BaseConfig(dict):
         if pipeline is None:
             pipeline = self
         sort_list = pipeline['Processors']
-        pipeline['Processors'] = [item for item in sort_list if item.split(':')[0].lower() == 'filter'] + [item for item in sort_list if item.split(':')[0].lower() == 'producer']
+        pipeline['Processors'] = [item for item in sort_list if item.split(':')[0].lower() == 'producer'] + [item for item in sort_list if item.split(':')[0].lower() == 'filter']
 
     def add_data_settings(self, ilumi=-1., data_stream=''):
         self['LumiMetadata']   = 'lumiInfo'
@@ -201,8 +202,10 @@ class BaseConfig(dict):
         self['Pipelines']['default']['TriggerEfficiencyQuantity'] = 'jet1_pt'
         # self['Pipelines']['default']['Consumers'].append('TriggerResultsHistogramConsumer')
         self.add_processor('filter:JsonFilter', idx=0)
+        self.add_processor('producer:JetQuantitiesProducer', after='producer:ValidJetsProducer')
         self.add_processor('producer:JetHltProducer', after='filter:NJetsFilter')
         self.add_processor('filter:JetHltFilter', after='producer:JetHltProducer')
+        self.add_processor('EventWeightProducer', after='producer:JetHltProducer')
 
 
 
