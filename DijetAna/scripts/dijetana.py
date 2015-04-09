@@ -118,6 +118,8 @@ def run(executable, arguments=''):
     cmd = '{0} {1}'.format(executable, arguments)
     log.debug("Executing command: \"{0}\"".format(cmd))
     try:
+        # TODO start process in new console so that output does not get spoiled
+        # subprocess.popen([sys.executable, 'script.py'], creationflags = subprocess.CREATE_NEW_CONSOLE)
         rc = subprocess.call(cmd.split())
     except KeyboardInterrupt:
         log.critical("Received Interrupt")
