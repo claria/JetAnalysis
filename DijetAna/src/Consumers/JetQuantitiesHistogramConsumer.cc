@@ -85,7 +85,7 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
 		                    product.m_validJets.at(0)->p4.Pt(),
 		                    eventWeight);
 		m_h3_jet12rapsign->Fill(std::abs(product.m_validJets.at(0)->p4.Rapidity()),
-		                    boost::math::sign(product.m_validJets.at(0)->p4.Rapidity()*product.m_validJets.at(1)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(),
+		                    boost::math::sign(product.m_validJets.at(0)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(),
 		                    product.m_validJets.at(0)->p4.Pt(),
 		                    eventWeight);
 
@@ -109,7 +109,7 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings)
 {
 	// save histograms
 	RootFileHelper::SafeCd(settings.GetRootOutFile(), settings.GetRootFileFolder());
-
+	// hist->Scale(1.0 ,"width");
 	m_h_jet1pt->Write(m_h_jet1pt->GetName());
 	m_h_jet1rap->Write(m_h_jet1rap->GetName());
 	m_h_jet1phi->Write(m_h_jet1phi->GetName());
@@ -118,7 +118,9 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings)
 	m_h_jet2phi->Write(m_h_jet2phi->GetName());
 	m_h_incjetpt->Write(m_h_incjetpt->GetName());
 	m_h_jet12rap->Write(m_h_jet12rap->GetName());
+	// m_h3_jet12rap->Scale(1.0, "width");
 	m_h3_jet12rap->Write(m_h3_jet12rap->GetName());
+	// m_h3_jet12rapsign->Scale(1.0, "width");
 	m_h3_jet12rapsign->Write(m_h3_jet12rapsign->GetName());
 
 	m_h_neutralHadronFraction->Write(m_h_neutralHadronFraction->GetName());

@@ -50,16 +50,16 @@ void JetUnfoldingResponseConsumer::ProcessEvent(event_type const& event, product
 		{
 			m_unfoldResponse_jet12rapsign->Fill(
 					std::abs(product.m_validJets.at(0)->p4.Rapidity()), 
-					boost::math::sign(product.m_validJets.at(0)->p4.Rapidity()*product.m_validJets.at(1)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(), 
+					boost::math::sign(product.m_validJets.at(0)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(), 
 					product.m_validJets.at(0)->p4.Pt(), 
 					std::abs(event.m_genJets->at(0).p4.Rapidity()),
-					boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
+					boost::math::sign(event.m_genJets->at(0).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
 					event.m_genJets->at(0).p4.Pt(),
 					// std::abs(product.m_matchedRecoJets.at(0)->p4.Rapidity()), 
-					// boost::math::sign(product.m_matchedRecoJets.at(0)->p4.Rapidity()*product.m_matchedRecoJets.at(1)->p4.Rapidity())*product.m_matchedRecoJets.at(1)->p4.Rapidity(),
+					// boost::math::sign(product.m_matchedRecoJets.at(0)->p4.Rapidity())*product.m_matchedRecoJets.at(1)->p4.Rapidity(),
 					// product.m_matchedRecoJets.at(0)->p4.Pt(), 
 					// std::abs(event.m_genJets->at(0).p4.Rapidity()),
-					// boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
+					// boost::math::sign(event.m_genJets->at(0).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
 					// event.m_genJets->at(0).p4.Pt(),
 					eventWeight);
 		}
@@ -67,12 +67,12 @@ void JetUnfoldingResponseConsumer::ProcessEvent(event_type const& event, product
 		{
 			m_unfoldResponse_jet12rapsign->Miss(
 					std::abs(event.m_genJets->at(0).p4.Rapidity()),
-					boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
+					boost::math::sign(event.m_genJets->at(0).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
 					event.m_genJets->at(0).p4.Pt(),
 					eventWeight);
 
 			m_unfoldResponse_jet12rapsign->Fake(std::abs(product.m_validJets.at(0)->p4.Rapidity()), 
-					boost::math::sign(product.m_validJets.at(0)->p4.Rapidity()*product.m_validJets.at(1)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(), 
+					boost::math::sign(product.m_validJets.at(0)->p4.Rapidity())*product.m_validJets.at(1)->p4.Rapidity(), 
 					product.m_validJets.at(0)->p4.Pt(), 
 					eventWeight);
 
@@ -82,7 +82,7 @@ void JetUnfoldingResponseConsumer::ProcessEvent(event_type const& event, product
 	{
 		m_unfoldResponse_jet12rapsign->Miss(
 				std::abs(event.m_genJets->at(0).p4.Rapidity()),
-				boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
+				boost::math::sign(event.m_genJets->at(0).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
 				event.m_genJets->at(0).p4.Pt(),
 				eventWeight);
 

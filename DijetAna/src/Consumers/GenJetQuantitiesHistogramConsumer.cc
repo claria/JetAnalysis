@@ -61,6 +61,13 @@ void GenJetQuantitiesHistogramConsumer::ProcessEvent(event_type const& event, pr
 		m_h_genjet1pt->Fill(event.m_genJets->at(0).p4.Pt(), eventWeight);
 		m_h_genjet1rap->Fill(event.m_genJets->at(0).p4.Rapidity(), eventWeight);
 		m_h_genjet1phi->Fill(event.m_genJets->at(0).p4.Phi(), eventWeight);
+		if (product.m_matchedRecoJets.at(0) != NULL) {
+			m_h2GenVsRecoPt->Fill(product.m_matchedRecoJets.at(0)->p4.Pt()/event.m_genJets->at(0).p4.Pt(), 
+					event.m_genJets->at(0).p4.Pt(),
+					eventWeight);
+			m_h_jet1DeltaR->Fill(ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(0)->p4,event.m_genJets->at(0).p4),eventWeight); 
+		}
+
 	}
 	// 2+ jet quantities
 	if (event.m_genJets->size() > 1) {
@@ -76,23 +83,18 @@ void GenJetQuantitiesHistogramConsumer::ProcessEvent(event_type const& event, pr
 		                       event.m_genJets->at(0).p4.Pt(),
 		                       eventWeight);
 		m_h3_genjet12rapsign->Fill(std::abs(event.m_genJets->at(0).p4.Rapidity()),
-		                           boost::math::sign(event.m_genJets->at(0).p4.Rapidity()*event.m_genJets->at(1).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
+		                           boost::math::sign(event.m_genJets->at(0).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
 		                           event.m_genJets->at(0).p4.Pt(),
 		                           eventWeight);
+		if (product.m_matchedRecoJets.at(1) != NULL) {
+			m_h_jet2DeltaR->Fill(ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(1)->p4,event.m_genJets->at(1).p4),eventWeight); 
+		}
+
 	}
+
 	for ( auto jet = event.m_genJets->begin(); jet != event.m_genJets->end(); jet++ ) {
 		m_h_incgenjetpt->Fill((*jet).p4.Pt(), eventWeight);
 	}
-	if (product.m_matchedRecoJets.at(0) != NULL) {
-		m_h2GenVsRecoPt->Fill(product.m_matchedRecoJets.at(0)->p4.Pt()/event.m_genJets->at(0).p4.Pt(), 
-		                      event.m_genJets->at(0).p4.Pt(),
-		                      eventWeight);
-		m_h_jet1DeltaR->Fill(ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(0)->p4,event.m_genJets->at(0).p4),eventWeight); 
-	}
-	if (product.m_matchedRecoJets.at(1) != NULL) {
-		m_h_jet2DeltaR->Fill(ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(1)->p4,event.m_genJets->at(1).p4),eventWeight); 
-	}
-
 	// }
 }
 
@@ -114,7 +116,9 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings)
 	m_h_genjet2phi->Write(m_h_genjet2phi->GetName());
 	m_h_incgenjetpt->Write(m_h_incgenjetpt->GetName());
 	m_h_genjet12rap->Write(m_h_genjet12rap->GetName());
+	// m_h3_genjet12rap->Scale(1.0, "width");
 	m_h3_genjet12rap->Write(m_h3_genjet12rap->GetName());
+	// m_h3_genjet12rapsign->Scale(1.0, "width");
 	m_h3_genjet12rapsign->Write(m_h3_genjet12rapsign->GetName());
 	m_h_jet1DeltaR->Write(m_h_jet1DeltaR->GetName());
 	m_h_jet2DeltaR->Write(m_h_jet2DeltaR->GetName());
