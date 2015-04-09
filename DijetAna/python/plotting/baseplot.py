@@ -10,10 +10,13 @@ import matplotlib.pyplot as plt
 class BasePlot(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self, output_fn='test', output_ext=('png',), style='none'):
+    def __init__(self, output_fn='test', output_ext=('png',), style='none', figsize=None):
 
         self.init_matplotlib()
-        self.fig = plt.figure()
+        if figsize:
+            self.fig = plt.figure(figsize=figsize)
+        else:
+            self.fig = plt.figure()
 
         self.output_fn = output_fn
         self.output_ext = output_ext
