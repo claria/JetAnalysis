@@ -18,6 +18,13 @@ echo "---------------------------------"
 echo "Running with the following config"
 echo "---------------------------------"
 # $FILE_NAMES=echo "${FILE_NAMES//\"}"
-dijetana.py -i ${FILE_NAMES//\"} --save-config config.json -c $CONFIG --log-level debug > out.log 2>&1 || exit $?
+dijetana.py -i ${FILE_NAMES//\"} --save-config config.json -c $CONFIG --log-level debug 2>&1 | tee out.log
 
-exit 0
+RC=${PIPESTATUS[0]}
+if [ ${RC} -eq 0 ]
+then
+  exit 0
+else
+  # do stuff
+  exit 1
+fi
