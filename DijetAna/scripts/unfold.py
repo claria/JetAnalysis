@@ -38,12 +38,14 @@ def main():
         raise ValueError()
 
     # Unfold distribution
-    recotruth_histo = unfold.Hreco(2)
-    # recotruth_histo.SetName(measured_histo.GetName())
+
     # Run Toys
     unfold.SetNToys(args['ntoys'])
     unfold.RunToy()
-    recotruth_cov = unfold.Ereco(2)
+
+    recotruth_histo = unfold.Hreco(3)
+    # recotruth_histo.SetName(measured_histo.GetName())
+    recotruth_cov = unfold.Ereco(3)
     # recotruth_cov.SetName("cov_{0}".format(measured_histo.GetName()))
 
     input_path = measured_histo.GetDirectory().GetPath()
