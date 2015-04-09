@@ -62,7 +62,7 @@ def main():
         basename = args.get('output_prefix', 'td_ratio')
         plotproducer = TripleDiffRatioPlot(histos_sliced, output_fn='plots/{0}_{1}'.format(basename, i), labels=args['labels'], ratio_lims=args['ratio_lims'], ptbin=ptbin)
         plotproducer.do_plot()
-        # tddistplot = TripleDiffHeatMapPlot(histos_sliced[0], output_fn='plots/tdhmplot_{0}'.format(i))
+        # tddistplot = TripleDiffHeatMapPlot(histos_sliced[0], figsize=(7.,4.), output_fn='plots/{0}_{1}'.format(basename, i))
         # tddistplot.do_plot()
 
         # tddistplot = TripleDiff3DPlot(histos_sliced[0], output_fn='td3dplot_{0}'.format(i))
@@ -134,11 +134,10 @@ class TripleDiffHeatMapPlot(BasePlot):
                                norm =LogNorm(vmin=Z.min(), vmax=Z.max()))
 
         cbar = self.fig.colorbar(artist)
-        cbar.set_label('Events')
+        cbar.set_label('Cross Section [pb]')
 
-        ax.set_xlabel('Leading jet rapidity')
-        ax.set_ylabel('Second jet rapidity')
-
+        ax.set_xlabel("$\mathrm{sgn}(y_1) \cdot y_2$")
+        ax.set_ylabel("$|y_1|$")
 
     def finalize(self):
         self._save_fig()
@@ -213,7 +212,7 @@ class TripleDiffRatioPlot(BasePlot):
                 ax.legend(bbox_to_anchor=(1.00, 1.02), loc='lower right', borderaxespad=0.)
             if i==1:
                 ax.xaxis.set_visible(True)
-                ax.set_xlabel("$\mathrm{sgn}(y_1 \cdot y_2)\cdot y_2$")
+                ax.set_xlabel("$\mathrm{sgn}(y_1)\cdot y_2$")
 
         plt.subplots_adjust(hspace=.200)
 
