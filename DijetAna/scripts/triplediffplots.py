@@ -29,6 +29,7 @@ def main():
                         help='Path to root file with the distribution with the syntax file.root:path/to/histo')
     parser.add_argument('--labels', nargs='+', help='Legend labels for each plot')
     parser.add_argument('--output-prefix', help='Output prefix to put before filename')
+    parser.add_argument('--scale', nargs='+', type=float, help='Scale histograms')
     parser.add_argument('--ratio-lims', type=float, nargs=2, help='Output prefix to put before filename')
 
     args = vars(parser.parse_args())
@@ -37,8 +38,15 @@ def main():
     for inputhisto in args['inputfiles']:
         histos.append(get_root_object(*inputhisto.split(':')))
 
+    if args['scale'] and not (len(args['scale']) == len(histos)):
+        print "len of scale arguments not matching."
+        sys.exit(1)
+
     for i, histo in enumerate(histos):
         histo.SetName("{0}_{1}".format(histo.GetName(), i))
+        if args['scale']:
+            histo.Scale(args['scale'][i])
+
 
     n_zbins = histos[0].GetNbinsZ()
 
