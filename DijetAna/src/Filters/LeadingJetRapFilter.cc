@@ -10,7 +10,7 @@ bool LeadingJetRapFilter::DoesEventPass(JetEvent const& event,
 
 	bool pass = false;
 	if ((std::abs(product.m_validJets.at(0)->p4.Rapidity()) >= minLeadingJetAbsRap) &&
-			std::abs(product.m_validJets.at(0)->p4.Rapidity()) <  maxLeadingJetAbsRap) {
+			std::abs(product.m_validJets.at(0)->p4.Rapidity()) < maxLeadingJetAbsRap) {
 		pass = true;
 	}
 	return pass;
