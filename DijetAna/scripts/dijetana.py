@@ -89,6 +89,7 @@ def main():
         configs = []
         for nickname in nicknames:
             config = get_config(args['config'], nick=nickname)
+            config['LogLevel'] = args['log_level']
             config['InputFiles'] = [filename for filename in args['input_files'] if extract_nickname(filename) == nickname]
             if args['output_file'] is None: 
                 config['OutputFile'] = "{0}_{1}".format('output', nickname)
