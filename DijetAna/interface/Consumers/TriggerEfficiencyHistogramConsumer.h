@@ -4,12 +4,12 @@
 #include "JetAnalysis/DijetAna/interface/JetTypes.h"
 #include <boost/regex.hpp>
 
-class TriggerResultsHistogramConsumer: public ConsumerBase<JetTypes> {
+class TriggerEfficiencyHistogramConsumer: public ConsumerBase<JetTypes> {
 public:
 
 	virtual std::string GetConsumerId() const
 	{
-		return "TriggerResultsHistogramConsumer";
+		return "TriggerEfficiencyHistogramConsumer";
 	}
 
 	virtual void Init(setting_type const& settings);
@@ -24,12 +24,11 @@ protected:
 	std::vector<std::string> m_hltPaths;
 	std::map<std::string, std::pair<double, double> > m_filterThresholds;
 
+	// pattern to recognize the l1/hlt filter in all filters of trigger path.
 	boost::regex m_patternL1Filter;
 	boost::regex m_patternHltFilter;
 
 	std::vector<TH1F*> m_triggerResultHists;
 	std::vector<TH1F*> m_triggerEmulatedHists;
 
-
-	// HLTTools hltInfo;
 };
