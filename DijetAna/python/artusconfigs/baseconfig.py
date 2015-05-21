@@ -107,7 +107,6 @@ class BaseConfig(dict):
             'filter:NJetsFilter',
             'filter:METSumEtFilter',
             'filter:GoodPrimaryVertexFilter',
-            # 'filter:HCALNoiseFilter',
         ]
         self['BasicJets'] = 'ak7PFJets'
         self['PileupDensity'] = 'KT6Area'
@@ -134,7 +133,7 @@ class BaseConfig(dict):
         self['GenLumiMetadata'] = 'lumiInfo'
         self['GenEventMetadata'] = 'eventInfo'
         self['GenJets'] = 'ak7GenJets'
-       # self['Pipelines']['default']['Quantities'].append('gendijet_mass')
+        # self['Pipelines']['default']['Quantities'].append('gendijet_mass')
         self['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup/pileup_weights_S10.root'
         self.add_processor('producer:GenJetMatchingProducer', after='producer:ValidJetsProducer')
         self.add_processor('producer:GenJetQuantitiesProducer', after='producer:ValidJetsProducer')
@@ -150,8 +149,6 @@ class BaseConfig(dict):
                                                 ]
         self['NumberGeneratedEvents'] = sample_size
         self['CrossSection'] = crosssection
-
-        # self['Pipelines']['epilog']['Consumers'].append('JetResolutionConsumer')
 
     def producer_before_filter(self, pipeline=None):
         if pipeline is None:
@@ -195,20 +192,17 @@ class BaseConfig(dict):
         self['TriggerEffThresholds'] = [74., 133., 220., 300., 395., 507., 2500.]
 
         self['HltPathsBlacklist'] = []
-        self['Pipelines']['default']['L1FilterThresholds'] = [16., 36., 68., 92., 128., 128.]
-        self['Pipelines']['default']['HltFilterThresholds'] = [40., 80., 140., 200., 260., 320.]
-        # self['Pipelines']['default']['L1FilterPattern'] = '(L1SingleJet)([0-9]+)'
-        # self['Pipelines']['default']['HltFilterPattern'] = '(PFJet)([0-9]+)'
+        self['L1FilterThresholds'] = [16., 36., 68., 92., 128., 128.]
+        self['HltFilterThresholds'] = [40., 80., 140., 200., 260., 320.]
+        self['L1FilterPattern'] = '(L1SingleJet)([0-9]+)'
+        self['HltFilterPattern'] = '(PFJet)([0-9]+)'
+
         self['Pipelines']['default']['TriggerEfficiencyQuantity'] = 'jet1_pt'
-        # self['Pipelines']['default']['Consumers'].append('TriggerResultsHistogramConsumer')
         self.add_processor('filter:JsonFilter', idx=0)
         self.add_processor('producer:JetQuantitiesProducer', after='producer:ValidJetsProducer')
         self.add_processor('producer:JetHltProducer', after='filter:NJetsFilter')
         self.add_processor('filter:JetHltFilter', after='producer:JetHltProducer')
         self.add_processor('EventWeightProducer', after='producer:JetHltProducer')
-
-
-
 
 
     def add_pipeline(self, pipeline_name, pipeline=None, level=1):
