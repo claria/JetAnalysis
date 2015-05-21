@@ -23,10 +23,11 @@
 // #include "JetAnalysis/DijetAna/interface/Consumers/JetNtupleConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/JetLambdaNtupleConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/JetResolutionConsumer.h"
-#include "JetAnalysis/DijetAna/interface/Consumers/TriggerResultsHistogramConsumer.h"
+#include "JetAnalysis/DijetAna/interface/Consumers/TriggerEfficiencyHistogramConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/JetQuantitiesHistogramConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/GenJetQuantitiesHistogramConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/JetUnfoldingResponseConsumer.h"
+#include "JetAnalysis/DijetAna/interface/Consumers/JECUncertaintiesConsumer.h"
 // #include "JetAnalysis/DijetAna/interface/Consumers/TriggerHistogramFitConsumer.h"
 
 
@@ -53,8 +54,8 @@ ConsumerBaseUntemplated * JetFactory::createConsumer ( std::string const& id )
 {
 	if (JetLambdaNtupleConsumer().GetConsumerId() == id)
 		return new JetLambdaNtupleConsumer();
-	else if (TriggerResultsHistogramConsumer().GetConsumerId() == id)
-		return new TriggerResultsHistogramConsumer();
+	else if (TriggerEfficiencyHistogramConsumer().GetConsumerId() == id)
+		return new TriggerEfficiencyHistogramConsumer();
 	else if (JetQuantitiesHistogramConsumer().GetConsumerId() == id)
 		return new JetQuantitiesHistogramConsumer();
 	else if (JetResolutionConsumer().GetConsumerId() == id)
@@ -63,6 +64,8 @@ ConsumerBaseUntemplated * JetFactory::createConsumer ( std::string const& id )
 		return new GenJetQuantitiesHistogramConsumer();
 	else if (JetUnfoldingResponseConsumer().GetConsumerId() == id)
 		return new JetUnfoldingResponseConsumer();
+	else if (JECUncertaintiesConsumer().GetConsumerId() == id)
+		return new JECUncertaintiesConsumer();
 	else
 		return KappaFactory::createConsumer( id );
 }
