@@ -326,7 +326,7 @@ class GenericPlot(BasePlot):
 
 def plot_errorbar(hist, step=False, show_xerr=True, show_yerr=True, emptybins=True, ax=None, **kwargs):
     """ Produce an errorbar plots with or without connecting lines.
-    
+
     Args:
         hist: MplHisto representation of a root histogram.
         ax: Axis to plot on. If not specified current global axis will be used.
@@ -357,6 +357,7 @@ def plot_errorbar(hist, step=False, show_xerr=True, show_yerr=True, emptybins=Tr
         yerr = None
 
     linestyle = kwargs.pop('linestyle', '')
+    color = kwargs.pop('color', next(ax._get_lines.color_cycle))
     capsize = kwargs.pop('capsize', 0)
     fmt = kwargs.pop('fmt', '')
     if fmt in ['bar', 'fill']:
@@ -368,10 +369,10 @@ def plot_errorbar(hist, step=False, show_xerr=True, show_yerr=True, emptybins=Tr
     # http://stackoverflow.com/a/18499120/3243729
     if linestyle:
         if step:
-            ax.step(steppify_bin(hist.xbinedges, isx=True), steppify_bin(y), linestyle=linestyle, **kwargs)
+            ax.step(steppify_bin(hist.xbinedges, isx=True), steppify_bin(y), linestyle=linestyle, color=color, **kwargs)
         else:
-            ax.plot(x, y, linestyle=linestyle, **kwargs)
-    artist = ax.errorbar(x, y, xerr=xerr, yerr=yerr, label=label, capsize=capsize, fmt=fmt, linestyle='None', **kwargs)
+            ax.plot(x, y, linestyle=linestyle, color=color, **kwargs)
+    artist = ax.errorbar(x, y, xerr=xerr, yerr=yerr, label=label, capsize=capsize, fmt=fmt, linestyle='None', color=color, **kwargs)
     return artist
 
 def steppify_bin(arr, isx=False):
