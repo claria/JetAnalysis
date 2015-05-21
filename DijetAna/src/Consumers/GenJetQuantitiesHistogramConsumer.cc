@@ -61,12 +61,6 @@ void GenJetQuantitiesHistogramConsumer::ProcessEvent(event_type const& event, pr
 		m_h_genjet1pt->Fill(event.m_genJets->at(0).p4.Pt(), eventWeight);
 		m_h_genjet1rap->Fill(event.m_genJets->at(0).p4.Rapidity(), eventWeight);
 		m_h_genjet1phi->Fill(event.m_genJets->at(0).p4.Phi(), eventWeight);
-		if (product.m_matchedRecoJets.at(0) != NULL) {
-			m_h2GenVsRecoPt->Fill(product.m_matchedRecoJets.at(0)->p4.Pt()/event.m_genJets->at(0).p4.Pt(), 
-					event.m_genJets->at(0).p4.Pt(),
-					eventWeight);
-			m_h_jet1DeltaR->Fill(ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(0)->p4,event.m_genJets->at(0).p4),eventWeight); 
-		}
 
 	}
 	// 2+ jet quantities
@@ -86,9 +80,6 @@ void GenJetQuantitiesHistogramConsumer::ProcessEvent(event_type const& event, pr
 		                           boost::math::sign(event.m_genJets->at(0).p4.Rapidity())*event.m_genJets->at(1).p4.Rapidity(),
 		                           event.m_genJets->at(0).p4.Pt(),
 		                           eventWeight);
-		if (product.m_matchedRecoJets.at(1) != NULL) {
-			m_h_jet2DeltaR->Fill(ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(1)->p4,event.m_genJets->at(1).p4),eventWeight); 
-		}
 
 	}
 
@@ -100,6 +91,21 @@ void GenJetQuantitiesHistogramConsumer::ProcessEvent(event_type const& event, pr
 
 void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product, setting_type const& settings)
 {
+	double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
+
+	if (event.m_genJets->size() > 0) {
+		if (product.m_matchedRecoJets.at(0) != NULL) {
+			m_h2GenVsRecoPt->Fill(product.m_matchedRecoJets.at(0)->p4.Pt()/event.m_genJets->at(0).p4.Pt(), 
+					event.m_genJets->at(0).p4.Pt(),
+					eventWeight);
+			m_h_jet1DeltaR->Fill(ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(0)->p4,event.m_genJets->at(0).p4),eventWeight); 
+		}
+	}
+	if (event.m_genJets->size() > 1) {
+		if (product.m_matchedRecoJets.at(1) != NULL) {
+			m_h_jet2DeltaR->Fill(ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(1)->p4,event.m_genJets->at(1).p4),eventWeight); 
+		}
+	}
 
 }
 
