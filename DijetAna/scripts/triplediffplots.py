@@ -31,6 +31,7 @@ def main():
     parser.add_argument('--output-prefix', help='Output prefix to put before filename')
     parser.add_argument('--scale', nargs='+', type=float, help='Scale histograms')
     parser.add_argument('--ratio-lims', type=float, nargs=2, help='Output prefix to put before filename')
+    parser.add_argument('--plots', help='Type of the plot to do.')
 
     args = vars(parser.parse_args())
 
@@ -46,7 +47,6 @@ def main():
         histo.SetName("{0}_{1}".format(histo.GetName(), i))
         if args['scale']:
             histo.Scale(args['scale'][i])
-
 
     n_zbins = histos[0].GetNbinsZ()
 
@@ -68,7 +68,7 @@ def main():
 
         # histos_sliced = [histo.ProjectionZ("slice_{0}".format(i), i, i) for histo in histos]
         basename = args.get('output_prefix', 'td_ratio')
-        plotproducer = TripleDiffRatioPlot(histos_sliced, output_fn='plots/{0}_{1}'.format(basename, i), labels=args['labels'], ratio_lims=args['ratio_lims'], ptbin=ptbin)
+        plotproducer = TripleDiffUncertainties(histos_sliced, output_fn='plots/{0}_{1}'.format(basename, i), figsize=(14.,10.), labels=args['labels'], ratio_lims=args['ratio_lims'], ptbin=ptbin)
         plotproducer.do_plot()
         # tddistplot = TripleDiffHeatMapPlot(histos_sliced[0], figsize=(7.,4.), output_fn='plots/{0}_{1}'.format(basename, i))
         # tddistplot.do_plot()
@@ -162,44 +162,49 @@ class TripleDiffRatioPlot(BasePlot):
             self.ratio_lims = [0.51, 1.49]
         super(TripleDiffRatioPlot, self).__init__(*args, **kwargs)
         self.histos = histos
-        self.labels = labels
-        # for i in range(1, len(histos)):
-            # histos[i].Scale(histos[i].GetEntries()/histos[0].GetEntries())
-        self.nbins = self.histos[0].GetNbinsY()
-        # self.ybinedges =
 
-        # self.yaxis_major_locator   = MultipleLocator(0.25)
-        self.yaxis_major_locator   = FixedLocator([0.75, 1.25])
+        self.labels = labels if labels else [histo.GetName() for histo in self.histos]
+
+        self.nbins = self.histos[0].GetNbinsY()
+        self.axes = []
+
+        self.yaxis_major_locator   = MultipleLocator(0.25)
 
 
     def prepare(self):
-        pass
-
-
-    def produce(self):
 
         if self.ptbin:
-            self.fig.text(x=0., y=0.57, s='${0} \leq p_{{\mathrm{{T}},1}} < {1}$'.format(*self.ptbin), ha='left', va='top')
-        self.fig.text(x=-0.25, y=0.3, s='Ratio to Data', rotation='vertical', va='center')
-        if self.labels:
-            labels = self.labels
-        else:
-            labels = [histo.GetName() for histo in self.histos]
-        # labels = ['Data', 'Pythia 8']
-        # for histo in self.histos:
-            # histo.Scale(1./histo.Integral())
+            self.fig.text(x=0., y=0.99, s='${0} \leq p_{{\mathrm{{T}},1}} < {1}$'.format(*self.ptbin), ha='left', va='top')
 
-        for i in range(1,self.nbins + 1):
-            ax = self.fig.add_subplot(12,1,12+1-i)
+        self.fig.text(x=-0.1, y=0.5, s='Ratio to {0}'.format(self.ensure_latex(self.labels[0])), rotation='vertical', ha='right', va='center')
+
+        plt.subplots_adjust(hspace=.200)
+        for i in range(1, self.nbins+1):
+            ax = self.fig.add_subplot(self.nbins,1,self.nbins+1-i)
             ax.axhline(y=1.0, color='black', lw=1.0, zorder=0)
             ax.spines['top'].set_visible(False)
             ax.spines['bottom'].set_visible(False)
             ax.spines['left'].set_visible(True)
             ax.spines['right'].set_visible(False)
             ax.yaxis.set_ticks_position('left')
-            ref_histo = None
             if (i == self.nbins +1):
                 ax.set_xlabel('Jet 1 Rapidity')
+
+            ax.set_ylim(*self.ratio_lims)
+            ax.yaxis.set_major_locator(self.yaxis_major_locator)
+            ax.xaxis.set_visible(False)
+
+            if i==1:
+                ax.xaxis.set_visible(True)
+                ax.set_xlabel("$\mathrm{sgn}(y_1)\cdot y_2$")
+            self.axes.append(ax)
+
+
+    def produce(self):
+
+        for i in range(1,self.nbins+1):
+            ax = self.axes[i-1]
+            ref_histo = None
             for j, histo in enumerate(self.histos):
                 hist_slice = histo.ProjectionX("slice_{0}".format(i),i,i)
                 if j==0:
@@ -208,27 +213,34 @@ class TripleDiffRatioPlot(BasePlot):
                     # hist_slice.Scale(ref_histo.Integral()/hist_slice.Integral())
                 hist_slice.Divide(ref_histo)
                 hist = MplHisto(hist_slice)
-                plot_errorbar(hist, label=self.ensure_latex(labels[j]))
+                show_yerr=True if j==0 else False
+                plot_errorbar(hist, ax=ax, show_yerr=show_yerr, linestyle='-', step=True, label=self.ensure_latex(self.labels[j]))
 
+            if (i == self.nbins):
+                ax.legend(bbox_to_anchor=(1.00, 1.02), loc='lower right', borderaxespad=0.)
             ax.set_ylabel("${0} \leq |y_1| < {1}$".format(histo.GetYaxis().GetBinLowEdge(i), histo.GetYaxis().GetBinLowEdge(i+1)),
                           rotation='horizontal')
-            ax.set_ylim(*self.ratio_lims)
-            ax.yaxis.set_major_locator(self.yaxis_major_locator)
-            ax.xaxis.set_visible(False)
-
-            if i==self.nbins:
-                ax.legend(bbox_to_anchor=(1.00, 1.02), loc='lower right', borderaxespad=0.)
-            if i==1:
-                ax.xaxis.set_visible(True)
-                ax.set_xlabel("$\mathrm{sgn}(y_1)\cdot y_2$")
-
-        plt.subplots_adjust(hspace=.200)
+ 
 
 
     def finalize(self):
         self._save_fig()
         plt.close(self.fig)
         pass
+
+
+class TripleDiffUncertainties(TripleDiffRatioPlot):
+
+
+    def prepare(self):
+        super(TripleDiffUncertainties, self).prepare()
+        yaxis_major_locator   = MultipleLocator(0.1)
+        for ax in self.axes:
+            ax.yaxis.grid(which='major')
+            ax.yaxis.set_major_locator(yaxis_major_locator)
+
+    def produce(self):
+        super(TripleDiffUncertainties, self).produce()
 
 
 if __name__ == '__main__':
