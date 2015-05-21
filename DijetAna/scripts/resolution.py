@@ -13,7 +13,7 @@ from JetAnalysis.DijetAna.plotting.baseplot import BasePlot
 from Artus.HarryPlotter.utility.mplhisto import MplGraph
 import matplotlib
 import matplotlib.pyplot as plt
-
+from matplotlib.ticker import ScalarFormatter
 
 from JetAnalysis.DijetAna.tools import get_root_object
 
@@ -127,7 +127,6 @@ class JetResolutionPlot(BasePlot):
             fcn_y = np.array(map(fcn,fcn_x))
             self.ax.plot(fcn_x, fcn_y, color=color, lw=1.0)
 
-        self.ax.legend()
 
 
     def finalize(self):
@@ -137,6 +136,10 @@ class JetResolutionPlot(BasePlot):
         self.ax.set_xlim(50, 3000.)
         self.ax.set_xscale('log')
         self.ax.xaxis.set_minor_formatter(plt.FuncFormatter(self.log_locator_filter))
+        xfmt = ScalarFormatter()
+        xfmt.set_powerlimits((-9, 9))
+        self.ax.xaxis.set_major_formatter(xfmt)
+        self.ax.legend()
 
         self._save_fig()
         plt.close(self.fig)
