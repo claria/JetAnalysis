@@ -72,8 +72,6 @@ def main():
 
         gc_command = os.path.expandvars('$HOME/grid-control/go.py')
         arguments = '-Gc {0}'.format(os.path.join(project_directory, 'jetana.conf'))
-        log.info('grid-control was invoked with cmd: \"{0} {1}\"'.format(gc_command, arguments))
-        log.info('Output was written to \"{0}\"'.format(project_directory))
         if args['dry_run']:
             log.debug('Exit since only dry run requested.')
             pass
@@ -82,6 +80,9 @@ def main():
                 run(gc_command, arguments=arguments)
             except:
                 pass
+        log.info('grid-control was invoked with cmd: \"{0} {1}\"'.format(gc_command, arguments))
+        log.info('Output was written to \"{0}\"'.format(project_directory))
+
 
     if args['batch'] is not True:
         # Prepare list of all configs
@@ -113,7 +114,6 @@ def main():
                     raise Exception("Error in called program")
 
 
-
 def run(executable, arguments=''):
     """Execute and wait for command to complete. Returns returncode attribute."""
     cmd = '{0} {1}'.format(executable, arguments)
@@ -126,6 +126,7 @@ def run(executable, arguments=''):
         log.critical("Received Interrupt")
         return 1
     return rc
+
 
 def save_config(config, path=None, indent=4):
     """Save json config to file."""
@@ -142,6 +143,7 @@ def save_config(config, path=None, indent=4):
 def get_hash(s, truncate=12):
     """Return a (truncated) hash of the input string."""
     return hashlib.md5(s).hexdigest()[0:truncate]
+
 
 def get_config(config_name, *args, **kwargs):
     """ Get config from templates by name."""
@@ -170,6 +172,7 @@ def extract_nickname(s):
     s = os.path.basename(s)
     return '_'.join(s.split('_')[1:-1])
 
+
 def expand_glob(l):
     """Expand and glob input list and return flattened list."""
     if (isinstance(l, basestring)):
@@ -183,9 +186,6 @@ def expand_glob(l):
             expanded.append(glob.glob(os.path.expandvars(item)))
     # Flatten list of lists and return
     return [val for sublist in expanded for val in sublist]
-
-
-
 
 
 def write_dbsfile(filelist, path=None, work_directory=None):
@@ -245,6 +245,7 @@ def prepare_gc_input(filelist, config, work_directory):
 
     return project_directory
 
+
 def replace(source_file_path, replace_dict):
     fh, target_file_path = tempfile.mkstemp()
     with open(target_file_path, 'w') as target_file:
@@ -255,7 +256,6 @@ def replace(source_file_path, replace_dict):
                 target_file.write(line)
     os.remove(source_file_path)
     shutil.move(target_file_path, source_file_path)
-
 
 
 if __name__ == '__main__':
