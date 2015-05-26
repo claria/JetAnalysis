@@ -64,9 +64,9 @@ void TriggerEfficiencyHistogramConsumer::ProcessFilteredEvent(event_type const& 
 		std::string hltName = product.m_hltInfo.getHLTName(m_hltPaths[i]);
 		size_t hltPosition = product.m_hltInfo.getHLTPosition(m_hltPaths[i]);
 		if (event.m_eventInfo->hltFired(hltName, event.m_lumiInfo)) {
-			LOG(DEBUG) << "Trigger " << hltName << " fired." << std::endl;
-			int l1FilterIndex = -1;
-			int hltFilterIndex = -1;
+			LOG(DEBUG) << "Trigger " << hltName << "fired." << std::endl;
+			int l1objIdx = -1;
+			int hltobjIdx = -1;
 			// identify the l1 and hlt filter in all filters of the trigger path.
 			LOG(DEBUG) << "Event contains the following filters." << std::endl;
 			for (size_t filterIndex = event.m_triggerObjectMetadata->getMinFilterIndex(hltPosition);
@@ -77,20 +77,14 @@ void TriggerEfficiencyHistogramConsumer::ProcessFilteredEvent(event_type const& 
 				LOG(DEBUG) << "Filtername: " << filterName << " Index " << filterIndex << std::endl;
 				if (boost::regex_search(filterName, m_patternL1Filter)) {
 					// Sorted by Pt, we just use the first one
-					l1FilterIndex = filterIndex;
-					LOG(DEBUG) << "Number of L1 objects : " << event.m_triggerObjects->toIdxFilter[filterIndex].size() << std::endl;
+					l1objIdx = event.m_triggerObjects->toIdxFilter[filterIndex][0];
 				}
 				else if (boost::regex_search(filterName,  m_patternHltFilter)) {
 					// Sorted by Pt, we just use the first one
-					// hltFilterIndex = event.m_triggerObjects->toIdxFilter[filterIndex][0];
-					hltFilterIndex = filterIndex;
-					// LOG(DEBUG) << "Number of HLT objects : " << event.m_triggerObjects->toIdxFilter[filterIndex].size() << std::endl;
-					// for (size_t i=0; i < event.m_triggerObjects->toIdxFilter[filterIndex].size(); i++) {
-					// 	LOG(DEBUG) << "Jet " << i << " pT= " << event.m_triggerObjects->trgObjects[event.m_triggerObjects->toIdxFilter[filterIndex][i]].p4.Pt() << std::endl;
-					// }
+					hltobjIdx = event.m_triggerObjects->toIdxFilter[filterIndex][0];
 				}
 			}
-			if (l1FilterIndex < 0 || hltFilterIndex < 0) 
+			if (l1objIdx < 0 || hltobjIdx < 0) 
 			{
 				LOG(DEBUG) << "The L1 or HLT filter of the fired trigger in the event were not found."
 					         << "This can happen if the filter has saveTags=False set in the trigger path. "
@@ -98,22 +92,6 @@ void TriggerEfficiencyHistogramConsumer::ProcessFilteredEvent(event_type const& 
 					         <<std::endl;
 				return;
 			}
-			// Just look at leading Hlt object
-			size_t hltobjIdx = event.m_triggerObjects->toIdxFilter[hltFilterIndex][0];
-			size_t l1objIdx;
-			RMFLV hltP4 = event.m_triggerObjects->trgObjects[hltobjIdx].p4;
-			RMFLV l1P4;
-			// Find best matching L1 object by using minimum deltaR
-			double minDeltaR = 99.;
-			for (size_t i=0; i < event.m_triggerObjects->toIdxFilter[l1FilterIndex].size(); i++) {
-				double deltaR = ROOT::Math::VectorUtil::DeltaR(hltP4, event.m_triggerObjects->trgObjects[event.m_triggerObjects->toIdxFilter[l1FilterIndex][i]].p4);
-				if (deltaR < minDeltaR) {
-					l1objIdx = event.m_triggerObjects->toIdxFilter[l1FilterIndex][i];
-					l1P4 = event.m_triggerObjects->trgObjects[event.m_triggerObjects->toIdxFilter[l1FilterIndex][i]].p4;
-				}
-			}
-
-
 			LOG(DEBUG) << "Trigger object pT: L1=" << event.m_triggerObjects->trgObjects[l1objIdx].p4.Pt() << " GeV "
 				       << "HLT=" << event.m_triggerObjects->trgObjects[hltobjIdx].p4.Pt() << " GeV." << std::endl;
 			m_triggerResultHists[i]->Fill(triggerEffQuantity);
