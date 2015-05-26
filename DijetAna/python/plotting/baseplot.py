@@ -10,9 +10,10 @@ import matplotlib.pyplot as plt
 class BasePlot(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self, output_fn='test', output_ext=('png',), style='none', figsize=None):
+    def __init__(self, output_fn='test', output_ext=('png',), style=None, figsize=None):
 
         self.init_matplotlib()
+
         if figsize:
             self.fig = plt.figure(figsize=figsize)
         else:
@@ -238,35 +239,31 @@ class BasePlot(object):
                 setattr(obj, attr, val)
 
 
-    @staticmethod
-    def ensure_latex(inp_str):
-        """
-        Return string with escaped latex incompatible characters.
-        :param inp_str:
-        :return:
-        """
-        chars = {
-            '&': r'\&',
-            '%': r'\%',
-            '$': r'\$',
-            '#': r'\#',
-            '_': r'\_',
-            '{': r'\letteropenbrace{}',
-            '}': r'\letterclosebrace{}',
-            '~': r'\lettertilde{}',
-            '^': r'\letterhat{}',
-            '\\': r'\letterbackslash{}',
-        }
-        return ''.join([chars.get(char, char) for char in inp_str])
+def ensure_latex(inp_str):
+    """
+    Return string with escaped latex incompatible characters.
+    :param inp_str:
+    :return:
+    """
+    chars = {
+        '&': r'\&',
+        '%': r'\%',
+        '$': r'\$',
+        '#': r'\#',
+        '_': r'\_',
+        '{': r'\letteropenbrace{}',
+        '}': r'\letterclosebrace{}',
+        '~': r'\lettertilde{}',
+        '^': r'\letterhat{}',
+        '\\': r'\letterbackslash{}',
+    }
+    return ''.join([chars.get(char, char) for char in inp_str])
 
 
 class GenericPlot(BasePlot):
     """
-    Very simple generic plotting script
-    A list of datasets has to be provided.
-    A dataset is a dict with x and y keys and dx,dy
     """
-    def __init__(self, datasets,
+    def __init__(self,
                  output_fn='test.png',
                  output_ext=('png', ),
                  props=None,
@@ -275,53 +272,18 @@ class GenericPlot(BasePlot):
                                           output_ext=output_ext,
                                           **kwargs)
 
-        self.output_fn = output_fn
-        self.datasets = datasets
-
         self.ax = self.fig.add_subplot(111)
-        self.props = props if props else {}
-        self.props.update(kwargs.get('post_props', {}))
-        self.pre_props = kwargs.get('pre_props', {})
 
-    def prepare(self, **kwargs):
-
-        for artist, props in self.props.items():
-            obj = getattr(self, artist)
-            self.set(obj, **props)
+    def prepare(self):
+        pass
 
     def produce(self):
-        for dataset in self.datasets:
-            plot_type = dataset.get('plot_type', 'plot')
-            if plot_type == 'plot':
-                self.ax.plot(dataset['x'],
-                             dataset['y'],
-                             label=dataset.get('label', ''),
-                             **dataset.get('props', {}))
-            elif plot_type == 'errorbar':
-                self.ax.errorbar(x=dataset['x'],
-                                 xerr=dataset['dx'],
-                                 y=dataset['y'],
-                                 yerr=dataset['dy'],
-                                 fmt='+',
-                                 label=dataset.get('label', ''),
-                                 **dataset.get('props', {}))
-            elif plot_type == 'fill_between':
-                self.ax.fill_between(x=dataset['x'],
-                                     y1=dataset['y'] - dataset['dy'][0],
-                                     y2=dataset['y'] + dataset['dy'],
-                                     #label=dataset.get('label',''),
-                                     **dataset.get('props', {}))
-        self.ax.legend()
+        pass
 
     def finalize(self):
-
-        for artist, props in self.props.items():
-            obj = getattr(self, artist)
-            self.set(obj, **props)
-
-        self.autoscale(self.ax, margin=0.1)
         self._save_fig()
         plt.close(self.fig)
+
 
 
 def plot_errorbar(hist, step=False, show_xerr=True, show_yerr=True, emptybins=True, ax=None, **kwargs):
