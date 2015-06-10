@@ -27,7 +27,6 @@
 #include "JetAnalysis/DijetAna/interface/Consumers/JetQuantitiesHistogramConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/GenJetQuantitiesHistogramConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/JetUnfoldingResponseConsumer.h"
-#include "JetAnalysis/DijetAna/interface/Consumers/JECUncertaintiesConsumer.h"
 // #include "JetAnalysis/DijetAna/interface/Consumers/TriggerHistogramFitConsumer.h"
 
 
@@ -64,8 +63,6 @@ ConsumerBaseUntemplated * JetFactory::createConsumer ( std::string const& id )
 		return new GenJetQuantitiesHistogramConsumer();
 	else if (JetUnfoldingResponseConsumer().GetConsumerId() == id)
 		return new JetUnfoldingResponseConsumer();
-	else if (JECUncertaintiesConsumer().GetConsumerId() == id)
-		return new JECUncertaintiesConsumer();
 	else
 		return KappaFactory::createConsumer( id );
 }
