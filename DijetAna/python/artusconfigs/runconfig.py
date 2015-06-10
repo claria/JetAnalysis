@@ -16,6 +16,9 @@ class RunConfig(BaseConfig):
 
         self['GenPtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         self['TripleDiffGenPtBinning'] = [74, 114, 196, 300, 468, 790, 3000]
+        # Binnings
+        self['RapidityAbsBinning'] = [0.0, 1.0, 2.0, 3.0]
+        self['RapidityBinning'] = [-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0]
 
         default_pipeline = self.get_default_pipeline()
         default_pipeline['Consumers'] =  [
@@ -31,9 +34,9 @@ class RunConfig(BaseConfig):
                                   # 'npu',
                                   'weight',
                                   'njets',
-                                  'incjets_pt',
+                                  # 'incjets_pt',
                                   # 'incjets_eta',
-                                  'incjets_rap',
+                                  # 'incjets_rap',
                                   # 'incjets_phi',
                                   'jet1_pt',
                                   'jet1_eta',
@@ -43,21 +46,30 @@ class RunConfig(BaseConfig):
                                   'jet2_eta',
                                   'jet2_rap',
                                   'jet2_phi',
-                                  # 'dijet_mass',
-                                  # 'dijet_ystar',
-                                  # 'dijet_yboost',
+                                  'dijet_mass',
+                                  'pt12_avg',
+                                  'dijet_ystar',
+                                  'dijet_yboost',
+                                  'dijet_yinner',
+                                  'dijet_youter',
+                                  'dijet_chi',
+                                  'dijet_costhetastar',
+                                  'dijet_deltaphi',
+                                  'dijet_ymax',
                                   'trigweight',
                                   'puweight',
                                   'pathindex',
                                   'xsweight',
                                   'ngeneventsweight',
+                                  'luminosityWeight',
                                   'genweight',
-                                  # 'met',
-                                  # 'sumet',
+                                  'met',
+                                  'sumet',
                                   ]
 
         if self.is_data is True:
-            pass
+            self['IntLuminosity']  = 19789.
+
         elif self.is_data is False:
             default_pipeline['Consumers'].append('GenJetQuantitiesHistogramConsumer')
             default_pipeline['Quantities'].append('genjet1_pt')

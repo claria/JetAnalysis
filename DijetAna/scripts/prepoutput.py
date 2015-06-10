@@ -21,19 +21,25 @@ def main():
     samples_config = RawConfigParser(allow_no_value=True)
     samples_config.read(os.path.expandvars('$CMSSW_BASE/src/JetAnalysis/DijetAna/data/samples.conf'))
 
+    # Bad hack
     sample_summary = dict(samples_config.items('samples_summary'))
+    for sample in sample_summary:
+        sample_summary[sample] = sample_summary[sample].split(',')
+
     print sample_summary
 
     print args
     all_dirs = [d for d in os.listdir(args['output_folder']) if os.path.isdir(os.path.join(args['output_folder'], d))]
-    
+
     mergedict = {}
     for sample in sample_summary:
         mergedict[sample] = []
         for subsample in sample_summary[sample]:
+            print subsample
             for dir in all_dirs:
                 if subsample in dir:
-                    mergedict[sample].append(dir)
+                    # mergedict[sample].append(dir)
+                    mergedict[sample] += glob.glob(os.path.join(args['output_folder'], "{0}/*.root".format(dir)))
 
     print mergedict
 

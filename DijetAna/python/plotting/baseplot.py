@@ -61,14 +61,13 @@ class BasePlot(object):
         if not yet existing.
         """
         #Check if directory exists and create if not
-        print self.output_fn
         directory = os.path.dirname(self.output_fn)
 
-        print directory
         if directory and not os.path.exists(directory):
             os.makedirs(directory)
         for ext in self.output_ext:
             filename = "{}.{}".format(self.output_fn, ext)
+            print 'Saved plot to {0}'.format(filename)
             self.fig.savefig(filename, bbox_inches='tight')
 
     @staticmethod
@@ -87,9 +86,9 @@ class BasePlot(object):
         matplotlib.rcParams['font.style'] = 'normal'
         matplotlib.rcParams['font.size'] = 20.
         matplotlib.rcParams['legend.fontsize'] = 14.
-        matplotlib.rcParams['text.usetex'] = True
+        matplotlib.rcParams['text.usetex'] = False
         # matplotlib.rc('text.latex', preamble=r'\usepackage{helvet},\usepackage{sfmath}')
-        matplotlib.rc('text.latex', preamble=r'\usepackage{helvet}')
+        # matplotlib.rc('text.latex', preamble=r'\usepackage{helvet}')
         # Axes
         matplotlib.rcParams['axes.linewidth'] = 2
         matplotlib.rcParams['axes.labelsize'] = 20
@@ -283,6 +282,36 @@ class GenericPlot(BasePlot):
     def finalize(self):
         self._save_fig()
         plt.close(self.fig)
+
+
+def plot_band(hist, step=False, emptybins=True, ax=None, **kwargs):
+    """ Produce an errorbar plots with or without connecting lines.
+
+    Args:
+        hist: MplHisto representation of a root histogram.
+        ax: Axis to plot on. If not specified current global axis will be used.
+        show_xerr: If True, x errorbars will be plotted.
+        show_yerr: If True, y errorbars will be plotted.
+        emptybins: Not Implemented. Supposed to ignore/plot empty bins.
+    """
+
+    # if no axis passed use current global axis
+    if ax is None:
+        ax = plt.gca()
+
+    x = hist.x
+    if isinstance(hist, MplHisto):
+        y = hist.bincontents
+        yerrl = hist.binerru
+        yerru = hist.binerrl
+    else:
+        y = hist.y
+        yerrl = hist.yerrl
+        yerru = hist.yerru
+
+    label = kwargs.pop('label', '')
+    artist = ax.fill_between(x, yerrl, yerru, label=label, color=color, **kwargs)
+    return artist
 
 
 

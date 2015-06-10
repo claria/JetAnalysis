@@ -1,5 +1,6 @@
 import os
 import copy
+import numpy as np
 from ConfigParser import RawConfigParser
 
 class BaseConfig(dict):
@@ -61,13 +62,13 @@ class BaseConfig(dict):
         # Observable binning in leading jet pT
         # self['ObservableBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         # Binnings
+        self['RapidityAbsBinning'] = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
         self['RapidityBinning'] = [-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
-        self['Jet1RapidityBinning'] = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
-        self['Jet2RapidityBinning'] = [-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
         # self['RapidityBinning'] = [-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0]
         # self['Jet1RapidityBinning'] = [0.0, 1.0, 2.0, 3.0]
         # self['Jet2RapidityBinning'] = [-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0]
         self['PtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
+        self['LogPtBinning'] = list(np.logspace(0, 3, 100))
         self['GenPtBinning'] = [36, 44, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         self['TripleDiffPtBinning'] = [74, 114, 196, 300, 468, 790, 3000]
         self['TripleDiffGenPtBinning'] = [46, 60, 74, 114, 196, 300, 468, 790, 3000]
@@ -105,7 +106,7 @@ class BaseConfig(dict):
             'producer:JetCorrectionsProducer',
             'producer:ValidJetsProducer',
             'filter:NJetsFilter',
-            'filter:METSumEtFilter',
+            # 'filter:METSumEtFilter',
             'filter:GoodPrimaryVertexFilter',
         ]
         self['BasicJets'] = 'ak7PFJets'
@@ -202,7 +203,8 @@ class BaseConfig(dict):
         self.add_processor('producer:JetQuantitiesProducer', after='producer:ValidJetsProducer')
         self.add_processor('producer:JetHltProducer', after='filter:NJetsFilter')
         self.add_processor('filter:JetHltFilter', after='producer:JetHltProducer')
-        self.add_processor('EventWeightProducer', after='producer:JetHltProducer')
+        self.add_processor('producer:EventWeightProducer', after='producer:JetHltProducer')
+        self.add_processor('producer:LuminosityWeightProducer', before='producer:EventWeightProducer')
 
 
     def add_pipeline(self, pipeline_name, pipeline=None, level=1):

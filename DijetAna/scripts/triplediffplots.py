@@ -5,7 +5,7 @@ import argparse
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
-from JetAnalysis.DijetAna.plotting.baseplot import BasePlot
+from JetAnalysis.DijetAna.plotting.baseplot import BasePlot, ensure_latex
 from JetAnalysis.DijetAna.plotting.baseplot import plot_errorbar, steppify_bin
 from JetAnalysis.DijetAna.tools import *
 from Artus.HarryPlotter.utility.mplhisto import MplHisto, MplGraph
@@ -16,7 +16,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-from matplotlib.ticker import MultipleLocator, FixedLocator
+from matplotlib.ticker import MultipleLocator, FixedLocator, AutoLocator
 from matplotlib.colors import LogNorm
 import numpy as np
 import sys
@@ -32,6 +32,9 @@ def main():
     parser.add_argument('--scale', nargs='+', type=float, help='Scale histograms')
     parser.add_argument('--ratio-lims', type=float, nargs=2, help='Output prefix to put before filename')
     parser.add_argument('--plots', help='Type of the plot to do.')
+    parser.add_argument('--x-label', help='xlabel')
+    parser.add_argument('--y-label', help='ylabel')
+
 
     args = vars(parser.parse_args())
 
@@ -46,6 +49,7 @@ def main():
     for i, histo in enumerate(histos):
         histo.SetName("{0}_{1}".format(histo.GetName(), i))
         if args['scale']:
+            print "Scale", histo.GetName(), "with ", args['scale'][i]
             histo.Scale(args['scale'][i])
 
     n_zbins = histos[0].GetNbinsZ()
@@ -62,16 +66,16 @@ def main():
         for histo in histos:
             histo.GetZaxis().SetRange(i,i)
             ptbin = histo.GetZaxis().GetBinLowEdge(i), histo.GetZaxis().GetBinUpEdge(i)
-            xyslice = histo.Project3D("xy")
+            xyslice = histo.Project3D("yx")
             # normalize_to_binwidth(xyslice)
             histos_sliced.append(xyslice)
 
         # histos_sliced = [histo.ProjectionZ("slice_{0}".format(i), i, i) for histo in histos]
         basename = args.get('output_prefix', 'td_ratio')
-        plotproducer = TripleDiffUncertainties(histos_sliced, output_fn='plots/{0}_{1}'.format(basename, i), figsize=(14.,10.), labels=args['labels'], ratio_lims=args['ratio_lims'], ptbin=ptbin)
-        plotproducer.do_plot()
-        # tddistplot = TripleDiffHeatMapPlot(histos_sliced[0], figsize=(7.,4.), output_fn='plots/{0}_{1}'.format(basename, i))
-        # tddistplot.do_plot()
+        # plotproducer = TripleDiffUncertainties(histos_sliced, output_fn='plots/{0}_{1}'.format(basename, i), figsize=(14.,10.), labels=args['labels'], ratio_lims=args['ratio_lims'], ptbin=ptbin)
+        # plotproducer.do_plot()
+        tddistplot = TripleDiffHeatMapPlot(histos_sliced[0], figsize=(7.,4.), output_fn='plots/{0}_{1}'.format(basename, i), x_label=args['x_label'], y_label=args['y_label'])
+        tddistplot.do_plot()
 
         # tddistplot = TripleDiff3DPlot(histos_sliced[0], output_fn='td3dplot_{0}'.format(i))
         # tddistplot.do_plot()
@@ -122,6 +126,8 @@ class TripleDiff3DPlot(BasePlot):
 class TripleDiffHeatMapPlot(BasePlot):
 
     def __init__(self, histo, *args, **kwargs):
+        self.x_label = kwargs.pop('x_label', '')
+        self.y_label = kwargs.pop('y_label', '')
         super(TripleDiffHeatMapPlot, self).__init__(*args, **kwargs)
 
         self.histo = histo
@@ -144,8 +150,12 @@ class TripleDiffHeatMapPlot(BasePlot):
         cbar = self.fig.colorbar(artist)
         cbar.set_label('Cross Section [pb]')
 
-        ax.set_xlabel("$\mathrm{sgn}(y_1) \cdot y_2$")
-        ax.set_ylabel("$|y_1|$")
+        # ax.set_xlabel("$\mathrm{sgn}(y_1) \cdot y_2$")
+        # ax.set_ylabel("$|y_1|$")
+        # ax.set_xlabel("$\mathrm{sgn}(y_\mathrm{i}) \cdot y_\mathrm{o}$")
+        # ax.set_ylabel("$|y_\mathrm{i}|$")
+        ax.set_xlabel(self.x_label)
+        ax.set_ylabel(self.y_label)
 
     def finalize(self):
         self._save_fig()
@@ -158,8 +168,8 @@ class TripleDiffRatioPlot(BasePlot):
     def __init__(self, histos, labels=None, *args, **kwargs):
         self.ratio_lims = kwargs.pop('ratio_lims')
         self.ptbin = kwargs.pop('ptbin', None)
-        if not self.ratio_lims:
-            self.ratio_lims = [0.51, 1.49]
+        # if not self.ratio_lims:
+            # self.ratio_lims = [0.51, 1.49]
         super(TripleDiffRatioPlot, self).__init__(*args, **kwargs)
         self.histos = histos
 
@@ -176,7 +186,7 @@ class TripleDiffRatioPlot(BasePlot):
         if self.ptbin:
             self.fig.text(x=0., y=0.99, s='${0} \leq p_{{\mathrm{{T}},1}} < {1}$'.format(*self.ptbin), ha='left', va='top')
 
-        self.fig.text(x=-0.1, y=0.5, s='Ratio to {0}'.format(self.ensure_latex(self.labels[0])), rotation='vertical', ha='right', va='center')
+        self.fig.text(x=-0.1, y=0.5, s='Ratio to {0}'.format(ensure_latex(self.labels[0])), rotation='vertical', ha='right', va='center')
 
         plt.subplots_adjust(hspace=.200)
         for i in range(1, self.nbins+1):
@@ -190,7 +200,8 @@ class TripleDiffRatioPlot(BasePlot):
             if (i == self.nbins +1):
                 ax.set_xlabel('Jet 1 Rapidity')
 
-            ax.set_ylim(*self.ratio_lims)
+            if self.ratio_lims:
+                ax.set_ylim(*self.ratio_lims)
             ax.yaxis.set_major_locator(self.yaxis_major_locator)
             ax.xaxis.set_visible(False)
 
@@ -214,7 +225,7 @@ class TripleDiffRatioPlot(BasePlot):
                 hist_slice.Divide(ref_histo)
                 hist = MplHisto(hist_slice)
                 show_yerr=True if j==0 else False
-                plot_errorbar(hist, ax=ax, show_yerr=show_yerr, linestyle='-', step=True, label=self.ensure_latex(self.labels[j]))
+                plot_errorbar(hist, ax=ax, show_yerr=show_yerr, linestyle='-', step=True, label=ensure_latex(self.labels[j]))
 
             if (i == self.nbins):
                 ax.legend(bbox_to_anchor=(1.00, 1.02), loc='lower right', borderaxespad=0.)
@@ -234,7 +245,8 @@ class TripleDiffUncertainties(TripleDiffRatioPlot):
 
     def prepare(self):
         super(TripleDiffUncertainties, self).prepare()
-        yaxis_major_locator   = MultipleLocator(0.1)
+        # yaxis_major_locator   = MultipleLocator(0.1)
+        yaxis_major_locator   = AutoLocator()
         for ax in self.axes:
             ax.yaxis.grid(which='major')
             ax.yaxis.set_major_locator(yaxis_major_locator)
