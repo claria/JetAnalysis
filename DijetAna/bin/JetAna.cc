@@ -27,15 +27,13 @@ int main(int argc, char** argv) {
   // load the settings from the config file
   JetSettings settings = myConfig.GetSettings<JetSettings>();
   // create the output root file
-  boost::scoped_ptr<TFile> rootOutputFile(
-      new TFile(myConfig.GetOutputPath().c_str(), "RECREATE"));
+  boost::scoped_ptr<TFile> rootOutputFile(new TFile(myConfig.GetOutputPath().c_str(), "RECREATE"));
 
   // will load the Ntuples from the root file
   // this must be modified if you want to load more/new quantities
 
   FileInterface2 finterface(myConfig.GetInputFiles());
-  JetEventProvider evtProvider(
-      finterface, (settings.GetInputIsData() ? DataInput : McInput));
+  JetEventProvider evtProvider(finterface, (settings.GetInputIsData() ? DataInput : McInput));
   evtProvider.WireEvent(settings);
 
   // the pipeline initializer will setup the pipeline, with

@@ -9,8 +9,7 @@ class JetResolutionConsumer : public ConsumerBase<JetTypes> {
 
   virtual void Init(setting_type const& settings) ARTUS_CPP11_OVERRIDE;
   // virtual void Process(setting_type const& settings) ARTUS_CPP11_OVERRIDE;
-  virtual void ProcessFilteredEvent(event_type const& event,
-                                    product_type const& product,
+  virtual void ProcessFilteredEvent(event_type const& event, product_type const& product,
                                     setting_type const& settings) override;
 
   virtual void Finish(setting_type const& settings) ARTUS_CPP11_OVERRIDE;

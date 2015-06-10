@@ -13,10 +13,7 @@ class JetFactory : public KappaFactory /*<JetTypes> */ {
  public:
   JetFactory();
   ~JetFactory();
-  virtual ProducerBaseUntemplated* createProducer(std::string const& id)
-      ARTUS_CPP11_OVERRIDE;
-  virtual ConsumerBaseUntemplated* createConsumer(std::string const& id)
-      ARTUS_CPP11_OVERRIDE;
-  virtual FilterBaseUntemplated* createFilter(std::string const& id)
-      ARTUS_CPP11_OVERRIDE;
+  virtual ProducerBaseUntemplated* createProducer(std::string const& id) ARTUS_CPP11_OVERRIDE;
+  virtual ConsumerBaseUntemplated* createConsumer(std::string const& id) ARTUS_CPP11_OVERRIDE;
+  virtual FilterBaseUntemplated* createFilter(std::string const& id) ARTUS_CPP11_OVERRIDE;
 };

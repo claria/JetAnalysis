@@ -3,8 +3,7 @@
 
 std::string JetHltFilter::GetFilterId() const { return "JetHltFilter"; }
 
-bool JetHltFilter::DoesEventPass(JetEvent const& event,
-                                 JetProduct const& product,
+bool JetHltFilter::DoesEventPass(JetEvent const& event, JetProduct const& product,
                                  JetSettings const& settings) const {
   if (product.m_selectedHltName.empty()) {
     return false;

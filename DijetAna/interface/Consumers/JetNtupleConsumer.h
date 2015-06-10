@@ -28,8 +28,7 @@ class JetNtupleConsumer : public NtupleConsumerBase<JetTypes> {
     } else if (string.compare(0, trigger.length(), trigger) == 0) {
       return product.m_HltTrigger.find(string)->second;
     } else
-      LOG(FATAL) << "The quantity " << string
-                 << " could not be added to the Ntuple";
+      LOG(FATAL) << "The quantity " << string << " could not be added to the Ntuple";
     return -999.0;
   }
 };

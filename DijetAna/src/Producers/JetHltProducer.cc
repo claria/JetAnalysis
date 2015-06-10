@@ -14,16 +14,12 @@ void JetHltProducer::Init(KappaSettings const &settings) {
   assert(jetSettings.GetTriggerEffThresholds().size() ==
          jetSettings.GetTriggerEffPaths().size() + 1);
   for (size_t i = 0; i < jetSettings.GetTriggerEffPaths().size(); i++) {
-    triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]] =
-        std::make_pair(jetSettings.GetTriggerEffThresholds()[i],
-                       jetSettings.GetTriggerEffThresholds()[i + 1]);
-    LOG(DEBUG)
-        << "Trigger eff. thresholds for path "
-        << jetSettings.GetTriggerEffPaths()[i] << " is: ("
-        << triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]].first
-        << ", "
-        << triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]].second
-        << ")." << std::endl;
+    triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]] = std::make_pair(
+        jetSettings.GetTriggerEffThresholds()[i], jetSettings.GetTriggerEffThresholds()[i + 1]);
+    LOG(DEBUG) << "Trigger eff. thresholds for path " << jetSettings.GetTriggerEffPaths()[i]
+               << " is: (" << triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]].first
+               << ", " << triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]].second << ")."
+               << std::endl;
   }
 }
 
@@ -45,8 +41,7 @@ void JetHltProducer::Produce(KappaEvent const &event, KappaProduct &product,
   product.m_hltInfo.setLumiInfo(event.m_lumiInfo);
 
   double triggerEffQuantity = product.m_validJets.at(0)->p4.Pt();
-  for (std::vector<std::string>::const_iterator hltPath =
-           jetSettings.GetHltPaths().begin();
+  for (std::vector<std::string>::const_iterator hltPath = jetSettings.GetHltPaths().begin();
        hltPath != jetSettings.GetHltPaths().end(); ++hltPath) {
     std::string hltName = product.m_hltInfo.getHLTName(*hltPath);
     if (!hltName.empty()) {
@@ -62,10 +57,8 @@ void JetHltProducer::Produce(KappaEvent const &event, KappaProduct &product,
           // triggerEffQuantity <<
           // std::endl;
           product.m_selectedHltName = *hltPath;
-          product.m_weights["hltPrescaleWeight"] =
-              product.m_hltInfo.getPrescale(hltName);
-          product.m_selectedHltPosition =
-              (int)product.m_hltInfo.getHLTPosition(hltName);
+          product.m_weights["hltPrescaleWeight"] = product.m_hltInfo.getPrescale(hltName);
+          product.m_selectedHltPosition = (int)product.m_hltInfo.getHLTPosition(hltName);
           break;
         } else {
           product.m_selectedHltName = "";
@@ -74,8 +67,7 @@ void JetHltProducer::Produce(KappaEvent const &event, KappaProduct &product,
         }
       }
     } else {
-      std::cout << "Trigger " << *hltPath << " could not be resolved."
-                << std::endl;
+      std::cout << "Trigger " << *hltPath << " could not be resolved." << std::endl;
     }
   }
 }

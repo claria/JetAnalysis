@@ -6,19 +6,16 @@
 
 class TriggerEfficiencyHistogramConsumer : public ConsumerBase<JetTypes> {
  public:
-  virtual std::string GetConsumerId() const {
-    return "TriggerEfficiencyHistogramConsumer";
-  }
+  virtual std::string GetConsumerId() const { return "TriggerEfficiencyHistogramConsumer"; }
 
   virtual void Init(setting_type const& settings);
-  virtual void ProcessFilteredEvent(event_type const& event,
-                                    product_type const& product,
+  virtual void ProcessFilteredEvent(event_type const& event, product_type const& product,
                                     setting_type const& settings);
   virtual void Finish(setting_type const& settings);
-  double GetL1FilterThreshold(event_type const& event,
-                              product_type const& product, std::string path);
-  double GetHltFilterThreshold(event_type const& event,
-                               product_type const& product, std::string path);
+  double GetL1FilterThreshold(event_type const& event, product_type const& product,
+                              std::string path);
+  double GetHltFilterThreshold(event_type const& event, product_type const& product,
+                               std::string path);
 
  protected:
   std::vector<std::string> m_hltPaths;

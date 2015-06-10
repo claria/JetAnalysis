@@ -2,9 +2,7 @@
 #include "JetAnalysis/DijetAna/interface/Producers/GenJetMatchingProducer.h"
 #include <KappaTools/RootTools/Matching.h>
 
-std::string GenJetMatchingProducer::GetProducerId() const {
-  return "GenJetMatchingProducer";
-}
+std::string GenJetMatchingProducer::GetProducerId() const { return "GenJetMatchingProducer"; }
 
 void GenJetMatchingProducer::Init(JetSettings const& settings) {
   maxDeltaR = settings.GetMaxDeltaR();
@@ -23,11 +21,9 @@ void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct& product,
   static matchSort_deltaRdeltaPtRel metric(maxDeltaR, maxDeltaPtRel);
 
   std::vector<int> match_result_genjets = matchSort_Matrix<KLV, KBasicJet>(
-      *(event.m_genJets), event.m_genJets->size(), validJets, validJets.size(),
-      metric);
+      *(event.m_genJets), event.m_genJets->size(), validJets, validJets.size(), metric);
   std::vector<int> match_result_recojets = matchSort_Matrix<KBasicJet, KLV>(
-      validJets, validJets.size(), *(event.m_genJets), event.m_genJets->size(),
-      metric);
+      validJets, validJets.size(), *(event.m_genJets), event.m_genJets->size(), metric);
 
   // List of indices of matched genjets to each reco, size=recojet.size()
   product.m_match_result_genjets = match_result_genjets;
@@ -50,8 +46,7 @@ void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct& product,
     if (match_result_genjets[idx] < 0)
       product.m_matchedGenJets.at(idx) = NULL;
     else
-      product.m_matchedGenJets.at(idx) =
-          &(event.m_genJets->at(match_result_genjets[idx]));
+      product.m_matchedGenJets.at(idx) = &(event.m_genJets->at(match_result_genjets[idx]));
   }
 
   for (std::vector<KLV>::iterator genJet = event.m_genJets->begin();
@@ -60,8 +55,7 @@ void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct& product,
     if (match_result_recojets[idx] < 0)
       product.m_matchedRecoJets.at(idx) = NULL;
     else
-      product.m_matchedRecoJets.at(idx) =
-          product.m_validJets.at(match_result_recojets[idx]);
+      product.m_matchedRecoJets.at(idx) = product.m_validJets.at(match_result_recojets[idx]);
   }
 
   // for (size_t i=0;i<match_result_recojets.size();i++){
