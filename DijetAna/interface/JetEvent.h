@@ -2,9 +2,7 @@
 
 #include "Artus/KappaAnalysis/interface/KappaEvent.h"
 
-class JetEvent : public KappaEvent
-{
-public:
-	JetEvent() : KappaEvent() {};
-
+class JetEvent : public KappaEvent {
+ public:
+  JetEvent() : KappaEvent(){};
 };

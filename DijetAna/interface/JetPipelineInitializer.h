@@ -19,10 +19,8 @@
 #include "JetNtupleConsumer.h"
 //#include "JetObservables.h"
 
-class JetPipelineInitializer: public PipelineInitilizerBase<JetTypes> {
-	public:
-
-		virtual void InitPipeline(JetPipeline * pLine,
-				JetPipelineSettings const& pset) const ARTUS_CPP11_OVERRIDE
-		{}
+class JetPipelineInitializer : public PipelineInitilizerBase<JetTypes> {
+ public:
+  virtual void InitPipeline(JetPipeline* pLine, JetPipelineSettings const& pset)
+      const ARTUS_CPP11_OVERRIDE {}
 };

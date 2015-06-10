@@ -6,15 +6,12 @@
 #include "../JetTypes.h"
 
 class METSumEtFilter : public JetFilterBase {
-	public:
+ public:
+  virtual std::string GetFilterId() const { return "METSumEtFilter"; }
+  virtual void Init(JetSettings const& settings) override;
+  virtual bool DoesEventPass(JetEvent const& event, JetProduct const& product,
+                             JetSettings const& settings) const;
 
-		virtual std::string GetFilterId() const {
-			return "METSumEtFilter";
-		}
-		virtual void Init(JetSettings const& settings) override;
-		virtual bool DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const;
-
-	private:
-		double maxMETSumEtRatio;
+ private:
+  double maxMETSumEtRatio;
 };
-

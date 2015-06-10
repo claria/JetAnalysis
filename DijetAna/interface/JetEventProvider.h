@@ -9,13 +9,9 @@
  * The memory locations are passed to ROOT one time, in the
  * WireEvent() method call.
  */
-class JetEventProvider: public KappaEventProvider<JetTypes> {
-public:
+class JetEventProvider : public KappaEventProvider<JetTypes> {
+ public:
+  JetEventProvider(FileInterface2& fi, InputTypeEnum inpType);
 
-	JetEventProvider(FileInterface2& fi, InputTypeEnum inpType);
-
-	virtual void WireEvent(JetSettings const& settings) ARTUS_CPP11_OVERRIDE;
-
-
-
+  virtual void WireEvent(JetSettings const& settings) ARTUS_CPP11_OVERRIDE;
 };

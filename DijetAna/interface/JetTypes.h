@@ -7,16 +7,15 @@
 
 #include "Artus/KappaAnalysis/interface/KappaPipelineInitializer.h"
 
-
 #include "JetEvent.h"
 #include "JetProduct.h"
 #include "JetSettings.h"
 
 // all data types which are used for this analysis
 struct JetTypes {
-	typedef JetEvent event_type;
-	typedef JetProduct product_type;
-	typedef JetSettings setting_type;
+  typedef JetEvent event_type;
+  typedef JetProduct product_type;
+  typedef JetSettings setting_type;
 };
 
 // Pass the template parameters for the Producers
@@ -28,10 +27,9 @@ typedef ConsumerBase<JetTypes> JetConsumerBase;
 // Pass the template parameters for the Filter
 typedef FilterBase<JetTypes> JetFilterBase;
 
-//Pass the template parameters for the Pipeline
+// Pass the template parameters for the Pipeline
 typedef Pipeline<JetTypes> JetPipeline;
 
-//Setup our custom pipeline runner
+// Setup our custom pipeline runner
 typedef PipelineRunner<JetPipeline, JetTypes> JetPipelineRunner;
 typedef KappaPipelineInitializer<JetTypes> JetPipelineInitializer;
-

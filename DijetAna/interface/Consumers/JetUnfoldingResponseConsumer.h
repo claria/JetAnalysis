@@ -9,23 +9,23 @@
 //#include "RooUnfoldSvd.h"
 //#include "RooUnfoldTUnfold.h"
 
-class JetUnfoldingResponseConsumer: public JetConsumerBase {
+class JetUnfoldingResponseConsumer : public JetConsumerBase {
+ public:
+  virtual std::string GetConsumerId() const {
+    return "JetUnfoldingResponseConsumer";
+  }
+  virtual void Init(setting_type const& settings) override;
+  virtual void ProcessEvent(event_type const& event,
+                            product_type const& product,
+                            setting_type const& setting,
+                            FilterResult& result) override;
+  virtual void ProcessFilteredEvent(event_type const& event,
+                                    product_type const& product,
+                                    setting_type const& settings) override;
+  virtual void Finish(setting_type const& settings) override;
 
-public:
-	virtual std::string GetConsumerId() const {
-		return "JetUnfoldingResponseConsumer";
-	}
-	virtual void Init(setting_type const& settings) override;
-	virtual void ProcessEvent(event_type const& event,
-			product_type const& product,
-			setting_type const& setting, 
-			FilterResult & result) override;
-	virtual void ProcessFilteredEvent(event_type const& event, product_type const& product, setting_type const& settings) override;
-	virtual void Finish(setting_type const& settings) override;
-
-private:
-	RooUnfoldResponse* m_unfoldResponse_jet12rap = NULL;
-	RooUnfoldResponse* m_unfoldResponse_jet12rapsign = NULL;
-	RooUnfoldResponse* m_unfoldResponse_pt = NULL;
-
+ private:
+  RooUnfoldResponse* m_unfoldResponse_jet12rap = NULL;
+  RooUnfoldResponse* m_unfoldResponse_jet12rapsign = NULL;
+  RooUnfoldResponse* m_unfoldResponse_pt = NULL;
 };

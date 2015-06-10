@@ -6,40 +6,30 @@
 
 #include "../JetTypes.h"
 
+class JetNtupleConsumer : public NtupleConsumerBase<JetTypes> {
+ public:
+  virtual std::string GetConsumerId() { return "JetNtupleConsumer"; }
 
-class JetNtupleConsumer: public NtupleConsumerBase<JetTypes> {
-
-public:
-	virtual std::string GetConsumerId() {
-		return "JetNtupleConsumer";
-	}
-
-private:
-	
-	float returnvalue(std::string string, JetEvent const& event,
-			JetProduct const& product) ARTUS_CPP11_OVERRIDE
-	{
-		std::string trigger("HLT");
-		// Observables
-		if (string == "Jet1Pt")
-			return product.m_Jet1Pt;
-		else if (string == "Jet1Rap")
-			return product.m_Jet1Eta;
-		else if (string == "Jet2Pt")
-			return product.m_Jet2Pt;
-		else if (string == "Jet2Rap")
-			return product.m_Jet2Eta;
-		else if (string.find(std::string("Weight")) != std::string::npos){
-			return product.m_weights.find(string)->second;
-		}
-		else if (string.compare(0, trigger.length(), trigger) == 0)
-		{
-			return product.m_HltTrigger.find(string)->second;
-		}
-		else
-			LOG(FATAL) << "The quantity " << string << " could not be added to the Ntuple";
-		return -999.0;
-	}
-
-
+ private:
+  float returnvalue(std::string string, JetEvent const& event,
+                    JetProduct const& product) ARTUS_CPP11_OVERRIDE {
+    std::string trigger("HLT");
+    // Observables
+    if (string == "Jet1Pt")
+      return product.m_Jet1Pt;
+    else if (string == "Jet1Rap")
+      return product.m_Jet1Eta;
+    else if (string == "Jet2Pt")
+      return product.m_Jet2Pt;
+    else if (string == "Jet2Rap")
+      return product.m_Jet2Eta;
+    else if (string.find(std::string("Weight")) != std::string::npos) {
+      return product.m_weights.find(string)->second;
+    } else if (string.compare(0, trigger.length(), trigger) == 0) {
+      return product.m_HltTrigger.find(string)->second;
+    } else
+      LOG(FATAL) << "The quantity " << string
+                 << " could not be added to the Ntuple";
+    return -999.0;
+  }
 };

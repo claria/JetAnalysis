@@ -14,46 +14,47 @@
 //#include "Artus/KappaAnalysis/interface/Producers/ValidJetsProducer.h"
 //#include "JetAnalysis/DijetAna/interface/ValidDiJetsProducer.h"
 /*
-	This example implements a simple dummy anaylsis which
-	reads entries from a root file and produces various pt plots
+        This example implements a simple dummy anaylsis which
+        reads entries from a root file and produces various pt plots
 
-	It can be run with the config file data/exampleConfig.json
+        It can be run with the config file data/exampleConfig.json
 */
 
 int main(int argc, char** argv) {
+  // parse the command line and load the
+  ArtusConfig myConfig(argc, argv);
 
-	// parse the command line and load the
-	ArtusConfig myConfig(argc, argv);
+  // load the settings from the config file
+  JetSettings settings = myConfig.GetSettings<JetSettings>();
+  // create the output root file
+  boost::scoped_ptr<TFile> rootOutputFile(
+      new TFile(myConfig.GetOutputPath().c_str(), "RECREATE"));
 
-	// load the settings from the config file
-	JetSettings settings = myConfig.GetSettings<JetSettings>();
-	// create the output root file
-	boost::scoped_ptr < TFile > rootOutputFile(new TFile(myConfig.GetOutputPath().c_str(), "RECREATE"));
+  // will load the Ntuples from the root file
+  // this must be modified if you want to load more/new quantities
 
-	// will load the Ntuples from the root file
-	// this must be modified if you want to load more/new quantities
-	
-	FileInterface2 finterface(myConfig.GetInputFiles());
-	JetEventProvider evtProvider(finterface, (settings.GetInputIsData() ? DataInput : McInput));
-	evtProvider.WireEvent(settings);
+  FileInterface2 finterface(myConfig.GetInputFiles());
+  JetEventProvider evtProvider(
+      finterface, (settings.GetInputIsData() ? DataInput : McInput));
+  evtProvider.WireEvent(settings);
 
-	// the pipeline initializer will setup the pipeline, with
-	// all the attached Producer, Filer and Consumer
-	JetPipelineInitializer pInit;
-    JetFactory factory;
+  // the pipeline initializer will setup the pipeline, with
+  // all the attached Producer, Filer and Consumer
+  JetPipelineInitializer pInit;
+  JetFactory factory;
 
-	JetPipelineRunner runner;
+  JetPipelineRunner runner;
 
-	// load the pipeline with their configuration from the config file
-	myConfig.LoadConfiguration(pInit, runner, factory, rootOutputFile.get());
+  // load the pipeline with their configuration from the config file
+  myConfig.LoadConfiguration(pInit, runner, factory, rootOutputFile.get());
 
-	// run all the configured pipelines and all their attached
-	// consumers
-	runner.RunPipelines(evtProvider, settings);
+  // run all the configured pipelines and all their attached
+  // consumers
+  runner.RunPipelines(evtProvider, settings);
 
-	// close output root file, pointer will be automatically
-	// deleted
-	rootOutputFile->Close();
+  // close output root file, pointer will be automatically
+  // deleted
+  rootOutputFile->Close();
 
-	return 0;
+  return 0;
 }
