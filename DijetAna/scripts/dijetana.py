@@ -146,15 +146,24 @@ def get_hash(s, truncate=12):
 
 
 def get_config(config_name, *args, **kwargs):
-    """ Get config from templates by name."""
-    from JetAnalysis.DijetAna import artusconfigs
-    try:
-        config_class = getattr(artusconfigs, config_name)
-    except AttributeError:
-        log.critical( "The config {0} does not exist or is not a valid config.".format(config_name))
-        sys.exit(1)
+    """Get config from file or from config templates by name."""
+    if os.path.exists(config_name):
+        log.info('Try to read config from file {0}'.format(config_name))
+        with open(config_name) as json_file:
+            try:
+                config = json.load(json_file)
+            except ValueError:
+                log.critical('Failed to parse json file {0}'.format(config_name))
+    else:
+        from JetAnalysis.DijetAna import artusconfigs
+        try:
+            config_class = getattr(artusconfigs, config_name)
+            config = config_class(*args, **kwargs)
+        except AttributeError:
+            log.critical( "The config {0} does not exist or is not a valid config.".format(config_name))
+            sys.exit(1)
 
-    return config_class(*args, **kwargs)
+    return config
 
 
 def get_nicknames(filelist):
