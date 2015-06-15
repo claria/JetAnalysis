@@ -9,7 +9,7 @@ class BaseConfig(dict):
 
         # Configs containing additional infos about xs, number of gen. events etc.
         samples_config = RawConfigParser(allow_no_value=True)
-        samples_config.read('/afs/desy.de/user/g/gsieber/dijetana/ana/CMSSW_7_2_3/src/JetAnalysis/DijetAna/data/samples.conf')
+        samples_config.read(os.path.expandvars('$CMSSW_BASE/src/JetAnalysis/DijetAna/data/samples.conf'))
 
         self.add_global_settings()
         # Add a default pipeline
