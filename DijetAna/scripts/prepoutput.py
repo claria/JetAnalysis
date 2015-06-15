@@ -5,6 +5,7 @@ import os
 import sys
 import argparse
 from ConfigParser import RawConfigParser
+import subprocess
 
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -41,13 +42,15 @@ def main():
                     # mergedict[sample].append(dir)
                     mergedict[sample] += glob.glob(os.path.join(args['output_folder'], "{0}/*.root".format(dir)))
 
-    print mergedict
+    for sample in mergedict:
+        hdadd(mergedict[sample], '{0}.root'.format(sample))
 
-    # glob all folders in output folder
-    # if nick in them
-    # group folders according to nicks
-    # merge these files
-    # link merged files to CMSSW BASE DIR
+
+def hdadd(files, output_filename):
+    cmd = 'jethadd {0} {1}'.format(' '.join(files), output_filename)
+    rc = subprocess.call(cmd.split())
+    if rc != 0:
+        raise Exception('Merging failed.')
 
 
 if __name__ == '__main__':
