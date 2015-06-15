@@ -43,6 +43,11 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h2GenVsRecoPt = new TH2D("h2GenVsRecoPt", "h2GenVsRecoPt", 50, 0.5, 1.5,
                              settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
   m_h2GenVsRecoPt->Sumw2();
+
+  m_h2GenVsRecoPtAvg = new TH2D("h2GenVsRecoPtAvg", "h2GenVsRecoPtAvg", 50, 0.5, 1.5,
+                             settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
+  m_h2GenVsRecoPtAvg->Sumw2();
+
   // Triple-differential distribution of y1, y2 and genjet pT
   m_h3_genjet12rap =
       new TH3D("h3_genjet12rap", "h3_genjet12rap", settings.GetRapidityBinning().size() - 1,
@@ -112,6 +117,15 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
     }
   }
   if (event.m_genJets->size() > 1) {
+    if (product.m_matchedRecoJets.at(0) != NULL && product.m_matchedRecoJets.at(1) != NULL) {
+      double ptavg = 0.5 * (product.m_matchedRecoJets.at(0)->p4.Pt() + product.m_matchedRecoJets.at(1)->p4.Pt());
+      m_h2GenVsRecoPtAvg->Fill(
+          ptavg / product.m_gendijet_ptavg,
+          product.m_gendijet_ptavg, eventWeight);
+    }
+  }
+
+  if (event.m_genJets->size() > 1) {
     if (product.m_matchedRecoJets.at(1) != NULL) {
       m_h_jet2DeltaR->Fill(ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(1)->p4,
                                                           event.m_genJets->at(1).p4),
@@ -124,6 +138,7 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   // save histograms
   RootFileHelper::SafeCd(settings.GetRootOutFile(), settings.GetRootFileFolder());
   m_h2GenVsRecoPt->Write(m_h2GenVsRecoPt->GetName());
+  m_h2GenVsRecoPtAvg->Write(m_h2GenVsRecoPtAvg->GetName());
   m_h_genjet1pt->Write(m_h_genjet1pt->GetName());
   m_h_genjet1rap->Write(m_h_genjet1rap->GetName());
   m_h_genjet1phi->Write(m_h_genjet1phi->GetName());
