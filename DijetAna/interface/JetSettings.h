@@ -18,6 +18,10 @@ class JetSettings : public KappaSettings {
 
   IMPL_SETTING_DEFAULT(double, MinLeadingJetPt, std::numeric_limits<double>::min())
   IMPL_SETTING_DEFAULT(double, MaxLeadingJetPt, std::numeric_limits<double>::max())
+  IMPL_SETTING_DEFAULT(double, MinYStar, std::numeric_limits<double>::min())
+  IMPL_SETTING_DEFAULT(double, MaxYStar, std::numeric_limits<double>::max())
+  IMPL_SETTING_DEFAULT(double, MinYBoost, std::numeric_limits<double>::min())
+  IMPL_SETTING_DEFAULT(double, MaxYBoost, std::numeric_limits<double>::max())
 
   IMPL_SETTING_DEFAULT(double, MinLeadingJetAbsRap, std::numeric_limits<double>::min())
   IMPL_SETTING_DEFAULT(double, MaxLeadingJetAbsRap, std::numeric_limits<double>::max())
