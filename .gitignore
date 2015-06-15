@@ -1,3 +1,5 @@
+# vim
+*.swp
 # CMSSW
 __init__.py
 
