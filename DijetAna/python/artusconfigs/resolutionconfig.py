@@ -23,10 +23,15 @@ class ResolutionConfig(BaseConfig):
 
     def expand_pipelines(self):
         pass
-        rap_bins = [(0.0,0.5),(0.5,1.0),(1.0,1.5),(1.5,2.0),(2.0,2.5),(2.5,3.0)]
-        for bin in rap_bins:
-            pipeline_name = '{0}_{1}'.format(*bin).replace('.','')
-            self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
-            self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:LeadingJetRapFilter')
-            self['Pipelines'][pipeline_name]['MinLeadingJetAbsRap'] = bin[0]
-            self['Pipelines'][pipeline_name]['MaxLeadingJetAbsRap'] = bin[1]
+        # rap_bins = [(0.0,0.5),(0.5,1.0),(1.0,1.5),(1.5,2.0),(2.0,2.5),(2.5,3.0)]
+        rap_bins = [(0.0,1.0),(1.0,2.0),(2.0,3.0)]
+        for yboost_bin in rap_bins:
+            for ystar_bin in rap_bins:
+                pipeline_name = 'ystar_{0}_{1}_yboost_{2}_{3}'.format(ystar_bin[0],ystar_bin[1],yboost_bin[0],yboost_bin[1]).replace('.','')
+                self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
+                self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YStarFilter')
+                self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YBoostFilter')
+                self['Pipelines'][pipeline_name]['MinYStar'] = ystar_bin[0]
+                self['Pipelines'][pipeline_name]['MaxYStar'] = ystar_bin[1]
+                self['Pipelines'][pipeline_name]['MinYBoost'] = yboost_bin[0]
+                self['Pipelines'][pipeline_name]['MaxYBoost'] = yboost_bin[1]
