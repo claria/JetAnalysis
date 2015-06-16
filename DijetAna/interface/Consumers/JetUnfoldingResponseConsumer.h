@@ -22,5 +22,6 @@ class JetUnfoldingResponseConsumer : public JetConsumerBase {
  private:
   RooUnfoldResponse* m_unfoldResponse_jet12rap = NULL;
   RooUnfoldResponse* m_unfoldResponse_jet12rapsign = NULL;
+  RooUnfoldResponse* m_unfoldResponse_ysba = NULL;
   RooUnfoldResponse* m_unfoldResponse_pt = NULL;
 };
