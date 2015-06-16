@@ -66,7 +66,7 @@ void JetQuantitiesProducer::Produce(JetEvent const& event, JetProduct& product,
                                                     jetProduct.m_validJets.at(1)->p4.Rapidity())
                                         : -999.;
   jetProduct.m_dijet_yboost = (jetProduct.m_validJets.size() > 1)
-                                  ? 0.5 * (jetProduct.m_validJets.at(0)->p4.Rapidity() +
+                                  ? 0.5 * std::abs(jetProduct.m_validJets.at(0)->p4.Rapidity() +
                                            jetProduct.m_validJets.at(1)->p4.Rapidity())
                                   : -999.;
   jetProduct.m_dijet_ystar = (jetProduct.m_validJets.size() > 1)
