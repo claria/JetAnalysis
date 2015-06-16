@@ -10,15 +10,13 @@ void JetValidJetsProducer::Init(KappaSettings const& settings) {
   maxValidJetAbsRap = jetSettings.GetMaxValidJetAbsRap();
 }
 
-bool JetValidJetsProducer::AdditionalCriteria(KBasicJet* jet, KappaEvent const& event,
-                                              KappaProduct& product,
+bool JetValidJetsProducer::AdditionalCriteria(KBasicJet* jet, KappaEvent const& event, KappaProduct& product,
                                               KappaSettings const& settings) const {
   bool validJet = ValidJetsProducer::AdditionalCriteria(jet, event, product, settings);
   // std::cout << "JET "  << validJet << std::endl;
   // std::cout << "CUT " << minValidJetPt << " " << minValidJetAbsRap << " " <<
   // maxValidJetAbsRap << std::endl;
-  validJet = validJet && jet->p4.Pt() > minValidJetPt &&
-             std::abs(jet->p4.Rapidity()) > minValidJetAbsRap &&
+  validJet = validJet && jet->p4.Pt() > minValidJetPt && std::abs(jet->p4.Rapidity()) > minValidJetAbsRap &&
              std::abs(jet->p4.Rapidity()) < maxValidJetAbsRap;
   // std::cout << "JET " << jet->p4.Pt() << " " << jet->p4.Rapidity() << " " <<
   // validJet << std::endl;

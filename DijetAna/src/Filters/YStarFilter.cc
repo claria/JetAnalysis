@@ -5,8 +5,7 @@ void YStarFilter::Init(JetSettings const& settings) {
   maxYStar = settings.GetMaxYStar();
 }
 
-bool YStarFilter::DoesEventPass(JetEvent const& event, JetProduct const& product,
-                                        JetSettings const& settings) const {
+bool YStarFilter::DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const {
   bool pass = false;
   if (0.5 * std::abs(product.m_validJets.at(0)->p4.Rapidity() - product.m_validJets.at(1)->p4.Rapidity()) >= minYStar &&
       0.5 * std::abs(product.m_validJets.at(0)->p4.Rapidity() - product.m_validJets.at(1)->p4.Rapidity()) < maxYStar) {

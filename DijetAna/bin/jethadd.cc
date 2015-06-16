@@ -77,9 +77,8 @@
 //___________________________________________________________________________
 int main(int argc, char **argv) {
   if (argc < 3 || "-h" == std::string(argv[1]) || "--help" == std::string(argv[1])) {
-    std::cout << "Usage: " << argv[0]
-              << " [-f[0-9]] [-k] [-T] [-O] [-n maxopenedfiles] [-v verbosity] "
-                 "targetfile source1 [source2 source3 ...]" << std::endl;
+    std::cout << "Usage: " << argv[0] << " [-f[0-9]] [-k] [-T] [-O] [-n maxopenedfiles] [-v verbosity] "
+                                         "targetfile source1 [source2 source3 ...]" << std::endl;
     std::cout << "This program will add histograms from a list of root files "
                  "and write them" << std::endl;
     std::cout << "to a target root file. The target file is newly created and "
@@ -203,8 +202,7 @@ int main(int argc, char **argv) {
     merger.SetMaxOpenedFiles(maxopenedfiles);
   }
   if (!merger.OutputFile(targetname, force, newcomp)) {
-    std::cerr << "hadd error opening target file (does " << argv[ffirst - 1] << " exist?)."
-              << std::endl;
+    std::cerr << "hadd error opening target file (does " << argv[ffirst - 1] << " exist?)." << std::endl;
     std::cerr << "Pass \"-f\" argument to force re-creation of output file." << std::endl;
     exit(1);
   }
@@ -245,14 +243,13 @@ int main(int argc, char **argv) {
 
   if (status) {
     if (verbosity == 1) {
-      std::cout << "hadd merged " << merger.GetMergeList()->GetEntries() << " input files in "
-                << targetname << ".\n";
+      std::cout << "hadd merged " << merger.GetMergeList()->GetEntries() << " input files in " << targetname << ".\n";
     }
     return 0;
   } else {
     if (verbosity == 1) {
-      std::cout << "hadd failure during the merge of " << merger.GetMergeList()->GetEntries()
-                << " input files in " << targetname << ".\n";
+      std::cout << "hadd failure during the merge of " << merger.GetMergeList()->GetEntries() << " input files in "
+                << targetname << ".\n";
     }
     return 1;
   }

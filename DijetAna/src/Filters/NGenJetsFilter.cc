@@ -1,8 +1,6 @@
 #include "JetAnalysis/DijetAna/interface/Filters/NGenJetsFilter.h"
 
-void NGenJetsFilter::Init(JetSettings const& settings) {
-  minValidJets = settings.GetMinValidJets();
-}
+void NGenJetsFilter::Init(JetSettings const& settings) { minValidJets = settings.GetMinValidJets(); }
 
 bool NGenJetsFilter::DoesEventPass(JetEvent const& event, JetProduct const& product,
                                    JetSettings const& settings) const {

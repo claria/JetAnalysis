@@ -8,8 +8,8 @@ void JetHltEfficiencyFilter::Init(JetSettings const& settings) {
 
   assert(settings.GetTriggerEffThresholds().size() == settings.GetTriggerEffPaths().size() + 1);
   for (size_t i = 0; i < settings.GetTriggerEffPaths().size(); i++) {
-    triggerEffThresholds[settings.GetTriggerEffPaths()[i]] = std::make_pair(
-        settings.GetTriggerEffThresholds()[i], settings.GetTriggerEffThresholds()[i + 1]);
+    triggerEffThresholds[settings.GetTriggerEffPaths()[i]] =
+        std::make_pair(settings.GetTriggerEffThresholds()[i], settings.GetTriggerEffThresholds()[i + 1]);
     std::cout << "Trigger eff. thresholds for path " << settings.GetTriggerEffPaths()[i] << " is: ("
               << triggerEffThresholds[settings.GetTriggerEffPaths()[i]].first << ", "
               << triggerEffThresholds[settings.GetTriggerEffPaths()[i]].second << ")." << std::endl;
@@ -27,8 +27,8 @@ bool JetHltEfficiencyFilter::DoesEventPass(JetEvent const& event, JetProduct con
   double triggerEffQuantity = product.m_validJets.at(0)->p4.Pt();
   std::cout << "Selected trigger:" << product.m_selectedHltName << " in Range ("
             << triggerEffThresholds.at(product.m_selectedHltName).first << ", "
-            << triggerEffThresholds.at(product.m_selectedHltName).second
-            << "). :" << product.m_validJets.at(0)->p4.Pt() << std::endl;
+            << triggerEffThresholds.at(product.m_selectedHltName).second << "). :" << product.m_validJets.at(0)->p4.Pt()
+            << std::endl;
   if ((triggerEffQuantity > triggerEffThresholds.at(product.m_selectedHltName).first) &&
       (triggerEffQuantity <= triggerEffThresholds.at(product.m_selectedHltName).second)) {
     pass = true;

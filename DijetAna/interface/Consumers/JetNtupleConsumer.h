@@ -11,8 +11,7 @@ class JetNtupleConsumer : public NtupleConsumerBase<JetTypes> {
   virtual std::string GetConsumerId() { return "JetNtupleConsumer"; }
 
  private:
-  float returnvalue(std::string string, JetEvent const& event,
-                    JetProduct const& product) ARTUS_CPP11_OVERRIDE {
+  float returnvalue(std::string string, JetEvent const &event, JetProduct const &product) ARTUS_CPP11_OVERRIDE {
     std::string trigger("HLT");
     // Observables
     if (string == "Jet1Pt")

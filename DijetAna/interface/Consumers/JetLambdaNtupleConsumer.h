@@ -13,5 +13,5 @@ class JetLambdaNtupleConsumer : public KappaLambdaNtupleConsumer<JetTypes> {
   typedef typename JetTypes::setting_type setting_type;
 
   //	virtual std::string GetConsumerId() const ARTUS_CPP11_OVERRIDE;
-  virtual void Init(setting_type const& settings) ARTUS_CPP11_OVERRIDE;
+  virtual void Init(setting_type const &settings) ARTUS_CPP11_OVERRIDE;
 };

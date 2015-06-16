@@ -9,6 +9,4 @@
 JetEventProvider::JetEventProvider(FileInterface2& fi, InputTypeEnum inpType)
     : KappaEventProvider<JetTypes>(fi, inpType) {}
 
-void JetEventProvider::WireEvent(JetSettings const& settings) {
-  KappaEventProvider::WireEvent(settings);
-}
+void JetEventProvider::WireEvent(JetSettings const& settings) { KappaEventProvider::WireEvent(settings); }

@@ -31,12 +31,11 @@ void TriggerHistogramFitConsumer::Process(setting_type const& settings) {
   for (std::vector<std::string>::size_type i = 0; i < m_pipelineNames.size(); i++) {
     RootFileHelper::SafeCd(settings.GetRootOutFile(), m_pipelineNames[i]);
     for (std::vector<std::string>::size_type j = 0; j < m_triggerPaths.size() - 1; j++) {
-      TH1F* trgemul =
-          (TH1F*)RootFileHelper::SafeGet<TH1F>(
-              settings.GetRootOutFile(), m_pipelineNames[i] + "/emul_" + m_triggerPaths[j + 1])
-              ->Clone(("trgeff_" + m_triggerPaths[j + 1]).c_str());
-      TH1F* trg = (TH1F*)RootFileHelper::SafeGet<TH1F>(
-          settings.GetRootOutFile(), m_pipelineNames[i] + "/" + m_triggerPaths[j]);
+      TH1F* trgemul = (TH1F*)RootFileHelper::SafeGet<TH1F>(settings.GetRootOutFile(),
+                                                           m_pipelineNames[i] + "/emul_" + m_triggerPaths[j + 1])
+                          ->Clone(("trgeff_" + m_triggerPaths[j + 1]).c_str());
+      TH1F* trg =
+          (TH1F*)RootFileHelper::SafeGet<TH1F>(settings.GetRootOutFile(), m_pipelineNames[i] + "/" + m_triggerPaths[j]);
 
       // trgN->Scale(1. / settings.GetEffectiveLumiPerHLTPath()[j]);
       // trgNP1->Scale(1. / settings.GetEffectiveLumiPerHLTPath()[j+1]);

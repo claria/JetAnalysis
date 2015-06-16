@@ -23,8 +23,7 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_nPV = new TH1D("h_nPV", "h_nPV", 61, -0.5, 60.5);
 
   // Leading Jet histograms
-  m_h_jet1pt = new TH1D("h_jet1pt", "h_jet1pt", settings.GetPtBinning().size() - 1,
-                        &settings.GetPtBinning()[0]);
+  m_h_jet1pt = new TH1D("h_jet1pt", "h_jet1pt", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   m_h_jet1pt->Sumw2();
   m_h_jet1rap = new TH1D("h_jet1rap", "h_jet1rap", 36, -3.0, 3.0);
   m_h_jet1rap->Sumw2();
@@ -32,8 +31,7 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_jet1phi->Sumw2();
 
   // Second Jet histograms
-  m_h_jet2pt = new TH1D("h_jet2pt", "h_jet2pt", settings.GetPtBinning().size() - 1,
-                        &settings.GetPtBinning()[0]);
+  m_h_jet2pt = new TH1D("h_jet2pt", "h_jet2pt", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   m_h_jet2pt->Sumw2();
   m_h_jet2rap = new TH1D("h_jet2rap", "h_jet2rap", 36, -3.0, 3.0);
   m_h_jet2rap->Sumw2();
@@ -41,44 +39,37 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_jet2phi->Sumw2();
 
   // Inclusive Jets
-  m_h_incjetpt = new TH1D("h_incjetpt", "h_incjetpt", settings.GetPtBinning().size() - 1,
-                          &settings.GetPtBinning()[0]);
+  m_h_incjetpt = new TH1D("h_incjetpt", "h_incjetpt", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   m_h_incjetpt->Sumw2();
 
   // Triple differential histogram
-  m_h3_jet12rap =
-      new TH3D("h3_jet12rap", "h3_jet12rap", settings.GetRapidityBinning().size() - 1,
-               &settings.GetRapidityBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
-               &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffPtBinning().size() - 1,
-               &settings.GetTripleDiffPtBinning()[0]);
+  m_h3_jet12rap = new TH3D("h3_jet12rap", "h3_jet12rap", settings.GetRapidityBinning().size() - 1,
+                           &settings.GetRapidityBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
+                           &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffPtBinning().size() - 1,
+                           &settings.GetTripleDiffPtBinning()[0]);
   m_h3_jet12rap->Sumw2();
 
-  m_h3_ptavg_yio =
-      new TH3D("h3_ptavg_yio", "h3_ptavg_yio", settings.GetRapidityBinning().size() - 1,
-               &settings.GetRapidityBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
-               &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffPtBinning().size() - 1,
-               &settings.GetTripleDiffPtBinning()[0]);
+  m_h3_ptavg_yio = new TH3D("h3_ptavg_yio", "h3_ptavg_yio", settings.GetRapidityBinning().size() - 1,
+                            &settings.GetRapidityBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
+                            &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffPtBinning().size() - 1,
+                            &settings.GetTripleDiffPtBinning()[0]);
   m_h3_ptavg_yio->Sumw2();
 
-  m_h3_ptavg_ysb =
-      new TH3D("h3_ptavg_ysb", "h3_ptavg_ysb", settings.GetRapidityAbsBinning().size() - 1,
-               &settings.GetRapidityAbsBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
-               &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffPtBinning().size() - 1,
-               &settings.GetTripleDiffPtBinning()[0]);
+  m_h3_ptavg_ysb = new TH3D("h3_ptavg_ysb", "h3_ptavg_ysb", settings.GetRapidityAbsBinning().size() - 1,
+                            &settings.GetRapidityAbsBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
+                            &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffPtBinning().size() - 1,
+                            &settings.GetTripleDiffPtBinning()[0]);
   m_h3_ptavg_ysb->Sumw2();
 
-  m_h3_ptavg_ysio =
-      new TH3D("h3_ptavg_ysio", "h3_ptavg_ysio", settings.GetRapidityBinning().size() - 1,
-               &settings.GetRapidityBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
-               &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffPtBinning().size() - 1,
-               &settings.GetTripleDiffPtBinning()[0]);
+  m_h3_ptavg_ysio = new TH3D("h3_ptavg_ysio", "h3_ptavg_ysio", settings.GetRapidityBinning().size() - 1,
+                             &settings.GetRapidityBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
+                             &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffPtBinning().size() - 1,
+                             &settings.GetTripleDiffPtBinning()[0]);
 
   m_h3_ptavg_ysio->Sumw2();
 
-  m_h_neutralHadronFraction =
-      new TH1D("h_neutralHadronFraction", "h_neutralHadronFraction", 50, 0., 2.);
-  m_h_chargedHadronFraction =
-      new TH1D("h_chargedHadronFraction", "h_chargedHadronFraction", 50, 0., 1.);
+  m_h_neutralHadronFraction = new TH1D("h_neutralHadronFraction", "h_neutralHadronFraction", 50, 0., 2.);
+  m_h_chargedHadronFraction = new TH1D("h_chargedHadronFraction", "h_chargedHadronFraction", 50, 0., 1.);
   m_h_photonFraction = new TH1D("h_photonFraction", "h_photonFraction", 50, 0., 2.);
   m_h_electronFraction = new TH1D("h_electronFraction", "h_electronFraction", 50, 0., 1.);
   m_h_muonFraction = new TH1D("h_muonFraction", "h_muonFraction", 50, 0., 1.);
@@ -88,8 +79,7 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_nCharged = new TH1D("h_nCharged", "h_nCharged", 250, -0.5, 249.5);
 }
 
-void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event,
-                                                          product_type const& product,
+void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product,
                                                           setting_type const& settings) {
   double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
 
@@ -110,15 +100,15 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
     m_h_jet2phi->Fill(product.m_jet2Phi, eventWeight);
 
     // Fill double with inverted jet 1<->2
-    m_h3_jet12rap->Fill(boost::math::sign(product.m_jet1Rap) * product.m_jet2Rap,
-                        std::abs(product.m_jet1Rap), product.m_jet1Pt, eventWeight);
-    m_h3_jet12rap->Fill(boost::math::sign(product.m_jet1Rap) * product.m_jet2Rap,
-                        std::abs(product.m_jet1Rap), product.m_jet1Pt, eventWeight);
+    m_h3_jet12rap->Fill(boost::math::sign(product.m_jet1Rap) * product.m_jet2Rap, std::abs(product.m_jet1Rap),
+                        product.m_jet1Pt, eventWeight);
+    m_h3_jet12rap->Fill(boost::math::sign(product.m_jet1Rap) * product.m_jet2Rap, std::abs(product.m_jet1Rap),
+                        product.m_jet1Pt, eventWeight);
 
     m_h3_ptavg_yio->Fill(boost::math::sign(product.m_dijet_yinner) * product.m_dijet_yinner,
                          std::abs(product.m_dijet_yinner), product.m_dijet_ptavg, eventWeight);
-    m_h3_ptavg_ysb->Fill(std::abs(product.m_dijet_yboost), std::abs(product.m_dijet_ystar),
-                         product.m_dijet_ptavg, eventWeight);
+    m_h3_ptavg_ysb->Fill(std::abs(product.m_dijet_yboost), std::abs(product.m_dijet_ystar), product.m_dijet_ptavg,
+                         eventWeight);
     m_h3_ptavg_ysio->Fill(product.m_dijet_yinner * boost::math::sign(product.m_dijet_youter),
                           std::abs(product.m_dijet_ystar), product.m_dijet_ptavg, eventWeight);
   }
@@ -126,8 +116,7 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
   for (auto jet = product.m_validJets.begin(); jet != product.m_validJets.end(); jet++) {
     m_h_incjetpt->Fill((*jet)->p4.Pt(), eventWeight);
 
-    m_h_neutralHadronFraction->Fill((*jet)->neutralHadronFraction + (*jet)->hfHadronFraction,
-                                    eventWeight);
+    m_h_neutralHadronFraction->Fill((*jet)->neutralHadronFraction + (*jet)->hfHadronFraction, eventWeight);
     m_h_chargedHadronFraction->Fill((*jet)->chargedHadronFraction, eventWeight);
     m_h_photonFraction->Fill((*jet)->photonFraction + (*jet)->hfEMFraction, eventWeight);
     m_h_electronFraction->Fill((*jet)->electronFraction, eventWeight);

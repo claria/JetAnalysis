@@ -11,7 +11,7 @@
  */
 class JetEventProvider : public KappaEventProvider<JetTypes> {
  public:
-  JetEventProvider(FileInterface2& fi, InputTypeEnum inpType);
+  JetEventProvider(FileInterface2 &fi, InputTypeEnum inpType);
 
-  virtual void WireEvent(JetSettings const& settings) ARTUS_CPP11_OVERRIDE;
+  virtual void WireEvent(JetSettings const &settings) ARTUS_CPP11_OVERRIDE;
 };

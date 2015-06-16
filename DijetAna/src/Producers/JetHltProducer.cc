@@ -8,23 +8,19 @@ void JetHltProducer::Init(KappaSettings const &settings) {
   KappaProducerBase::Init(settings);
   auto const &jetSettings = static_cast<JetSettings const &>(settings);
 
-  if (settings.GetHltPaths().empty())
-    LOG(FATAL) << "No Hlt Trigger path list (tag \"HltPaths\") configured!";
+  if (settings.GetHltPaths().empty()) LOG(FATAL) << "No Hlt Trigger path list (tag \"HltPaths\") configured!";
 
-  assert(jetSettings.GetTriggerEffThresholds().size() ==
-         jetSettings.GetTriggerEffPaths().size() + 1);
+  assert(jetSettings.GetTriggerEffThresholds().size() == jetSettings.GetTriggerEffPaths().size() + 1);
   for (size_t i = 0; i < jetSettings.GetTriggerEffPaths().size(); i++) {
-    triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]] = std::make_pair(
-        jetSettings.GetTriggerEffThresholds()[i], jetSettings.GetTriggerEffThresholds()[i + 1]);
-    LOG(DEBUG) << "Trigger eff. thresholds for path " << jetSettings.GetTriggerEffPaths()[i]
-               << " is: (" << triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]].first
-               << ", " << triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]].second << ")."
-               << std::endl;
+    triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]] =
+        std::make_pair(jetSettings.GetTriggerEffThresholds()[i], jetSettings.GetTriggerEffThresholds()[i + 1]);
+    LOG(DEBUG) << "Trigger eff. thresholds for path " << jetSettings.GetTriggerEffPaths()[i] << " is: ("
+               << triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]].first << ", "
+               << triggerEffThresholds[jetSettings.GetTriggerEffPaths()[i]].second << ")." << std::endl;
   }
 }
 
-void JetHltProducer::Produce(KappaEvent const &event, KappaProduct &product,
-                             KappaSettings const &settings) const {
+void JetHltProducer::Produce(KappaEvent const &event, KappaProduct &product, KappaSettings const &settings) const {
   // auto const& jetEvent = static_cast <JetEvent const&> (event);
   // auto const& jetProduct = static_cast <JetProduct const&> (product);
   auto const &jetSettings = static_cast<JetSettings const &>(settings);

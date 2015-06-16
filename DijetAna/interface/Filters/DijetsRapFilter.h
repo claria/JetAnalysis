@@ -9,9 +9,8 @@ class DijetsRapFilter : public JetFilterBase {
  public:
   virtual std::string GetFilterId() const { return "DijetsRapFilter"; }
 
-  virtual void Init(JetSettings const& settings) override;
-  virtual bool DoesEventPass(JetEvent const& event, JetProduct const& product,
-                             JetSettings const& settings) const;
+  virtual void Init(JetSettings const &settings) override;
+  virtual bool DoesEventPass(JetEvent const &event, JetProduct const &product, JetSettings const &settings) const;
 
  private:
   double minDijetsAbsRap;

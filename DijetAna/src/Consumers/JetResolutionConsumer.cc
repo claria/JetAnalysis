@@ -11,12 +11,11 @@
 void JetResolutionConsumer::Init(setting_type const& settings) {
   ConsumerBase<JetTypes>::Init(settings);
   RootFileHelper::SafeCd(settings.GetRootOutFile(), settings.GetRootFileFolder());
-  m_hGenVsRecoPt = new TH2D("hgenvsrecopt", "hgenvsrecopt", 100, 0.5, 1.5,
-                            settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
+  m_hGenVsRecoPt = new TH2D("hgenvsrecopt", "hgenvsrecopt", 100, 0.5, 1.5, settings.GetPtBinning().size() - 1,
+                            &settings.GetPtBinning()[0]);
 }
 
-void JetResolutionConsumer::ProcessFilteredEvent(event_type const& event,
-                                                 product_type const& product,
+void JetResolutionConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product,
                                                  setting_type const& settings) {
   double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
 
@@ -46,8 +45,7 @@ void JetResolutionConsumer::Finish(setting_type const& settings) {
     // double sigma_err = gaussFunction->GetParError(1);
     std::cout << "failtest 3" << std::endl;
     graph_resolution->SetPoint(i, obsbin_center, sigma);
-    graph_resolution->SetPointError(i, m_hGenVsRecoPt->GetYaxis()->GetBinWidth(i),
-                                    gaussFunction->GetParError(1));
+    graph_resolution->SetPointError(i, m_hGenVsRecoPt->GetYaxis()->GetBinWidth(i), gaussFunction->GetParError(1));
   }
   std::cout << "failtest 4" << std::endl;
   // for (std::vector<std::string>::size_type i = 0; i < m_pipelineNames.size();

@@ -21,6 +21,5 @@
 
 class JetPipelineInitializer : public PipelineInitilizerBase<JetTypes> {
  public:
-  virtual void InitPipeline(JetPipeline* pLine,
-                            JetPipelineSettings const& pset) const ARTUS_CPP11_OVERRIDE {}
+  virtual void InitPipeline(JetPipeline *pLine, JetPipelineSettings const &pset) const ARTUS_CPP11_OVERRIDE {}
 };
