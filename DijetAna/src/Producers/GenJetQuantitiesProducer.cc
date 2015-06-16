@@ -52,7 +52,7 @@ void GenJetQuantitiesProducer::Produce(JetEvent const& event, JetProduct& produc
           : -999.;
   jetProduct.m_gendijet_yboost =
       (event.m_genJets->size() > 1)
-          ? 0.5 * (event.m_genJets->at(0).p4.Rapidity() + event.m_genJets->at(1).p4.Rapidity())
+          ? 0.5 * std::abs(event.m_genJets->at(0).p4.Rapidity() + event.m_genJets->at(1).p4.Rapidity())
           : -999.;
   jetProduct.m_gendijet_ystar = (event.m_genJets->size() > 1)
                                     ? 0.5 * std::abs(event.m_genJets->at(0).p4.Rapidity() -
