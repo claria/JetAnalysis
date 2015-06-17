@@ -9,8 +9,8 @@ class GenJetQuantitiesHistogramConsumer : public JetConsumerBase {
  public:
   virtual std::string GetConsumerId() const { return "GenJetQuantitiesHistogramConsumer"; }
   virtual void Init(setting_type const &settings) override;
-  virtual void ProcessEvent(event_type const &event, product_type const &product, setting_type const &setting,
-                            FilterResult &result) override;
+  // virtual void ProcessEvent(event_type const &event, product_type const &product, setting_type const &setting,
+  //                           FilterResult &result) override;
   virtual void ProcessFilteredEvent(event_type const &event, product_type const &product,
                                     setting_type const &settings) override;
   virtual void Finish(setting_type const &settings) override;

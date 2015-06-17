@@ -107,7 +107,7 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
 
     m_h3_ptavg_yio->Fill(boost::math::sign(product.m_dijet_yinner) * product.m_dijet_yinner,
                          std::abs(product.m_dijet_yinner), product.m_dijet_ptavg, eventWeight);
-    m_h3_ptavg_ysb->Fill(std::abs(product.m_dijet_yboost), std::abs(product.m_dijet_ystar), product.m_dijet_ptavg,
+    m_h3_ptavg_ysb->Fill(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg,
                          eventWeight);
     m_h3_ptavg_ysio->Fill(product.m_dijet_yinner * boost::math::sign(product.m_dijet_youter),
                           std::abs(product.m_dijet_ystar), product.m_dijet_ptavg, eventWeight);
