@@ -15,6 +15,7 @@
 #include "JetAnalysis/DijetAna/interface/Filters/JetHltFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/JetHltEfficiencyFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/LeadingJetPtFilter.h"
+#include "JetAnalysis/DijetAna/interface/Filters/LeadingGenJetPtFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/LeadingJetRapFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/YStarFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/YBoostFilter.h"
@@ -77,6 +78,8 @@ FilterBaseUntemplated* JetFactory::createFilter(std::string const& id) {
     return new DijetsRapFilter();
   else if (LeadingJetPtFilter().GetFilterId() == id)
     return new LeadingJetPtFilter();
+  else if (LeadingGenJetPtFilter().GetFilterId() == id)
+    return new LeadingGenJetPtFilter();
   else if (LeadingJetRapFilter().GetFilterId() == id)
     return new LeadingJetRapFilter();
   else if (YStarFilter().GetFilterId() == id)
