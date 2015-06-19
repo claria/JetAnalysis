@@ -99,6 +99,7 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
 
 void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product,
                                                              setting_type const& settings) {
+
   double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
 
   if (event.m_genJets->size() > 0) {
@@ -158,10 +159,12 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   m_h_incgenjetpt->Write(m_h_incgenjetpt->GetName());
   m_h_genjet12rap->Write(m_h_genjet12rap->GetName());
   // m_h3_genjet12rap->Scale(1.0, "width");
+  m_h3_genjet12rap->Scale(1.0, "width");
   m_h3_genjet12rap->Write(m_h3_genjet12rap->GetName());
-  // m_h3_genjet12rap->Scale(1.0, "width");
-  m_h3_genjet12rap->Write(m_h3_genjet12rap->GetName());
+
+  m_h3_genptavg_ysb->Scale(1.0, "width");
   m_h3_genptavg_ysb->Write(m_h3_genptavg_ysb->GetName());
+
   m_h_jet1DeltaR->Write(m_h_jet1DeltaR->GetName());
   m_h_jet2DeltaR->Write(m_h_jet2DeltaR->GetName());
 }
