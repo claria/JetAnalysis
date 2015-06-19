@@ -24,6 +24,7 @@ log = logging.getLogger(__name__)
 
 
 def main():
+
     parser = argparse.ArgumentParser(description='JetAnalysis config creation and run script.', add_help=True)
     parser.add_argument('-c', '--config', type=str, default='RunConfig',
                         help='Config file name or template name to load config from.')
@@ -230,7 +231,7 @@ def prepare_gc_input(filelist, config, work_directory):
 
     # Copy gc config template to project directory
     gc_config_path = os.path.join(project_directory, 'jetana.conf') 
-    shutil.copy(os.path.join(jetana_directory, 'data/gc_template.conf'), gc_config_path)
+    shutil.copy(os.path.join(jetana_directory, 'data/gc_template_user.conf'), gc_config_path)
     log.debug('Copied gc template file to work directory.')
 
 
