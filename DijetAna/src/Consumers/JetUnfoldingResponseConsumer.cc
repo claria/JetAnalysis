@@ -17,19 +17,20 @@ void JetUnfoldingResponseConsumer::Init(setting_type const& settings) {
                                  settings.GetRapidityAbsBinning().size() - 1, &settings.GetRapidityAbsBinning()[0],
                                  settings.GetRapidityBinning().size() - 1, &settings.GetRapidityBinning()[0],
                                  settings.GetTripleDiffPtBinning().size() - 1, &settings.GetTripleDiffPtBinning()[0]);
-  TH3D meas_binning_yabsa("meas_binning_yabsa", "meas_binning_yabsa", settings.GetRapidityAbsBinning().size() - 1,
-                          &settings.GetRapidityAbsBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
-                          &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffPtBinning().size() - 1,
-                          &settings.GetTripleDiffPtBinning()[0]);
-  TH3D truth_binning_yabsa("gen_binning_yabsa", "gen_binning_yabsa", settings.GetRapidityAbsBinning().size() - 1,
-                           &settings.GetRapidityAbsBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
-                           &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffGenPtBinning().size() - 1,
-                           &settings.GetTripleDiffGenPtBinning()[0]);
 
   TH3D truth_binning_jet12rapsign(
       "gen_binning_jet12rapsign", "gen_binning_jet12rapsign", settings.GetRapidityAbsBinning().size() - 1,
       &settings.GetRapidityAbsBinning()[0], settings.GetRapidityBinning().size() - 1, &settings.GetRapidityBinning()[0],
       settings.GetTripleDiffGenPtBinning().size() - 1, &settings.GetTripleDiffGenPtBinning()[0]);
+
+  TH3D meas_binning_ptavg_ysb("meas_binning_ptavg_ysb", "meas_binning_ptavg_ysb", settings.GetRapidityAbsBinning().size() - 1,
+                          &settings.GetRapidityAbsBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
+                          &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffPtBinning().size() - 1,
+                          &settings.GetTripleDiffPtBinning()[0]);
+  TH3D truth_binning_ptavg_ysb("gen_binning_ptavg_ysb", "gen_binning_ptavg_ysb", settings.GetRapidityAbsBinning().size() - 1,
+                           &settings.GetRapidityAbsBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
+                           &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffGenPtBinning().size() - 1,
+                           &settings.GetTripleDiffGenPtBinning()[0]);
 
   TH1D meas_binning_pt("meas_binning_pt", "meas_binning_pt", settings.GetPtBinning().size() - 1,
                        &settings.GetPtBinning()[0]);
@@ -41,57 +42,44 @@ void JetUnfoldingResponseConsumer::Init(setting_type const& settings) {
   m_unfoldResponse_jet12rapsign = new RooUnfoldResponse(&meas_binning_jet12rapsign, &truth_binning_jet12rapsign,
                                                         "res_matrix_jet12rapsign", "res_matrix_jet12rapsign");
 
-  m_unfoldResponse_ysba =
-      new RooUnfoldResponse(&meas_binning_yabsa, &truth_binning_yabsa, "res_matrix_yabsa", "res_matrix_yabsa");
+  m_unfoldResponse_ptavg_ysb = new RooUnfoldResponse(&meas_binning_ptavg_ysb, &truth_binning_ptavg_ysb, "res_matrix_ptavg_ysb", "res_matrix_ptavg_ysb");
   m_unfoldResponse_pt = new RooUnfoldResponse(&meas_binning_pt, &truth_binning_pt, "res_matrix_pt", "res_matrix_pt");
 }
 
 void JetUnfoldingResponseConsumer::ProcessEvent(event_type const& event, product_type const& product,
                                                 setting_type const& settings, FilterResult& result) {
   double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
-  if (result.HasPassed()) {
-    if (product.m_matchedRecoJets.at(0) != NULL) {
-      m_unfoldResponse_pt->Fill(product.m_matchedRecoJets.at(0)->p4.Pt(), event.m_genJets->at(0).p4.Pt(), eventWeight);
-    }
 
-    if (product.m_match_result_recojets[0] == 0 && product.m_match_result_recojets[1] == 1) {
-      m_unfoldResponse_jet12rapsign->Fill(
-          std::abs(product.m_validJets.at(0)->p4.Rapidity()),
-          boost::math::sign(product.m_validJets.at(0)->p4.Rapidity()) * product.m_validJets.at(1)->p4.Rapidity(),
-          product.m_validJets.at(0)->p4.Pt(), std::abs(event.m_genJets->at(0).p4.Rapidity()),
-          boost::math::sign(event.m_genJets->at(0).p4.Rapidity()) * event.m_genJets->at(1).p4.Rapidity(),
-          event.m_genJets->at(0).p4.Pt(), eventWeight);
-      m_unfoldResponse_ysba->Fill(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg,
-                                  product.m_gendijet_yboost, product.m_gendijet_ystar, product.m_gendijet_ptavg,
-                                  eventWeight);
-
-    } else {
-      m_unfoldResponse_jet12rapsign->Miss(
-          std::abs(event.m_genJets->at(0).p4.Rapidity()),
-          boost::math::sign(event.m_genJets->at(0).p4.Rapidity()) * event.m_genJets->at(1).p4.Rapidity(),
-          event.m_genJets->at(0).p4.Pt(), eventWeight);
-      m_unfoldResponse_ysba->Miss(product.m_gendijet_yboost, product.m_gendijet_ystar, product.m_gendijet_ptavg,
-                                  eventWeight);
-      m_unfoldResponse_ysba->Fake(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg, eventWeight);
-    }
-  } else {
-    m_unfoldResponse_jet12rapsign->Miss(
-        std::abs(event.m_genJets->at(0).p4.Rapidity()),
-        boost::math::sign(event.m_genJets->at(0).p4.Rapidity()) * event.m_genJets->at(1).p4.Rapidity(),
-        event.m_genJets->at(0).p4.Pt(), eventWeight);
-    m_unfoldResponse_ysba->Miss(product.m_gendijet_yboost, product.m_gendijet_ystar, product.m_gendijet_ptavg,
-                                eventWeight);
-
-    m_unfoldResponse_pt->Miss(event.m_genJets->at(0).p4.Pt(), eventWeight);
+  if (! result.HasPassed()) {
+    m_unfoldResponse_ptavg_ysb->Miss(product.m_gendijet_yboost, product.m_gendijet_ystar, product.m_gendijet_ptavg, eventWeight);
   }
+
 }
 void JetUnfoldingResponseConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product,
-                                                        setting_type const& settings) {}
+                                                        setting_type const& settings) 
+{
+  double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
+
+  // if ((product.m_match_result_recojets[0] == 0 || product.m_match_result_recojets[0] == 1)
+      // && (product.m_match_result_recojets[1] == 1 || product.m_match_result_recojets[1] == 0 )) 
+  // {
+    // m_unfoldResponse_ptavg_ysb->Fill(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg,
+    //                                  product.m_gendijet_yboost, product.m_gendijet_ystar, product.m_gendijet_ptavg,
+    //                                  eventWeight);
+    m_unfoldResponse_ptavg_ysb->Fill(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg,
+                                     product.m_gendijet_yboost, product.m_gendijet_ystar, product.m_gendijet_ptavg,
+                                     eventWeight);
+
+    m_unfoldResponse_pt->Fill(product.m_jet1Pt, product.m_genjet1Pt, eventWeight);
+  // }
+    // m_unfoldResponse_ptavg_ysb->Fake(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg, eventWeight);
+    // m_unfoldResponse_ptavg_ysb->Miss(product.m_gendijet_yboost, product.m_gendijet_ystar, product.m_gendijet_ptavg, eventWeight);
+}
 
 void JetUnfoldingResponseConsumer::Finish(setting_type const& settings) {
   RootFileHelper::SafeCd(settings.GetRootOutFile(), settings.GetRootFileFolder());
   m_unfoldResponse_jet12rap->Write(m_unfoldResponse_jet12rap->GetName());
   m_unfoldResponse_jet12rapsign->Write(m_unfoldResponse_jet12rapsign->GetName());
-  m_unfoldResponse_ysba->Write(m_unfoldResponse_ysba->GetName());
+  m_unfoldResponse_ptavg_ysb->Write(m_unfoldResponse_ptavg_ysb->GetName());
   m_unfoldResponse_pt->Write(m_unfoldResponse_pt->GetName());
 }
