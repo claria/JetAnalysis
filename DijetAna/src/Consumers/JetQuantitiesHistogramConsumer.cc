@@ -142,16 +142,16 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   m_h_jet2phi->Write(m_h_jet2phi->GetName());
   m_h_incjetpt->Write(m_h_incjetpt->GetName());
 
-  m_h3_jet12rap->Scale(0.5, "width");
+  // m_h3_jet12rap->Scale(0.5, "width");
   m_h3_jet12rap->Write(m_h3_jet12rap->GetName());
 
-  m_h3_ptavg_yio->Scale(1.0, "width");
+  // m_h3_ptavg_yio->Scale(1.0, "width");
   m_h3_ptavg_yio->Write(m_h3_ptavg_yio->GetName());
 
-  m_h3_ptavg_ysb->Scale(1.0, "width");
+  // m_h3_ptavg_ysb->Scale(1.0, "width");
   m_h3_ptavg_ysb->Write(m_h3_ptavg_ysb->GetName());
 
-  m_h3_ptavg_ysio->Scale(1.0, "width");
+  // m_h3_ptavg_ysio->Scale(1.0, "width");
   m_h3_ptavg_ysio->Write(m_h3_ptavg_ysio->GetName());
 
   // Jet property distributions
