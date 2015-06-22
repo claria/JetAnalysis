@@ -6,6 +6,7 @@
 #include "JetAnalysis/DijetAna/interface/Producers/GenJetMatchingProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/JetHltProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/JetValidJetsProducer.h"
+#include "JetAnalysis/DijetAna/interface/Producers/ValidGenJetsProducer.h"
 
 // Filters
 #include "JetAnalysis/DijetAna/interface/Filters/DiJetsFilter.h"
@@ -46,6 +47,9 @@ ProducerBaseUntemplated* JetFactory::createProducer(std::string const& id) {
     return new GenJetMatchingProducer();
   else if (JetValidJetsProducer().GetProducerId() == id)
     return new JetValidJetsProducer();
+  else if (ValidGenJetsProducer().GetProducerId() == id)
+    return new ValidGenJetsProducer();
+
   else
     return KappaFactory::createProducer(id);
 }
