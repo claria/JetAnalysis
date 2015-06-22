@@ -5,7 +5,6 @@
 #include "Artus/Utility/interface/SafeMap.h"
 #include "Artus/Utility/interface/Utility.h"
 #include "Artus/Utility/interface/DefaultValues.h"
-#include "Artus/KappaAnalysis/interface/KappaTypes.h"
 
 #include "JetAnalysis/DijetAna/interface/Consumers/JetLambdaNtupleConsumer.h"
 #include "JetAnalysis/DijetAna/interface/JetTypes.h"
@@ -21,45 +20,45 @@ void JetLambdaNtupleConsumer::Init(setting_type const& settings) {
   //////////////
   // MetaData //
   //////////////
-  LambdaNtupleConsumer<KappaTypes>::AddIntQuantity(
-      "evt", [](KappaEvent const& event, KappaProduct const& product) { return event.m_eventInfo->nEvent; });
+  LambdaNtupleConsumer<JetTypes>::AddIntQuantity(
+      "evt", [](JetEvent const& event, JetProduct const& product) { return event.m_eventInfo->nEvent; });
   /////////////
   // Weights //
   /////////////
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("puweight",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("puweight",
+                                                     [](JetEvent const& event, JetProduct const& product) {
     return SafeMap::GetWithDefault(product.m_weights, std::string("puWeight"), 1.0);
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("trigweight",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("trigweight",
+                                                     [](JetEvent const& event, JetProduct const& product) {
     return SafeMap::GetWithDefault(product.m_weights, std::string("hltPrescaleWeight"), 1.0);
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("weight",
-                                                     [settings](KappaEvent const& event, KappaProduct const& product) {
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("weight",
+                                                     [settings](JetEvent const& event, JetProduct const& product) {
     return SafeMap::GetWithDefault(product.m_weights, settings.GetEventWeight(), 1.0);
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("genweight",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("genweight",
+                                                     [](JetEvent const& event, JetProduct const& product) {
     return SafeMap::GetWithDefault(product.m_weights, std::string("generatorWeight"), 1.0);
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("xsweight",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("xsweight",
+                                                     [](JetEvent const& event, JetProduct const& product) {
     return SafeMap::GetWithDefault(product.m_weights, std::string("crossSectionPerEventWeight"), 1.0);
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("ngeneventsweight",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("ngeneventsweight",
+                                                     [](JetEvent const& event, JetProduct const& product) {
     return SafeMap::GetWithDefault(product.m_weights, std::string("numberGeneratedEventsWeight"), 1.0);
   });
 
   // Kappa Trigger path index
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity(
-      "pathindex", [](KappaEvent const& event, KappaProduct const& product) { return product.m_selectedHltPosition; });
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity(
+      "pathindex", [](JetEvent const& event, JetProduct const& product) { return product.m_selectedHltPosition; });
   // MET
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity(
-      "met", [](KappaEvent const& event, KappaProduct const& product) { return event.m_met->p4.Pt(); });
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity(
+      "met", [](JetEvent const& event, JetProduct const& product) { return event.m_met->p4.Pt(); });
   // SumEt
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity(
-      "sumet", [](KappaEvent const& event, KappaProduct const& product) { return event.m_met->sumEt; });
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity(
+      "sumet", [](JetEvent const& event, JetProduct const& product) { return event.m_met->sumEt; });
 
   /////////////
   // PF Jets //
@@ -67,181 +66,200 @@ void JetLambdaNtupleConsumer::Init(setting_type const& settings) {
   //
 
   // Number of jets
-  LambdaNtupleConsumer<KappaTypes>::AddIntQuantity(
-      "njets", [](KappaEvent const& event, KappaProduct const& product) { return product.m_validJets.size(); });
+  LambdaNtupleConsumer<JetTypes>::AddIntQuantity(
+      "njets", [](JetEvent const& event, JetProduct const& product) { return product.m_validJets.size(); });
   // inclusive jet pts
-  LambdaNtupleConsumer<KappaTypes>::AddVDoubleQuantity("incjets_pt",
-                                                       [](KappaEvent const& event, KappaProduct const& product) {
-    auto const& jetProduct = static_cast<JetProduct const&>(product);
-    return jetProduct.m_incJetsPt;
+  LambdaNtupleConsumer<JetTypes>::AddVDoubleQuantity("incjets_pt",
+                                                       [](JetEvent const& event, JetProduct const& product) {
+    return product.m_incJetsPt;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddVDoubleQuantity("incjets_eta",
-                                                       [](KappaEvent const& event, KappaProduct const& product) {
-    auto const& jetProduct = static_cast<JetProduct const&>(product);
-    return jetProduct.m_incJetsEta;
+  LambdaNtupleConsumer<JetTypes>::AddVDoubleQuantity("incjets_eta",
+                                                       [](JetEvent const& event, JetProduct const& product) {
+    return product.m_incJetsEta;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddVDoubleQuantity("incjets_rap",
-                                                       [](KappaEvent const& event, KappaProduct const& product) {
-    auto const& jetProduct = static_cast<JetProduct const&>(product);
-    return jetProduct.m_incJetsRap;
+  LambdaNtupleConsumer<JetTypes>::AddVDoubleQuantity("incjets_rap",
+                                                       [](JetEvent const& event, JetProduct const& product) {
+    return product.m_incJetsRap;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddVDoubleQuantity("incjets_phi",
-                                                       [](KappaEvent const& event, KappaProduct const& product) {
-    auto const& jetProduct = static_cast<JetProduct const&>(product);
-    return jetProduct.m_incJetsPhi;
+  LambdaNtupleConsumer<JetTypes>::AddVDoubleQuantity("incjets_phi",
+                                                       [](JetEvent const& event, JetProduct const& product) {
+    return product.m_incJetsPhi;
   });
 
   // Leading jet pT
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("jet1_pt",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 1) ? product.m_validJets.at(0)->p4.Pt() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("jet1_pt",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_jet1Pt;
   });
   // Leading jet eta
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("jet1_eta",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 1) ? product.m_validJets.at(0)->p4.Eta() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("jet1_eta",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_jet1Eta;
   });
   // Leading jet rapidity
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("jet1_rap",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 1) ? product.m_validJets.at(0)->p4.Rapidity() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("jet1_rap",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_jet1Rap;
   });
   // Leading jet phi
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("jet1_phi",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 1) ? product.m_validJets.at(0)->p4.Phi() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("jet1_phi",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_jet1Phi;
   });
   // Second jet pT
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("jet2_pt",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 2) ? product.m_validJets.at(1)->p4.Pt() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("jet2_pt",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_jet2Pt;
   });
   // Second jet eta
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("jet2_eta",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 2) ? product.m_validJets.at(1)->p4.Eta() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("jet2_eta",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_jet2Eta;
   });
   // Second jet rapidity
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("jet2_rap",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 2) ? product.m_validJets.at(1)->p4.Rapidity() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("jet2_rap",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_jet2Rap;
   });
   // Second jet phi
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("jet2_phi",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 2) ? product.m_validJets.at(1)->p4.Phi() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("jet2_phi",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_jet2Phi;
   });
 
   ////////////
   // Dijets //
   ////////////
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("dijet_mass",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 2) ? (product.m_validJets.at(0)->p4 + product.m_validJets.at(1)->p4).mass()
-                                             : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("dijet_mass",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_dijet_mass;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("pt12_avg",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 2)
-               ? 0.5 * (product.m_validJets.at(0)->p4.Pt() + product.m_validJets.at(1)->p4.Pt())
-               : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("dijet_ptavg",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_dijet_ptavg;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("dijet_ymax",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 2)
-               ? std::max(product.m_validJets.at(0)->p4.Rapidity(), product.m_validJets.at(1)->p4.Rapidity())
-               : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("dijet_ymax",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_dijet_ymax;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("dijet_deltaphi",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 2)
-               ? std::abs(product.m_validJets.at(0)->p4.Phi() - product.m_validJets.at(1)->p4.Phi())
-               : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("dijet_deltaphi",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_dijet_deltaPhi;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("dijet_costhetastar",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 2)
-               ? std::tanh(product.m_validJets.at(0)->p4.Rapidity() - product.m_validJets.at(1)->p4.Rapidity())
-               : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("dijet_costhetastar",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_dijet_cosThetaStar;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("dijet_yboost",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 2)
-               ? 0.5 * (product.m_validJets.at(0)->p4.Rapidity() + product.m_validJets.at(1)->p4.Rapidity())
-               : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("dijet_yboost",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_dijet_yboost;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("dijet_yinner",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 2) ? ((std::abs(product.m_validJets.at(0)->p4.Rapidity()) <=
-                                                 std::abs(product.m_validJets.at(1)->p4.Rapidity()))
-                                                    ? product.m_validJets.at(0)->p4.Rapidity()
-                                                    : product.m_validJets.at(1)->p4.Rapidity())
-                                             : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("dijet_yinner",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_dijet_yinner;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("dijet_youter",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 2) ? ((std::abs(product.m_validJets.at(0)->p4.Rapidity()) >
-                                                 std::abs(product.m_validJets.at(1)->p4.Rapidity()))
-                                                    ? product.m_validJets.at(0)->p4.Rapidity()
-                                                    : product.m_validJets.at(1)->p4.Rapidity())
-                                             : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("dijet_youter",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_dijet_youter;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("dijet_ystar",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 2)
-               ? 0.5 * std::abs(product.m_validJets.at(0)->p4.Rapidity() - product.m_validJets.at(1)->p4.Rapidity())
-               : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("dijet_ystar",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_dijet_ystar;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("dijet_chi",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (product.m_validJets.size() >= 2)
-               ? exp(std::abs(product.m_validJets.at(0)->p4.Rapidity() - product.m_validJets.at(1)->p4.Rapidity()))
-               : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("dijet_chi",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_dijet_chi;
   });
 
   /////////////
   // GenJets //
   /////////////
+  //
+  // Leading jet pT
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("genjet1_pt",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_genjet1Pt;
+  });
+  // Leading jet eta
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("genjet1_eta",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_genjet1Eta;
+  });
+  // Leading jet rapidity
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("genjet1_rap",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_genjet1Rap;
+  });
+  // Leading jet phi
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("genjet1_phi",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_genjet1Phi;
+  });
+  // Second jet pT
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("genjet2_pt",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_genjet2Pt;
+  });
+  // Second jet eta
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("genjet2_eta",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_genjet2Eta;
+  });
+  // Second jet rapidity
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("genjet2_rap",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_genjet2Rap;
+  });
+  // Second jet phi
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("genjet2_phi",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_genjet2Phi;
+  });
 
-  // Dijet quantities
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("gendijet_mass",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (event.m_genJets->size() >= 2) ? (event.m_genJets->at(0).p4 + event.m_genJets->at(1).p4).mass() : -999.;
+  ////////////
+  // Dijets //
+  ////////////
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("gendijet_mass",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_gendijet_mass;
   });
-  // Leading GenJet
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("genjet1_pt",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (event.m_genJets->size() >= 1) ? event.m_genJets->at(0).p4.Pt() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("gendijet_ptavg",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_gendijet_ptavg;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("genjet1_eta",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (event.m_genJets->size() >= 1) ? event.m_genJets->at(0).p4.Eta() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("gendijet_ymax",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_gendijet_ymax;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("genjet1_rap",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (event.m_genJets->size() >= 1) ? event.m_genJets->at(0).p4.Rapidity() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("gendijet_deltaphi",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_gendijet_deltaPhi;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("genjet1_phi",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (event.m_genJets->size() >= 1) ? event.m_genJets->at(0).p4.Phi() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("gendijet_costhetastar",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_gendijet_cosThetaStar;
   });
-  // Second GenJet
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("genjet2_pt",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (event.m_genJets->size() >= 2) ? event.m_genJets->at(1).p4.Pt() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("gendijet_yboost",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_gendijet_yboost;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("genjet2_eta",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (event.m_genJets->size() >= 2) ? event.m_genJets->at(1).p4.Eta() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("gendijet_yinner",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_gendijet_yinner;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("genjet2_rap",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (event.m_genJets->size() >= 2) ? event.m_genJets->at(1).p4.Rapidity() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("gendijet_youter",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_gendijet_youter;
   });
-  LambdaNtupleConsumer<KappaTypes>::AddFloatQuantity("genjet2_phi",
-                                                     [](KappaEvent const& event, KappaProduct const& product) {
-    return (event.m_genJets->size() >= 2) ? event.m_genJets->at(1).p4.Phi() : -999.;
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("gendijet_ystar",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_gendijet_ystar;
   });
+  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity("gendijet_chi",
+                                                     [](JetEvent const& event, JetProduct const& product) {
+    return product.m_gendijet_chi;
+  });
+
 
   KappaLambdaNtupleConsumer::Init(settings);
 }
