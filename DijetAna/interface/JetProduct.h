@@ -7,6 +7,8 @@ class JetProduct : public KappaProduct {
   std::vector<KLV *> m_matchedGenJets;
   std::vector<KBasicJet *> m_matchedRecoJets;
 
+  std::vector<KLV *> m_validGenJets;
+
   std::vector<double> m_incJetsPt;
   std::vector<double> m_incJetsEta;
   std::vector<double> m_incJetsRap;
