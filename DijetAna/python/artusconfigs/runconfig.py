@@ -42,7 +42,7 @@ class RunConfig(BaseConfig):
                                   'jet2_rap',
                                   'jet2_phi',
                                   'dijet_mass',
-                                  'pt12_avg',
+                                  'dijet_ptavg',
                                   'dijet_ystar',
                                   'dijet_yboost',
                                   'dijet_yinner',
@@ -66,26 +66,37 @@ class RunConfig(BaseConfig):
             self['Pipelines']['gen_default'] = copy.deepcopy(default_pipeline)
             gen_default_pipeline = self['Pipelines']['gen_default']
             gen_default_pipeline['Processors'].append('filter:NGenJetsFilter')
-            gen_default_pipeline['MinValidGenJets'] = self['MinValidJets']
             gen_default_pipeline['Processors'].append('filter:LeadingGenJetPtFilter')
-            self['MinValidGenJetPt'] = self['MinValidJetPt']
-            self['MaxValidGenJetsAbsRap'] = self['MaxValidJetAbsRap']
             gen_default_pipeline['Consumers'].append('GenJetQuantitiesHistogramConsumer')
-            gen_default_pipeline['Quantities'].append('genjet1_pt')
-            gen_default_pipeline['Quantities'].append('genjet1_phi')
-            gen_default_pipeline['Quantities'].append('genjet1_eta')
-            gen_default_pipeline['Quantities'].append('genjet1_rap')
+            gen_default_pipeline['Quantities'] += ['genjet1_pt',
+                                                   'genjet1_eta',
+                                                   'genjet1_rap',
+                                                   'genjet1_phi',
+                                                   'genjet2_pt',
+                                                   'genjet2_eta',
+                                                   'genjet2_rap',
+                                                   'genjet2_phi',
+                                                   'gendijet_mass',
+                                                   'gendijet_ptavg',
+                                                   'gendijet_ystar',
+                                                   'gendijet_yboost',
+                                                   'gendijet_yinner',
+                                                   'gendijet_youter',
+                                                   'gendijet_chi',
+                                                   'gendijet_costhetastar',
+                                                   'gendijet_deltaphi',
+                                                   'gendijet_ymax',
+                                                   ]
 
         default_pipeline['Processors'].append('filter:NJetsFilter')
-        default_pipeline['Processors'].append('filter:JetHltFilter')
 
         if self.is_data is False:
             default_pipeline['Processors'].append('filter:LeadingJetPtFilter')
-            self['MinLeadingJetPt'] = '74.'
 
 
         if self.is_data is True:
             self['IntLuminosity']  = 19789.
+            default_pipeline['Processors'].append('filter:JetHltFilter')
 
  
     def expand_pipelines(self):

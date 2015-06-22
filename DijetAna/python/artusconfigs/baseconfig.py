@@ -81,9 +81,16 @@ class BaseConfig(dict):
         self['JetIDVersion'] = '2014'
         # Valid Jet Selection
         self['MinValidJetPt'] = '50.'
+        self['MinValidGenJetPt'] = '50.'
         self['MaxValidJetAbsRap'] = '3.0'
+        self['MaxValidGenJetAbsRap'] = '3.0'
         # Global Cuts
         self['MinValidJets'] = '2'
+        self['MinValidGenJets'] = '2'
+
+        self['MinLeadingJetPt'] = '74.'
+        self['MinLeadingGenJetPt'] = '74.'
+
         # Gen Jet Matching
         self['MaxDeltaR'] = 0.3
         self['MaxDeltaPtRel'] = 1E9
