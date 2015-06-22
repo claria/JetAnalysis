@@ -32,12 +32,6 @@ void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct& product,
   product.m_matchedGenJets.resize(product.m_validJets.size());
   product.m_matchedRecoJets.resize(event.m_genJets->size());
 
-  // std::cout << "recojets size " << validJets.size() << std::endl;
-  // std::cout << "genjets size " << event.m_genJets->size() << std::endl;
-  // std::cout << "matchresultgenjets size " << match_result_genjets.size() <<
-  // std::endl;
-  // std::cout << "matchresultrecojets size " << match_result_recojets.size() <<
-  // std::endl;
 
   for (std::vector<KBasicJet*>::iterator validJet = product.m_validJets.begin(); validJet != product.m_validJets.end();
        ++validJet) {
@@ -56,59 +50,4 @@ void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct& product,
       product.m_matchedRecoJets.at(idx) = product.m_validJets.at(match_result_recojets[idx]);
   }
 
-  // for (size_t i=0;i<match_result_recojets.size();i++){
-  // 	std::cout << i << " " << match_result_recojets[i] << std::endl;;
-  // }
-
-  // for (std::vector<KBasicJet*>::iterator validJet =
-  // product.m_validJets.begin();
-  // 		validJet != product.m_validJets.end(); ++validJet)
-  // {
-  // 	double minDeltaR = maxDeltaR;
-  // 	product.m_matchedGenJets[validJet - product.m_validJets.begin()] = NULL;
-  // 	for (std::vector<KLV>::iterator genJet = event.m_genJets->begin();
-  // 			genJet != event.m_genJets->end(); ++genJet)
-  // 	{
-  // 		double deltaR = ROOT::Math::VectorUtil::DeltaR((*validJet)->p4,
-  // genJet->p4);
-  // 		if (deltaR < minDeltaR) {
-  // 			if(std::find(product.m_matchedGenJets.begin(),
-  // product.m_matchedGenJets.end(), &(*genJet)) !=
-  // product.m_matchedGenJets.end())
-  // 			{
-  // 				continue;
-  // 			}
-  // 			minDeltaR = deltaR;
-  // 			product.m_matchedGenJets[validJet - product.m_validJets.begin()] =
-  // &(*genJet);
-  // 		}
-  // 	}
-  // }
-  // product.m_matchedRecoJets.resize(event.m_genJets->size());
-  // // Produce matched recojets to vector of gen jets
-  // for (std::vector<KLV>::iterator genJet = event.m_genJets->begin();
-  // 			genJet != event.m_genJets->end(); ++genJet)
-  // {
-  // 	double minDeltaR = maxDeltaR;
-  // 	product.m_matchedRecoJets[genJet - event.m_genJets->begin()] = NULL;
-  // 	for (std::vector<KBasicJet*>::iterator validJet =
-  // product.m_validJets.begin();
-  // 			validJet != product.m_validJets.end(); ++validJet)
-  // 	{
-  // 		double deltaR = ROOT::Math::VectorUtil::DeltaR((*validJet)->p4,
-  // genJet->p4);
-  // 		if (deltaR < minDeltaR)
-  // 		{
-  // 			if(std::find(product.m_matchedRecoJets.begin(),
-  // product.m_matchedRecoJets.end(), *validJet) !=
-  // product.m_matchedRecoJets.end())
-  // 			{
-  // 				continue;
-  // 			}
-  // 			minDeltaR = deltaR;
-  // 			product.m_matchedRecoJets[genJet - event.m_genJets->begin()] =
-  // *validJet;
-  // 		}
-  // 	}
-  // }
 }

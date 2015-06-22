@@ -18,7 +18,9 @@ void ValidGenJetsProducer::Produce(JetEvent const& event, JetProduct& product, J
       product.m_validGenJets.push_back(&(*genjet));
     }
   }
-
+  // for (auto i = product.m_validGenJets.begin(); i != product.m_validGenJets.end(); ++i)
+  //   std::cout << (*i)->p4.Pt() << ' ';
+  // std::cout <<std::endl;
 }
 
 bool ValidGenJetsProducer::AdditionalCriteria(KLV* jet, JetEvent const& event,
