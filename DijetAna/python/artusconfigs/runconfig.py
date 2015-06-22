@@ -10,14 +10,12 @@ class RunConfig(BaseConfig):
     def modify_settings(self):
 
         # Same leading jet Pt cut in MC as induced by first HLT path
-        if self.is_data is False:
-            self['Processors'].append('filter:LeadingJetPtFilter')
-            self['MinLeadingJetPt'] = '74.'
 
         self['GenPtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         self['TripleDiffGenPtBinning'] = [74, 114, 196, 300, 468, 790, 3000]
         # Binnings
         default_pipeline = self.get_default_pipeline()
+
         default_pipeline['Consumers'] =  [
                                   'KappaLambdaNtupleConsumer',
                                   'cutflow_histogram',
@@ -64,15 +62,31 @@ class RunConfig(BaseConfig):
                                   'sumet',
                                   ]
 
+        if self.is_data is False:
+            self['Pipelines']['gen_default'] = copy.deepcopy(default_pipeline)
+            gen_default_pipeline = self['Pipelines']['gen_default']
+            gen_default_pipeline['Processors'].append('filter:NGenJetsFilter')
+            gen_default_pipeline['MinValidGenJets'] = self['MinValidJets']
+            gen_default_pipeline['Processors'].append('filter:LeadingGenJetPtFilter')
+            self['MinValidGenJetPt'] = self['MinValidJetPt']
+            self['MaxValidGenJetsAbsRap'] = self['MaxValidJetAbsRap']
+            gen_default_pipeline['Consumers'].append('GenJetQuantitiesHistogramConsumer')
+            gen_default_pipeline['Quantities'].append('genjet1_pt')
+            gen_default_pipeline['Quantities'].append('genjet1_phi')
+            gen_default_pipeline['Quantities'].append('genjet1_eta')
+            gen_default_pipeline['Quantities'].append('genjet1_rap')
+
+        default_pipeline['Processors'].append('filter:NJetsFilter')
+        default_pipeline['Processors'].append('filter:JetHltFilter')
+
+        if self.is_data is False:
+            default_pipeline['Processors'].append('filter:LeadingJetPtFilter')
+            self['MinLeadingJetPt'] = '74.'
+
+
         if self.is_data is True:
             self['IntLuminosity']  = 19789.
 
-        elif self.is_data is False:
-            default_pipeline['Consumers'].append('GenJetQuantitiesHistogramConsumer')
-            default_pipeline['Quantities'].append('genjet1_pt')
-            default_pipeline['Quantities'].append('genjet1_phi')
-            default_pipeline['Quantities'].append('genjet1_eta')
-            default_pipeline['Quantities'].append('genjet1_rap')
  
     def expand_pipelines(self):
         pass

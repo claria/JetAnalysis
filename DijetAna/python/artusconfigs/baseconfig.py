@@ -107,9 +107,8 @@ class BaseConfig(dict):
         self['Processors'] = [
             'producer:JetCorrectionsProducer',
             'producer:ValidJetsProducer',
-            'filter:NJetsFilter',
+            'producer:ValidGenJetsProducer',
             # 'filter:METSumEtFilter',
-            'filter:GoodPrimaryVertexFilter',
         ]
         self['BasicJets'] = 'ak7PFJets'
         self['PileupDensity'] = 'KT6Area'
@@ -203,8 +202,7 @@ class BaseConfig(dict):
         self['Pipelines']['default']['TriggerEfficiencyQuantity'] = 'jet1_pt'
         self.add_processor('filter:JsonFilter', idx=0)
         self.add_processor('producer:JetQuantitiesProducer', after='producer:ValidJetsProducer')
-        self.add_processor('producer:JetHltProducer', after='filter:NJetsFilter')
-        self.add_processor('filter:JetHltFilter', after='producer:JetHltProducer')
+        self.add_processor('producer:JetHltProducer')
         self.add_processor('producer:EventWeightProducer', after='producer:JetHltProducer')
         self.add_processor('producer:LuminosityWeightProducer', before='producer:EventWeightProducer')
 
