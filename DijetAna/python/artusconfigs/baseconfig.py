@@ -138,7 +138,7 @@ class BaseConfig(dict):
         # self['Pipelines']['default']['Quantities'].append('gendijet_mass')
         self['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup/pileup_weights_S10.root'
         self.add_processor('producer:GenJetMatchingProducer', after='producer:ValidJetsProducer')
-        self.add_processor('producer:GenJetQuantitiesProducer', after='producer:ValidJetsProducer')
+        self.add_processor('producer:GenJetQuantitiesProducer', after='producer:ValidGenJetsProducer')
         self.add_processor('producer:JetQuantitiesProducer', after='producer:ValidJetsProducer')
         self.add_processor('producer:PUWeightProducer', after='producer:ValidJetsProducer')
         self.add_processor('producer:CrossSectionWeightProducer', after='producer:ValidJetsProducer')
