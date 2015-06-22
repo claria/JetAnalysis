@@ -12,5 +12,5 @@ class NGenJetsFilter : public JetFilterBase {
   virtual void Init(JetSettings const &settings) override;
 
  private:
-  unsigned int minValidJets;
+  unsigned int minValidGenJets;
 };
