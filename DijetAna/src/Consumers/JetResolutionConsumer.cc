@@ -48,11 +48,6 @@ void JetResolutionConsumer::Finish(setting_type const& settings) {
     graph_resolution->SetPointError(i, m_hGenVsRecoPt->GetYaxis()->GetBinWidth(i), gaussFunction->GetParError(1));
   }
   std::cout << "failtest 4" << std::endl;
-  // for (std::vector<std::string>::size_type i = 0; i < m_pipelineNames.size();
-  // i++)
-  //{
-  //	RootFileHelper::SafeCd(settings.GetRootOutFile(), m_pipelineNames[i]);
-  //}
   RootFileHelper::SafeCd(settings.GetRootOutFile(), "default/");
   graph_resolution->Write("resolution");
 }
