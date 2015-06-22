@@ -47,18 +47,45 @@ void JetUnfoldingResponseConsumer::Init(setting_type const& settings) {
 }
 
 void JetUnfoldingResponseConsumer::ProcessEvent(event_type const& event, product_type const& product,
-                                                setting_type const& settings, FilterResult& result) {
+                                                setting_type const& settings, FilterResult& fres) {
   double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
 
-  if (! result.HasPassed()) {
+  bool validGenEvent = false;
+  bool validRecoEvent = false;
+
+  if ((fres.GetDecisionEntry("NGenJetsFilter")->filterDecision == FilterResult::Decision::Passed) &&
+      (fres.GetDecisionEntry("LeadingGenJetPtFilter")->filterDecision == FilterResult::Decision::Passed)) 
+  {
+    validGenEvent = true;
+  }
+
+  if ((fres.GetDecisionEntry("NJetsFilter")->filterDecision == FilterResult::Decision::Passed) &&
+     (fres.GetDecisionEntry("LeadingJetPtFilter")->filterDecision == FilterResult::Decision::Passed)) 
+  {
+    validRecoEvent = true;
+  }
+
+  if (validGenEvent && validRecoEvent)
+  {
+    m_unfoldResponse_ptavg_ysb->Fill(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg,
+                                     product.m_gendijet_yboost, product.m_gendijet_ystar, product.m_gendijet_ptavg,
+                                     eventWeight);
+  }
+  if (validGenEvent && !validRecoEvent) {
+    std::cout << "Miss" << std::endl;
     m_unfoldResponse_ptavg_ysb->Miss(product.m_gendijet_yboost, product.m_gendijet_ystar, product.m_gendijet_ptavg, eventWeight);
   }
+  if (! validGenEvent && validRecoEvent) {
+    std::cout << "Fake" << std::endl;
+    m_unfoldResponse_ptavg_ysb->Fake(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg, eventWeight);
+  }
+
 
 }
 void JetUnfoldingResponseConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product,
                                                         setting_type const& settings) 
 {
-  double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
+  // double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
 
   // if ((product.m_match_result_recojets[0] == 0 || product.m_match_result_recojets[0] == 1)
       // && (product.m_match_result_recojets[1] == 1 || product.m_match_result_recojets[1] == 0 )) 
@@ -66,11 +93,7 @@ void JetUnfoldingResponseConsumer::ProcessFilteredEvent(event_type const& event,
     // m_unfoldResponse_ptavg_ysb->Fill(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg,
     //                                  product.m_gendijet_yboost, product.m_gendijet_ystar, product.m_gendijet_ptavg,
     //                                  eventWeight);
-    m_unfoldResponse_ptavg_ysb->Fill(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg,
-                                     product.m_gendijet_yboost, product.m_gendijet_ystar, product.m_gendijet_ptavg,
-                                     eventWeight);
-
-    m_unfoldResponse_pt->Fill(product.m_jet1Pt, product.m_genjet1Pt, eventWeight);
+    // m_unfoldResponse_pt->Fill(product.m_jet1Pt, product.m_genjet1Pt, eventWeight);
   // }
     // m_unfoldResponse_ptavg_ysb->Fake(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg, eventWeight);
     // m_unfoldResponse_ptavg_ysb->Miss(product.m_gendijet_yboost, product.m_gendijet_ystar, product.m_gendijet_ptavg, eventWeight);
