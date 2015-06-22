@@ -14,11 +14,13 @@ import glob
 import importlib
 import json
 import os
+import signal
 import shutil
 import subprocess
 import sys
 import tempfile
 import hashlib
+from sys import stdin
 
 from ConfigParser import RawConfigParser
 
@@ -103,7 +105,7 @@ def main():
             config = get_config(args['config'], nick=nickname)
             config['LogLevel'] = args['log_level']
             config['InputFiles'] = [filename for filename in args['input_files'] if extract_nickname(filename) == nickname]
-            if args['output_file'] is None: 
+            if args['output_file'] is None:
                 config['OutputFile'] = "{0}_{1}".format('output', nickname)
             else:
                 config['OutputFile'] = args['output_file']
@@ -126,7 +128,25 @@ def main():
                     raise Exception("Error in called program")
 
 
-def run(executable, arguments=''):
+
+
+def get_tty_fg():
+    # new process group
+    os.setpgrp()
+    # don't stop the process when we get SIGTTOU. since this is now in a
+    # background process group, SIGTTOU will be sent to this process when
+    # we call tcsetpgrp(), below. the default action when receiving that
+    # signal is to stop (process mode T).
+    hdlr = signal.signal(signal.SIGTTOU, signal.SIG_IGN)
+    # open a file handle to the current tty
+    if stdin.isatty():
+        tty = os.open('/dev/tty', os.O_RDWR)
+        os.tcsetpgrp(tty, os.getpgrp())
+    # replace the old signal handler to minimize the chance of the child
+    # getting confused by a non-standard starting signal table.
+    signal.signal(signal.SIGTTOU, hdlr)
+
+def run(executable, arguments='',ncurses=False):
     """Execute and wait for command to complete. Returns returncode attribute."""
 
     cmd = '{0} {1}'.format(executable, arguments)
@@ -134,7 +154,7 @@ def run(executable, arguments=''):
     try:
         # TODO start process in new console so that output does not get spoiled
         # subprocess.popen([sys.executable, 'script.py'], creationflags = subprocess.CREATE_NEW_CONSOLE)
-        rc = subprocess.call(cmd.split())
+        rc = subprocess.call(cmd.split(), preexec_fn=get_tty_fg)
     except KeyboardInterrupt:
         log.critical("Received Interrupt")
         rc = 1
@@ -250,6 +270,8 @@ def prepare_gc_input(filelist, config, work_directory):
 
     # Copy gc config template to project directory
     gc_config_path = os.path.join(project_directory, 'jetana.conf') 
+    # Create work directory for gc
+    os.mkdir(os.path.join(project_directory, 'work.{0}'.format('jetana')))
     shutil.copy(os.path.join(jetana_directory, 'data/gc_template_user.conf'), gc_config_path)
     log.debug('Copied gc template file to work directory.')
 
