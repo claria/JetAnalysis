@@ -43,9 +43,9 @@ def main():
     unfold.SetNToys(args['ntoys'])
     unfold.RunToy()
 
-    recotruth_histo = unfold.Hreco(3)
+    recotruth_histo = unfold.Hreco(0)
     # recotruth_histo.SetName(measured_histo.GetName())
-    recotruth_cov = unfold.Ereco(3)
+    recotruth_cov = unfold.Ereco(0)
     # recotruth_cov.SetName("cov_{0}".format(measured_histo.GetName()))
 
     input_path = measured_histo.GetDirectory().GetPath()
@@ -86,7 +86,9 @@ def main():
  
     # datafile.cd()
     recotruth_histo.Write(measured_histo.GetName())
+    # response_matrix.Hmeasured().Scale(1.0, 'width')
     response_matrix.Hmeasured().Write(response_matrix.Hmeasured().GetName())
+    # response_matrix.Htruth().Scale(1.0, 'width')
     response_matrix.Htruth().Write(response_matrix.Htruth().GetName())
     recotruth_cov.Write('cov_{0}'.format(measured_histo.GetName()))
     recotruth_corr.Write('corr_{0}'.format(measured_histo.GetName()))
