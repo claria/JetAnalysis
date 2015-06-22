@@ -1,5 +1,11 @@
 #!/usr/bin/env python
+"""
+Usage: dijetana.py -i kappa_skim.root -c RunConfig -o output.root
 
+Prepares the json config using the RunConfig template, sets the
+input file kappa_skim.root and output file output.root and runs
+the artus binary directly.
+"""
 import argparse
 import copy
 from datetime import datetime
@@ -24,6 +30,13 @@ log = logging.getLogger(__name__)
 
 
 def main():
+    """Wrapper for the Artus binary call.
+
+       Prepares the json config from config files or config classes. Then
+       either calls directly the artus binary or prepares a grid-control
+       config for a batch run.
+
+    """
 
     parser = argparse.ArgumentParser(description='JetAnalysis config creation and run script.', add_help=True)
     parser.add_argument('-c', '--config', type=str, default='RunConfig',
@@ -77,10 +90,7 @@ def main():
             log.debug('Exit since only dry run requested.')
             pass
         else:
-            try:
-                run(gc_command, arguments=arguments)
-            except:
-                pass
+            run(gc_command, arguments=arguments)
         log.info('grid-control was invoked with cmd: \"{0} {1}\"'.format(gc_command, arguments))
         log.info('Output was written to \"{0}\"'.format(project_directory))
 
@@ -112,11 +122,13 @@ def main():
             else:
                 rc = run("JetAna", arguments=path)
                 if rc != 0:
+                    log.info("Config written to \"{0}\"".format(path))
                     raise Exception("Error in called program")
 
 
 def run(executable, arguments=''):
     """Execute and wait for command to complete. Returns returncode attribute."""
+
     cmd = '{0} {1}'.format(executable, arguments)
     log.debug("Executing command: \"{0}\"".format(cmd))
     try:
@@ -125,12 +137,13 @@ def run(executable, arguments=''):
         rc = subprocess.call(cmd.split())
     except KeyboardInterrupt:
         log.critical("Received Interrupt")
-        return 1
+        rc = 1
     return rc
 
 
 def save_config(config, path=None, indent=4):
     """Save json config to file."""
+
     if path is None:
         basename = "artus_{0}.json".format(get_hash(str(config)))
         path = os.path.join(tempfile.gettempdir(), basename)
@@ -143,11 +156,13 @@ def save_config(config, path=None, indent=4):
 
 def get_hash(s, truncate=12):
     """Return a (truncated) hash of the input string."""
+
     return hashlib.md5(s).hexdigest()[0:truncate]
 
 
 def get_config(config_name, *args, **kwargs):
     """Get config from file or from config templates by name."""
+
     if os.path.exists(config_name):
         log.info('Try to read config from file {0}'.format(config_name))
         with open(config_name) as json_file:
@@ -169,6 +184,7 @@ def get_config(config_name, *args, **kwargs):
 
 def get_nicknames(filelist):
     """Return unique list of nicknames."""
+
     nicknames = []
     for path in filelist:
         basename = os.path.basename(path)
@@ -179,12 +195,14 @@ def get_nicknames(filelist):
 
 def extract_nickname(s):
     """Returns nickname of syntax PREFIX_NICKNAME_SUFFIX."""
+
     s = os.path.basename(s)
     return '_'.join(s.split('_')[1:-1])
 
 
 def expand_glob(l):
     """Expand and glob input list and return flattened list."""
+
     if (isinstance(l, basestring)):
         l = [l]
     expanded = []
@@ -200,6 +218,7 @@ def expand_glob(l):
 
 def write_dbsfile(filelist, path=None, work_directory=None):
     """Write filenames ordered by nicknames to dbs file."""
+
     nicknames = get_nicknames(filelist)
 
     if path is None:
@@ -257,6 +276,10 @@ def prepare_gc_input(filelist, config, work_directory):
 
 
 def replace(source_file_path, replace_dict):
+    """ Replace all occurences of keys in replace_dict with the related
+        value in the file source_file_path.
+    """
+
     fh, target_file_path = tempfile.mkstemp()
     with open(target_file_path, 'w') as target_file:
         with open(source_file_path, 'r') as source_file:
