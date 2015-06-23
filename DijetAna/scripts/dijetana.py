@@ -93,6 +93,13 @@ def main():
             pass
         else:
             run(gc_command, arguments=arguments)
+        # Creates a symlink 'latest' in work directory pointing to project directory
+        dest = os.path.join(work_directory, 'latest')
+        if os.path.lexists(dest):
+            os.remove(dest)
+        os.symlink(project_directory, dest )
+
+        log.info('Updated symlink to latest Artus run.')
         log.info('grid-control was invoked with cmd: \"{0} {1}\"'.format(gc_command, arguments))
         log.info('Output was written to \"{0}\"'.format(project_directory))
 
