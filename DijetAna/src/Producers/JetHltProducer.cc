@@ -32,7 +32,15 @@ void JetHltProducer::Produce(KappaEvent const &event, KappaProduct &product, Kap
 
   assert(event.m_lumiInfo);
   assert(event.m_eventInfo);
-  assert(product.m_validJets.size() > 0);
+
+  // If no valid Jets return immediately
+  if (product.m_validJets.size() == 0)
+  {
+    product.m_selectedHltName = "";
+    product.m_weights["hltPrescaleWeight"] = 0.;
+    product.m_selectedHltPosition = DefaultValues::UndefinedInt;
+    return;
+  }
 
   product.m_hltInfo.setLumiInfo(event.m_lumiInfo);
 
