@@ -26,9 +26,10 @@ def main():
                         help='Path to root file with the distribution with the syntax file.root:path/to/histo')
     parser.add_argument('--labels', nargs='+', help='Legend labels for each plot')
     parser.add_argument('--colors', nargs='+', help='Colors for each plot')
-    parser.add_argument('--scale', type=float, nargs='+', help='Scale each histo with factor')
+    parser.add_argument('--scale',  nargs='+', help='Scale each histo with factor')
     parser.add_argument('--x-label', help='xlabel')
     parser.add_argument('--y-label', help='ylabel')
+    parser.add_argument('--z-label', help='ylabel')
     parser.add_argument('--output-prefix', help='Output prefix to put before filename')
     parser.add_argument('--ratio-lims', type=float, nargs=2, help='Output prefix to put before filename')
 
@@ -39,8 +40,12 @@ def main():
 
     if args['scale']:
         for i, histo in enumerate(histos_3d):
-            print "Scale", histo.GetName(), "with ", args['scale'][i]
-            histo.Scale(args['scale'][i])
+            if args['scale'][i] == 'width':
+                print "Scale", histo.GetName(), "with ", args['scale'][i]
+                histo.Scale(1.0, args['scale'][i])
+            else:
+                print "Scale", histo.GetName(), "with ", args['scale'][i]
+                histo.Scale(float(args['scale'][i]))
 
 
 
@@ -55,6 +60,7 @@ def main():
                                            colors=args['colors'],
                                            xlabel=args['x_label'],
                                            ylabel=args['y_label'],
+                                           zlabel=args['z_label'],
                                            ratio_lims=args['ratio_lims'])
         plotproducer.do_plot()
 
@@ -71,6 +77,7 @@ class TripleDiffRatioPlot(BasePlot):
         self.ptbin = kwargs.pop('ptbin', None)
         self.xlabel = kwargs.pop('xlabel', '')
         self.ylabel = kwargs.pop('ylabel', '')
+        self.zlabel = kwargs.pop('zlabel', '')
         self.ptbin = self.ptbin if self.ptbin else histos[0].GetName().split('_')
         # if not self.ratio_lims:
             # self.ratio_lims = [0.51, 1.49]
@@ -96,7 +103,7 @@ class TripleDiffRatioPlot(BasePlot):
             ax.yaxis.set_ticks_position('left')
             if i == self.nbins:
                 if self.ptbin:
-                    ax.text(x=0., y=1.02, s='${0} \leq p_{{\mathrm{{T}},1}} < {1}$'.format(*self.ptbin), ha='left', va='bottom', transform=ax.transAxes)
+                    ax.text(x=0., y=1.02, s='${0} \leq {2} < {1}$'.format(self.ptbin[0], self.ptbin[1], self.zlabel), ha='left', va='bottom', transform=ax.transAxes)
 
             if self.ratio_lims:
                 ax.set_ylim(*self.ratio_lims)
