@@ -43,9 +43,9 @@ def main():
     unfold.SetNToys(args['ntoys'])
     unfold.RunToy()
 
-    recotruth_histo = unfold.Hreco(0)
+    recotruth_histo = unfold.Hreco(3)
     # recotruth_histo.SetName(measured_histo.GetName())
-    recotruth_cov = unfold.Ereco(0)
+    recotruth_cov = unfold.Ereco(3)
     # recotruth_cov.SetName("cov_{0}".format(measured_histo.GetName()))
 
     input_path = measured_histo.GetDirectory().GetPath()
