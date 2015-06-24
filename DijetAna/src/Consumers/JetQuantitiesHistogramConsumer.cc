@@ -61,13 +61,6 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
                             &settings.GetTripleDiffPtBinning()[0]);
   m_h3_ptavg_ysb->Sumw2();
 
-  m_h3_ptavg_ysio = new TH3D("h3_ptavg_ysio", "h3_ptavg_ysio", settings.GetRapidityBinning().size() - 1,
-                             &settings.GetRapidityBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
-                             &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffPtBinning().size() - 1,
-                             &settings.GetTripleDiffPtBinning()[0]);
-
-  m_h3_ptavg_ysio->Sumw2();
-
   m_h_neutralHadronFraction = new TH1D("h_neutralHadronFraction", "h_neutralHadronFraction", 50, 0., 2.);
   m_h_chargedHadronFraction = new TH1D("h_chargedHadronFraction", "h_chargedHadronFraction", 50, 0., 1.);
   m_h_photonFraction = new TH1D("h_photonFraction", "h_photonFraction", 50, 0., 2.);
@@ -109,8 +102,6 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
                          std::abs(product.m_dijet_yinner), product.m_dijet_ptavg, eventWeight);
     m_h3_ptavg_ysb->Fill(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg,
                          eventWeight);
-    m_h3_ptavg_ysio->Fill(product.m_dijet_yinner * boost::math::sign(product.m_dijet_youter),
-                          std::abs(product.m_dijet_ystar), product.m_dijet_ptavg, eventWeight);
   }
 
   for (auto jet = product.m_validJets.begin(); jet != product.m_validJets.end(); jet++) {
@@ -150,9 +141,6 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
 
   // m_h3_ptavg_ysb->Scale(1.0, "width");
   m_h3_ptavg_ysb->Write(m_h3_ptavg_ysb->GetName());
-
-  // m_h3_ptavg_ysio->Scale(1.0, "width");
-  m_h3_ptavg_ysio->Write(m_h3_ptavg_ysio->GetName());
 
   // Jet property distributions
   m_h_neutralHadronFraction->Write(m_h_neutralHadronFraction->GetName());
