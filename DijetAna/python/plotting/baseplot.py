@@ -4,6 +4,8 @@ from Artus.HarryPlotter.utility.mplhisto import MplHisto, MplGraph
 import numpy as np
 
 import matplotlib
+from matplotlib.colors import Normalize
+from matplotlib.colors import LogNorm
 import matplotlib.pyplot as plt
 
 
@@ -383,3 +385,38 @@ def steppify_bin(arr, isx=False):
     return newarr
 
 
+def plot_contour1d(hist, ax=None, z_log=False, vmin=None, vmax=None, cmap='afmhot'):
+    """One dimensional contour plot.
+    Args:
+        hist: MplHisto representation of a root histogram.
+        ax: Axis to plot on. If not specified current global axis will be used.
+        z_log: If True, z axis will be logarithmic.
+        vmin: Lower limit of z axis
+        vmax: Upper limit of z axis
+        cmap: Colormap used to
+    """
+    cmap = matplotlib.cm.get_cmap(cmap)
+    if ax is None:
+        ax = plt.gca()
+    if (vmin, vmax) == (None,)*2:
+        if z_log:
+            vmin, vmax = np.min(hist.bincontents[np.nonzero(hist.bincontents)]), np.amax(hist.bincontents)
+        else:
+            vmin, vmax = np.amin(hist.bincontents), np.amax(hist.bincontents)
+    norm = (LogNorm if z_log else Normalize)(vmin=vmin, vmax=vmax)
+
+    # special settings for masked arrays (TProfile2Ds):
+    if type(hist.bincontents) == np.ma.core.MaskedArray:
+        min_color, max_color = cmap(norm(vmin))[:3], cmap(norm(vmax))[:3]  # get min and max colors from colorbar as rgb-tuples
+
+        # set color for masked entries depending on min and max color of colorbar
+        mask_color = 'white'
+        if any([all([i>0.95 for i in color]) for color in [min_color, max_color]]):  # check if white is min or max color
+            mask_color = 'black'
+            if any([all([i<0.05 for i in color]) for color in [min_color, max_color]]):  # check if black is min or max color
+                mask_color = 'red'
+        cmap.set_bad(mask_color, alpha=None)
+    if z_log:
+        cmap.set_bad('gray', alpha=None)
+    artist = ax.pcolormesh(hist.xbinedges, hist.ybinedges, hist.bincontents, cmap=cmap, norm=norm)
+    return artist
