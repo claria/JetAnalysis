@@ -135,7 +135,7 @@ class TripleDiffRatioPlot(BasePlot):
                 hist_slice.Divide(ref_histo)
                 # hist_slice.Scale(1./ref_histo.Integral())
                 hist = MplHisto(hist_slice)
-                show_yerr=True if j==len(self.histos) -1 else False
+                show_yerr=True if j==0 else False
                 if j == len(self.histos) -1:
                     plot_errorbar(hist, ax=ax, show_xerr=True, color=self.colors[j], show_yerr=show_yerr, marker='.', linestyle=None, step=True, label=self.labels[j])
                 else:
