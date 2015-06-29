@@ -4,19 +4,6 @@
 
 void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   ConsumerBase<JetTypes>::Init(settings);
-  // Jet Quantity histograms
-  // TODO: Move to config
-  // double incjet_pt_binning[42] = {48, 56, 64, 74, 84, 97, 114, 133, 153, 174,
-  // 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686,
-  // 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588,
-  // 1784, 2116, 2500, 3000};
-  // double pt_binning[39] = {74, 84, 97, 114, 133, 153, 174, 196, 220, 245,
-  // 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846,
-  // 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500,
-  // 3000};
-  // double rap_binning[13] = {-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5,
-  // 1.0, 1.5, 2.0, 2.5, 3.0};
-  // double pt_binning2[7] = {74, 114, 196, 300, 468, 790, 3000};
 
   RootFileHelper::SafeCd(settings.GetRootOutFile(), settings.GetRootFileFolder());
 
@@ -98,7 +85,7 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
     m_h3_jet12rap->Fill(boost::math::sign(product.m_jet1Rap) * product.m_jet2Rap, std::abs(product.m_jet1Rap),
                         product.m_jet1Pt, eventWeight);
 
-    m_h3_ptavg_yio->Fill(boost::math::sign(product.m_dijet_yinner) * product.m_dijet_yinner,
+    m_h3_ptavg_yio->Fill(boost::math::sign(product.m_dijet_yinner) * product.m_dijet_youter,
                          std::abs(product.m_dijet_yinner), product.m_dijet_ptavg, eventWeight);
     m_h3_ptavg_ysb->Fill(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg,
                          eventWeight);
