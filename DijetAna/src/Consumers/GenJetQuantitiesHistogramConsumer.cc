@@ -54,6 +54,12 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
                                &settings.GetTripleDiffGenPtBinning()[0]);
   m_h3_genptavg_ysb->Sumw2();
 
+  m_h3_genptavg_yio = new TH3D("h3_genptavg_yio", "h3_genptavg_yio", settings.GetRapidityBinning().size() - 1,
+                               &settings.GetRapidityBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
+                               &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffGenPtBinning().size() - 1,
+                               &settings.GetTripleDiffGenPtBinning()[0]);
+  m_h3_genptavg_yio->Sumw2();
+
   m_h3_genjet12rap = new TH3D(
       "h3_genjet12rap", "h3_genjet12rap", settings.GetRapidityAbsBinning().size() - 1,
       &settings.GetRapidityAbsBinning()[0], settings.GetRapidityBinning().size() - 1, &settings.GetRapidityBinning()[0],
@@ -123,11 +129,19 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
     m_h3_genjet12rap->Fill(product.m_validGenJets.at(0)->p4.Rapidity(), product.m_validGenJets.at(1)->p4.Rapidity(),
                            product.m_validGenJets.at(0)->p4.Pt(), eventWeight);
     m_h3_genjet12rap->Fill(
-        std::abs(product.m_validGenJets.at(0)->p4.Rapidity()),
         boost::math::sign(product.m_validGenJets.at(0)->p4.Rapidity()) * product.m_validGenJets.at(1)->p4.Rapidity(),
+        std::abs(product.m_validGenJets.at(0)->p4.Rapidity()),
         product.m_validGenJets.at(0)->p4.Pt(), eventWeight);
+    m_h3_genjet12rap->Fill(
+        boost::math::sign(product.m_validGenJets.at(1)->p4.Rapidity()) * product.m_validGenJets.at(0)->p4.Rapidity(),
+        std::abs(product.m_validGenJets.at(1)->p4.Rapidity()),
+        product.m_validGenJets.at(1)->p4.Pt(), eventWeight);
 
     m_h3_genptavg_ysb->Fill(product.m_gendijet_yboost, product.m_gendijet_ystar, product.m_gendijet_ptavg, eventWeight);
+
+    m_h3_genptavg_yio->Fill(boost::math::sign(product.m_gendijet_yinner) * product.m_gendijet_youter,
+        std::abs(product.m_gendijet_yinner),
+        product.m_gendijet_ptavg, eventWeight);
 
     if (product.m_matchedRecoJets.size() > 1 && product.m_matchedRecoJets.at(0) != NULL && product.m_matchedRecoJets.at(1) != NULL) {
       double ptavg = 0.5 * (product.m_matchedRecoJets.at(0)->p4.Pt() + product.m_matchedRecoJets.at(1)->p4.Pt());
@@ -158,12 +172,9 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   m_h_genjet2phi->Write(m_h_genjet2phi->GetName());
   m_h_incgenjetpt->Write(m_h_incgenjetpt->GetName());
   m_h_genjet12rap->Write(m_h_genjet12rap->GetName());
-  // m_h3_genjet12rap->Scale(1.0, "width");
-  // m_h3_genjet12rap->Scale(1.0, "width");
   m_h3_genjet12rap->Write(m_h3_genjet12rap->GetName());
-
-  // m_h3_genptavg_ysb->Scale(1.0, "width");
   m_h3_genptavg_ysb->Write(m_h3_genptavg_ysb->GetName());
+  m_h3_genptavg_yio->Write(m_h3_genptavg_yio->GetName());
 
   m_h_jet1DeltaR->Write(m_h_jet1DeltaR->GetName());
   m_h_jet2DeltaR->Write(m_h_jet2DeltaR->GetName());
