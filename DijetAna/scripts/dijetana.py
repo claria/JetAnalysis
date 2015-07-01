@@ -113,9 +113,9 @@ def main():
             config['LogLevel'] = args['log_level']
             config['InputFiles'] = [filename for filename in args['input_files'] if extract_nickname(filename) == nickname]
             if args['output_file'] is None:
-                config['OutputFile'] = "{0}_{1}".format('output', nickname)
+                config['OutputPath'] = "{0}_{1}".format('output', nickname)
             else:
-                config['OutputFile'] = args['output_file']
+                config['OutputPath'] = args['output_file']
             config['nickname'] = nickname
             configs.append(config)
         # Run over each config
