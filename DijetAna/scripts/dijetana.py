@@ -113,7 +113,10 @@ def main():
             config['LogLevel'] = args['log_level']
             config['InputFiles'] = [filename for filename in args['input_files'] if extract_nickname(filename) == nickname]
             if args['output_file'] is None:
-                config['OutputPath'] = "{0}_{1}".format('output', nickname)
+                if len(nicknames) > 1:
+                    config['OutputPath'] = "{0}_{1}.root".format('output', nickname)
+                else:
+                    config['OutputPath'] = "output.root"
             else:
                 config['OutputPath'] = args['output_file']
             config['nickname'] = nickname
