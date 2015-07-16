@@ -12,8 +12,10 @@ class RunConfig(BaseConfig):
         # Same leading jet Pt cut in MC as induced by first HLT path
 
         self['GenPtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
-        self['TripleDiffPtBinning'] = [30, 40, 50, 60, 74, 114, 196, 300, 468, 790, 3000]
-        self['TripleDiffGenPtBinning'] = [30, 40, 50, 60, 74, 114, 196, 300, 468, 790, 3000]
+        # self['TripleDiffPtBinning'] = [30, 40, 50, 60, 74, 114, 196, 300, 468, 790, 3000]
+        # self['TripleDiffGenPtBinning'] = [30, 40, 50, 60, 74, 114, 196, 300, 468, 790, 3000]
+        self['TripleDiffPtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
+        self['TripleDiffGenPtBinning'] = self['TripleDiffPtBinning']
         # Binnings
         default_pipeline = self.get_default_pipeline()
 
@@ -101,13 +103,18 @@ class RunConfig(BaseConfig):
 
  
     def expand_pipelines(self):
-        pass
-#         jet1_bins = [(74,114), (114,196), (196,300), (300,468), (468, 790), (790, 3000)]
-#
-#         for bin in jet1_bins:
-#             pipeline_name = '{0}_{1}'.format(*bin)
-#             self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
-#             self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:LeadingJetPtFilter')
-#             self['Pipelines'][pipeline_name]['MinLeadingJetPt'] = bin[0]
-#             self['Pipelines'][pipeline_name]['MaxLeadingJetPt'] = bin[1]
-#
+
+        for i in range(0, len(self['RapidityAbsBinning']) -1):
+            for j in range(0, len(self['RapidityAbsBinning']) -1):
+                yb_lo = self['RapidityAbsBinning'][i]
+                yb_hi = self['RapidityAbsBinning'][i+1]
+                ys_lo = self['RapidityAbsBinning'][j]
+                ys_hi = self['RapidityAbsBinning'][j+1]
+                pipeline_name = 'pt_avg_yb_{0}_{1}_ys_{2}_{3}'.format(yb_lo, yb_hi, ys_lo, ys_hi).replace('.','')
+                self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
+                self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YStarFilter')
+                self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YBoostFilter')
+                self['Pipelines'][pipeline_name]['MinYStar'] = ys_lo
+                self['Pipelines'][pipeline_name]['MaxYStar'] = ys_hi
+                self['Pipelines'][pipeline_name]['MinYBoost'] = yb_lo
+                self['Pipelines'][pipeline_name]['MaxYBoost'] = yb_hi
