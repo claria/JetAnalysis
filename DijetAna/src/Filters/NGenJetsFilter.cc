@@ -1,6 +1,7 @@
 #include "JetAnalysis/DijetAna/interface/Filters/NGenJetsFilter.h"
 
 void NGenJetsFilter::Init(JetSettings const& settings) { 
+  JetFilterBase::Init(settings);
   minValidGenJets = settings.GetMinValidGenJets(); 
 }
 

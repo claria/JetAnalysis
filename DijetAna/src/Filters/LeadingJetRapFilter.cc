@@ -1,6 +1,7 @@
 #include "JetAnalysis/DijetAna/interface/Filters/LeadingJetRapFilter.h"
 
 void LeadingJetRapFilter::Init(JetSettings const& settings) {
+  JetFilterBase::Init(settings);
   minLeadingJetAbsRap = settings.GetMinLeadingJetAbsRap();
   maxLeadingJetAbsRap = settings.GetMaxLeadingJetAbsRap();
 }

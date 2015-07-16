@@ -22,6 +22,12 @@ class JetSettings : public KappaSettings {
   IMPL_SETTING_DEFAULT(int, MinValidJets, 0)
   IMPL_SETTING_DEFAULT(int, MinValidGenJets, 0)
 
+  IMPL_SETTING_DEFAULT(double, MinPtAvg, std::numeric_limits<double>::lowest())
+  IMPL_SETTING_DEFAULT(double, MaxPtAvg, std::numeric_limits<double>::max())
+  IMPL_SETTING_DEFAULT(double, MinGenPtAvg, std::numeric_limits<double>::lowest())
+  IMPL_SETTING_DEFAULT(double, MaxGenPtAvg, std::numeric_limits<double>::max())
+
+
   IMPL_SETTING_DEFAULT(double, MinLeadingJetPt, std::numeric_limits<double>::lowest())
   IMPL_SETTING_DEFAULT(double, MaxLeadingJetPt, std::numeric_limits<double>::max())
   IMPL_SETTING_DEFAULT(double, MinLeadingGenJetPt, std::numeric_limits<double>::lowest())

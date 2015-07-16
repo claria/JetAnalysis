@@ -1,6 +1,7 @@
 #include "JetAnalysis/DijetAna/interface/Filters/SecondJetRapFilter.h"
 
 void SecondJetRapFilter::Init(JetSettings const& settings) {
+  JetFilterBase::Init(settings);
   minSecondJetAbsRap = settings.GetMinSecondJetAbsRap();
   maxSecondJetAbsRap = settings.GetMaxSecondJetAbsRap();
 }
