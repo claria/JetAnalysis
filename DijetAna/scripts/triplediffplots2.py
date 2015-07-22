@@ -11,6 +11,7 @@ import argparse
 import matplotlib
 import matplotlib.pyplot as plt
 
+from JetAnalysis.DijetAna.plotting.settings import SettingsDict
 from JetAnalysis.DijetAna.plotting.baseplot import BasePlot, ensure_latex
 from JetAnalysis.DijetAna.plotting.baseplot import plot_errorbar, plot_band, steppify_bin
 from JetAnalysis.DijetAna.tools import *
@@ -22,7 +23,7 @@ from matplotlib.colors import LogNorm
 
 def main():
     parser = argparse.ArgumentParser(description='Plot triplediff')
-    parser.add_argument('-i', '--inputfiles', nargs='+', default=['DATA.root:default/h3_jet12rap'],
+    parser.add_argument('-i', '--input', nargs='+', default=['DATA.root:default/h3_jet12rap'],
                         help='Path to root file with the distribution with the syntax file.root:path/to/histo')
     parser.add_argument('--labels', nargs='+', help='Legend labels for each plot')
     parser.add_argument('--colors', nargs='+', help='Colors for each plot')
@@ -31,12 +32,15 @@ def main():
     parser.add_argument('--y-label', help='ylabel')
     parser.add_argument('--z-label', help='ylabel')
     parser.add_argument('--output-prefix', help='Output prefix to put before filename')
-    parser.add_argument('--ratio-lims', type=float, nargs=2, help='Output prefix to put before filename')
+    parser.add_argument('--y-lims', type=float, nargs=2, help='Output prefix to put before filename')
+    parser.add_argument('--x-errs', action='store_true', help='Show x-errors.')
+    parser.add_argument('--y-errs', action='store_true', help='Show y-errors.')
 
-    args = vars(parser.parse_args())
+    args = SettingsDict(vars(parser.parse_args()))
+
     print args
 
-    histos_3d = [get_root_object(*histo.split(':')) for histo in args['inputfiles']]
+    histos_3d = [get_root_object(*histo.split(':')) for histo in args['input']]
 
     if args['scale']:
         for i, histo in enumerate(histos_3d):
@@ -55,13 +59,13 @@ def main():
     for i in range(1, n_zbins + 1):
         histos = [get_2dhisto(histo_3d, i) for histo_3d in histos_3d]
         basename = args.get('output_prefix', 'td_ratio')
-        plotproducer = TripleDiffRatioPlot(histos, output_fn='plots/{0}_{1}'.format(basename, i), figsize=(14.,10.), 
+        plotproducer = TwoDRatioPlot(histos, output_fn='plots/{0}_{1}'.format(basename, i), figsize=(14.,10.), 
                                            labels=args['labels'], 
                                            colors=args['colors'],
                                            xlabel=args['x_label'],
                                            ylabel=args['y_label'],
                                            zlabel=args['z_label'],
-                                           ratio_lims=args['ratio_lims'])
+                                           y_lims=args['y_lims'])
         plotproducer.do_plot()
 
 def get_2dhisto(histo_3d, zbin):
@@ -70,18 +74,18 @@ def get_2dhisto(histo_3d, zbin):
     histo_2d.SetName("{0}_{1}".format(histo_3d.GetZaxis().GetBinLowEdge(zbin), histo_3d.GetZaxis().GetBinUpEdge(zbin)))
     return histo_2d
 
-class TripleDiffRatioPlot(BasePlot):
+class TwoDRatioPlot(BasePlot):
 
     def __init__(self, histos, labels=None, colors=None, *args, **kwargs):
-        self.ratio_lims = kwargs.pop('ratio_lims')
+        self.y_lims = kwargs.pop('y_lims')
         self.ptbin = kwargs.pop('ptbin', None)
         self.xlabel = kwargs.pop('xlabel', '')
         self.ylabel = kwargs.pop('ylabel', '')
         self.zlabel = kwargs.pop('zlabel', '')
         self.ptbin = self.ptbin if self.ptbin else histos[0].GetName().split('_')
-        # if not self.ratio_lims:
-            # self.ratio_lims = [0.51, 1.49]
-        super(TripleDiffRatioPlot, self).__init__(*args, **kwargs)
+        # if not self.y_lims:
+            # self.y_lims = [0.51, 1.49]
+        super(TwoDRatioPlot, self).__init__(*args, **kwargs)
         self.histos = histos
 
         self.labels = labels if labels else [histo.GetName() for histo in self.histos]
@@ -102,11 +106,11 @@ class TripleDiffRatioPlot(BasePlot):
             ax.axhline(y=1.0, color='black', lw=1.0, zorder=0)
             ax.yaxis.set_ticks_position('left')
             if i == self.nbins:
-                if self.ptbin:
+                if self.ptbin:)
                     ax.text(x=0., y=1.02, s='${0} \leq {2} < {1}$'.format(self.ptbin[0], self.ptbin[1], self.zlabel), ha='left', va='bottom', transform=ax.transAxes)
 
-            if self.ratio_lims:
-                ax.set_ylim(*self.ratio_lims)
+            if self.y_lims:
+                ax.set_ylim(*self.y_lims)
 
             # self.yaxis_major_locator   = MultipleLocator(0.1)
             self.yaxis_major_locator   = AutoLocator()
@@ -154,7 +158,7 @@ class TripleDiffRatioPlot(BasePlot):
         pass
 
 
-class TripleDiffUncertainties(TripleDiffRatioPlot):
+class TripleDiffUncertainties(TwoDRatioPlot):
 
 
     def prepare(self):
