@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 class BasePlot(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self, output_fn='test', output_ext=('png',), style=None, figsize=None):
+    def __init__(self, output_fn='test', output_ext=('png',), style=None, figsize=None, **kwargs):
 
         self.init_matplotlib()
 
