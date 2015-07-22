@@ -135,7 +135,8 @@ def main():
                 rc = run("JetAna", arguments=path)
                 if rc != 0:
                     log.info("Config written to \"{0}\"".format(path))
-                    raise Exception("Error in called program")
+                    log.error("Error in called program.")
+                    sys.exit(1)
 
 
 
