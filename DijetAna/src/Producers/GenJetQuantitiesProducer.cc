@@ -1,4 +1,3 @@
-#include "Artus/Core/interface/Cpp11Support.h"
 #include "JetAnalysis/DijetAna/interface/Producers/GenJetQuantitiesProducer.h"
 
 std::string GenJetQuantitiesProducer::GetProducerId() const { return "GenJetQuantitiesProducer"; }

@@ -1,4 +1,3 @@
-#include "Artus/Core/interface/Cpp11Support.h"
 #include "JetAnalysis/DijetAna/interface/Producers/GenJetMatchingProducer.h"
 #include <KappaTools/RootTools/Matching.h>
 

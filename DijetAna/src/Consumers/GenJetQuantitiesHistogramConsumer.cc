@@ -71,41 +71,6 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
 
 }
 
-// void GenJetQuantitiesHistogramConsumer::ProcessEvent(event_type const& event, product_type const& product,
-//                                                      setting_type const& settings, FilterResult& result) {
-//   // if (result.HasPassed()) {
-//   double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
-//   // std::cout << "event" << std::endl;
-//   // std::cout << "genJet size: " <<  product.m_validGenJets.size() << std::endl;
-//   // 1+ jet quantities
-//   if (product.m_validGenJets.size() > 0) {
-//     m_h_genjet1pt->Fill(product.m_validGenJets.at(0)->p4.Pt(), eventWeight);
-//     m_h_genjet1rap->Fill(product.m_validGenJets.at(0)->p4.Rapidity(), eventWeight);
-//     m_h_genjet1phi->Fill(product.m_validGenJets.at(0)->p4.Phi(), eventWeight);
-//   }
-//   // 2+ jet quantities
-//   if (product.m_validGenJets.size() > 1) {
-//     m_h_genjet2pt->Fill(product.m_validGenJets.at(1)->p4.Pt(), eventWeight);
-//     m_h_genjet2rap->Fill(product.m_validGenJets.at(1)->p4.Rapidity(), eventWeight);
-//     m_h_genjet2phi->Fill(product.m_validGenJets.at(1)->p4.Phi(), eventWeight);
-//
-//     m_h_genjet12rap->Fill(product.m_validGenJets.at(0)->p4.Rapidity(), product.m_validGenJets.at(1)->p4.Rapidity(), eventWeight);
-//     m_h3_genjet12rap->Fill(product.m_validGenJets.at(0)->p4.Rapidity(), product.m_validGenJets.at(1)->p4.Rapidity(),
-//                            product.m_validGenJets.at(0)->p4.Pt(), eventWeight);
-//     m_h3_genjet12rap->Fill(
-//         std::abs(product.m_validGenJets.at(0)->p4.Rapidity()),
-//         boost::math::sign(product.m_validGenJets.at(0)->p4.Rapidity()) * product.m_validGenJets.at(1)->p4.Rapidity(),
-//         product.m_validGenJets.at(0)->p4.Pt(), eventWeight);
-//
-//     m_h3_genptavg_ysb->Fill(product.m_gendijet_yboost, product.m_gendijet_ystar, product.m_gendijet_ptavg, eventWeight);
-//   }
-//
-//   for (auto jet = event.m_genJets->begin(); jet != event.m_genJets->end(); jet++) {
-//     m_h_incgenjetpt->Fill((*jet)->p4.Pt(), eventWeight);
-//   }
-//   // }
-// }
-
 void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product,
                                                              setting_type const& settings) {
 
@@ -147,10 +112,10 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
         std::abs(product.m_gendijet_yinner),
         product.m_gendijet_ptavg, eventWeight);
 
-    if (product.m_matchedRecoJets.size() > 1 && product.m_matchedRecoJets.at(0) != NULL && product.m_matchedRecoJets.at(1) != NULL) {
-      double ptavg = 0.5 * (product.m_matchedRecoJets.at(0)->p4.Pt() + product.m_matchedRecoJets.at(1)->p4.Pt());
-      m_h2GenVsRecoPtAvg->Fill(ptavg / product.m_gendijet_ptavg, product.m_gendijet_ptavg, eventWeight);
-    }
+    // if (product.m_matchedRecoJets.size() > 1 && product.m_matchedRecoJets.at(0) != NULL && product.m_matchedRecoJets.at(1) != NULL) {
+      // double ptavg = 0.5 * (product.m_matchedRecoJets.at(0)->p4.Pt() + product.m_matchedRecoJets.at(1)->p4.Pt());
+    m_h2GenVsRecoPtAvg->Fill(product.m_dijet_ptavg / product.m_gendijet_ptavg, product.m_gendijet_ptavg, eventWeight);
+    // }
     if (product.m_matchedRecoJets.size() > 1 && product.m_matchedRecoJets.at(1) != NULL) {
       m_h_jet2DeltaR->Fill(
           ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(1)->p4, product.m_validGenJets.at(1)->p4), eventWeight);
@@ -181,25 +146,25 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
 
   m_h3_genjet12rap->Write(m_h3_genjet12rap->GetName());
   // Also write 2d slices for easier handling in root files
-  for (int i=1; i < m_h3_genjet12rap->GetNbinsZ() + 1; i++){
-    m_h3_genjet12rap->GetZaxis()->SetRange(i,i);
-    TH2D* m_h2_genjet12rap = (TH2D*)m_h3_genjet12rap->Project3D("yx");
-    std::stringstream ss;
-    ss << m_h3_genjet12rap->GetName() << "_" <<  m_h3_genjet12rap->GetZaxis()->GetBinLowEdge(i) << "_" <<  m_h3_genjet12rap->GetZaxis()->GetBinUpEdge(i);
-    m_h2_genjet12rap->SetName(ss.str().c_str());
-    m_h2_genjet12rap->Write(m_h2_genjet12rap->GetName());
-  }
+  // for (int i=1; i < m_h3_genjet12rap->GetNbinsZ() + 1; i++){
+  //   m_h3_genjet12rap->GetZaxis()->SetRange(i,i);
+  //   TH2D* m_h2_genjet12rap = (TH2D*)m_h3_genjet12rap->Project3D("yx");
+  //   std::stringstream ss;
+  //   ss << m_h3_genjet12rap->GetName() << "_" <<  m_h3_genjet12rap->GetZaxis()->GetBinLowEdge(i) << "_" <<  m_h3_genjet12rap->GetZaxis()->GetBinUpEdge(i);
+  //   m_h2_genjet12rap->SetName(ss.str().c_str());
+  //   m_h2_genjet12rap->Write(m_h2_genjet12rap->GetName());
+  // }
 
   m_h3_genptavg_ysb->Write(m_h3_genptavg_ysb->GetName());
   // Also write 2d slices for easier handling in root files
-  for (int i=1; i < m_h3_genptavg_ysb->GetNbinsZ() + 1; i++){
-    m_h3_genptavg_ysb->GetZaxis()->SetRange(i,i);
-    TH2D* m_h2_genptavg_ysb = (TH2D*)m_h3_genptavg_ysb->Project3D("yx");
-    std::stringstream ss;
-    ss << m_h3_genptavg_ysb->GetName() << "_" <<  m_h3_genptavg_ysb->GetZaxis()->GetBinLowEdge(i) << "_" <<  m_h3_genptavg_ysb->GetZaxis()->GetBinUpEdge(i);
-    m_h2_genptavg_ysb->SetName(ss.str().c_str());
-    m_h2_genptavg_ysb->Write(m_h2_genptavg_ysb->GetName());
-  }
+  // for (int i=1; i < m_h3_genptavg_ysb->GetNbinsZ() + 1; i++){
+  //   m_h3_genptavg_ysb->GetZaxis()->SetRange(i,i);
+  //   TH2D* m_h2_genptavg_ysb = (TH2D*)m_h3_genptavg_ysb->Project3D("yx");
+  //   std::stringstream ss;
+  //   ss << m_h3_genptavg_ysb->GetName() << "_" <<  m_h3_genptavg_ysb->GetZaxis()->GetBinLowEdge(i) << "_" <<  m_h3_genptavg_ysb->GetZaxis()->GetBinUpEdge(i);
+  //   m_h2_genptavg_ysb->SetName(ss.str().c_str());
+  //   m_h2_genptavg_ysb->Write(m_h2_genptavg_ysb->GetName());
+  // }
 
   //Also need pt slices...
   m_h3_genptavg_ysb->GetZaxis()->SetRange(1, m_h3_genptavg_ysb->GetZaxis()->GetNbins());
@@ -222,14 +187,14 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
 
   m_h3_genptavg_yio->Write(m_h3_genptavg_yio->GetName());
   // Also write 2d slices for easier handling in root files
-  for (int i=1; i < m_h3_genptavg_yio->GetNbinsZ() + 1; i++){
-    m_h3_genptavg_yio->GetZaxis()->SetRange(i,i);
-    TH2D* m_h2_ptavg_yio = (TH2D*)m_h3_genptavg_yio->Project3D("yx");
-    std::stringstream ss;
-    ss << m_h3_genptavg_yio->GetName() << "_" <<  m_h3_genptavg_yio->GetZaxis()->GetBinLowEdge(i) << "_" <<  m_h3_genptavg_yio->GetZaxis()->GetBinUpEdge(i);
-    m_h2_ptavg_yio->SetName(ss.str().c_str());
-    m_h2_ptavg_yio->Write(m_h2_ptavg_yio->GetName());
-  }
+  // for (int i=1; i < m_h3_genptavg_yio->GetNbinsZ() + 1; i++){
+  //   m_h3_genptavg_yio->GetZaxis()->SetRange(i,i);
+  //   TH2D* m_h2_ptavg_yio = (TH2D*)m_h3_genptavg_yio->Project3D("yx");
+  //   std::stringstream ss;
+  //   ss << m_h3_genptavg_yio->GetName() << "_" <<  m_h3_genptavg_yio->GetZaxis()->GetBinLowEdge(i) << "_" <<  m_h3_genptavg_yio->GetZaxis()->GetBinUpEdge(i);
+  //   m_h2_ptavg_yio->SetName(ss.str().c_str());
+  //   m_h2_ptavg_yio->Write(m_h2_ptavg_yio->GetName());
+  // }
 
   m_h_jet1DeltaR->Write(m_h_jet1DeltaR->GetName());
   m_h_jet2DeltaR->Write(m_h_jet2DeltaR->GetName());

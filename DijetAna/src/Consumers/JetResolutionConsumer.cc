@@ -3,7 +3,6 @@
 #include "TROOT.h"
 #include "TMinuit.h"
 
-#include "Artus/Core/interface/Cpp11Support.h"
 #include "Artus/Utility/interface/RootFileHelper.h"
 
 #include "JetAnalysis/DijetAna/interface/Consumers/JetResolutionConsumer.h"

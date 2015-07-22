@@ -22,6 +22,8 @@
 #include "JetAnalysis/DijetAna/interface/Filters/LeadingJetRapFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/YStarFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/YBoostFilter.h"
+#include "JetAnalysis/DijetAna/interface/Filters/GenYStarFilter.h"
+#include "JetAnalysis/DijetAna/interface/Filters/GenYBoostFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/SecondJetRapFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/METSumEtFilter.h"
 
@@ -96,7 +98,10 @@ FilterBaseUntemplated* JetFactory::createFilter(std::string const& id) {
     return new YStarFilter();
   else if (YBoostFilter().GetFilterId() == id)
     return new YBoostFilter();
-
+  else if (GenYStarFilter().GetFilterId() == id)
+    return new GenYStarFilter();
+  else if (GenYBoostFilter().GetFilterId() == id)
+    return new GenYBoostFilter();
   else if (SecondJetRapFilter().GetFilterId() == id)
     return new SecondJetRapFilter();
   else if (METSumEtFilter().GetFilterId() == id)

@@ -1,7 +1,6 @@
 #include <TH1.h>
 #include "TROOT.h"
 
-#include "Artus/Core/interface/Cpp11Support.h"
 #include "Artus/Utility/interface/RootFileHelper.h"
 
 #include "JetAnalysis/DijetAna/interface/Consumers/TriggerHistogramFitConsumer.h"
