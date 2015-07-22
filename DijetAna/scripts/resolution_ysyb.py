@@ -36,15 +36,15 @@ def main():
 def fit_resolution(inputfile):
 
     # rap_bins = ['00_05','05_10','10_15','15_20','20_25','25_30']
-    rap_bins = ['ystar_00_10_yboost_00_10',
-                'ystar_00_10_yboost_10_20',
-                'ystar_00_10_yboost_20_30',
-                'ystar_10_20_yboost_00_10',
-                'ystar_10_20_yboost_10_20',
-                'ystar_10_20_yboost_20_30',
-                'ystar_20_30_yboost_00_10',
-                'ystar_20_30_yboost_10_20',
-                'ystar_20_30_yboost_20_30',
+    rap_bins = ['ptavg_yb_00_10_ys_00_10',
+                'ptavg_yb_00_10_ys_10_20',
+                'ptavg_yb_00_10_ys_20_30',
+                'ptavg_yb_10_20_ys_00_10',
+                'ptavg_yb_10_20_ys_10_20',
+                'ptavg_yb_10_20_ys_20_30',
+                'ptavg_yb_20_30_ys_00_10',
+                'ptavg_yb_20_30_ys_10_20',
+                'ptavg_yb_20_30_ys_20_30',
             ]
     ROOT.TVirtualFitter.SetMaxIterations(9999)
     # rootfile = ROOT.TFile("res_results.root", "RECREATE")
@@ -142,10 +142,10 @@ class JetResolutionPlot(BasePlot):
 
         color_cycle = self.ax._get_lines.color_cycle
         for graph in self.graphs:
-            label = r"${0} \leq \vert y_s \vert < {1}$ ${2} \leq \vert y_b \vert < {3}$".format(float(graph.GetName().split('_')[1])/10.,
-                                                                                                float(graph.GetName().split('_')[2])/10.,
-                                                                                                float(graph.GetName().split('_')[4])/10.,
-                                                                                                float(graph.GetName().split('_')[5])/10.)
+            label = r"${0} \leq \vert y_s \vert < {1}$ ${2} \leq \vert y_b \vert < {3}$".format(float(graph.GetName().split('_')[2])/10.,
+                                                                                                float(graph.GetName().split('_')[3])/10.,
+                                                                                                float(graph.GetName().split('_')[5])/10.,
+                                                                                                float(graph.GetName().split('_')[6])/10.)
             color = next(color_cycle)
             mplgraph = MplGraph(graph)
             fcn = graph.GetFunction("res_fcn")
