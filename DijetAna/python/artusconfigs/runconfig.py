@@ -11,7 +11,9 @@ class RunConfig(BaseConfig):
 
         # Same leading jet Pt cut in MC as induced by first HLT path
 
-        self['GenPtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
+        self['GenPtBinning'] = [34, 42, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
+        self['PtBinning'] = [34, 42, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
+
         # self['TripleDiffPtBinning'] = [30, 40, 50, 60, 74, 114, 196, 300, 468, 790, 3000]
         # self['TripleDiffGenPtBinning'] = [30, 40, 50, 60, 74, 114, 196, 300, 468, 790, 3000]
         self['TripleDiffPtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
@@ -110,7 +112,8 @@ class RunConfig(BaseConfig):
                 yb_hi = self['RapidityAbsBinning'][i+1]
                 ys_lo = self['RapidityAbsBinning'][j]
                 ys_hi = self['RapidityAbsBinning'][j+1]
-                pipeline_name = 'pt_avg_yb_{0}_{1}_ys_{2}_{3}'.format(yb_lo, yb_hi, ys_lo, ys_hi).replace('.','')
+                # reco pipelines
+                pipeline_name = 'ptavg_yb_{0}_{1}_ys_{2}_{3}'.format(yb_lo, yb_hi, ys_lo, ys_hi).replace('.','')
                 self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
                 self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YStarFilter')
                 self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YBoostFilter')
@@ -118,3 +121,14 @@ class RunConfig(BaseConfig):
                 self['Pipelines'][pipeline_name]['MaxYStar'] = ys_hi
                 self['Pipelines'][pipeline_name]['MinYBoost'] = yb_lo
                 self['Pipelines'][pipeline_name]['MaxYBoost'] = yb_hi
+                # gen pipelines
+                if self.is_data is False:
+                    gen_pipeline_name = 'genptavg_yb_{0}_{1}_ys_{2}_{3}'.format(yb_lo, yb_hi, ys_lo, ys_hi).replace('.','')
+                    self['Pipelines'][gen_pipeline_name] = copy.deepcopy(self['Pipelines']['gen_default'])
+                    self['Pipelines'][gen_pipeline_name]['Processors'].insert(0,'filter:GenYStarFilter')
+                    self['Pipelines'][gen_pipeline_name]['Processors'].insert(0,'filter:GenYBoostFilter')
+                    self['Pipelines'][gen_pipeline_name]['MinGenYStar'] = ys_lo
+                    self['Pipelines'][gen_pipeline_name]['MaxGenYStar'] = ys_hi
+                    self['Pipelines'][gen_pipeline_name]['MinGenYBoost'] = yb_lo
+                    self['Pipelines'][gen_pipeline_name]['MaxGenYBoost'] = yb_hi
+
