@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Artus/Core/interface/Cpp11Support.h"
 #include "JetAnalysis/DijetAna/interface/JetTypes.h"
 #include <boost/regex.hpp>
 

@@ -4,13 +4,13 @@
 
 #include "../JetTypes.h"
 
-class YBoostFilter : public JetFilterBase {
+class GenYBoostFilter : public JetFilterBase {
  public:
-  virtual std::string GetFilterId() const { return "YBoostFilter"; }
+  virtual std::string GetFilterId() const { return "GenYBoostFilter"; }
   virtual void Init(JetSettings const &settings);
   virtual bool DoesEventPass(JetEvent const &event, JetProduct const &product, JetSettings const &settings) const;
 
  private:
-  double maxYBoost;
-  double minYBoost;
+  double maxGenYBoost;
+  double minGenYBoost;
 };

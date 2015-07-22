@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Artus/Core/interface/Cpp11Support.h"
 #include "Artus/Consumer/interface/ValueModifier.h"
 
 #include "Artus/Consumer/interface/DrawHist1dConsumer.h"
@@ -21,5 +20,5 @@
 
 class JetPipelineInitializer : public PipelineInitilizerBase<JetTypes> {
  public:
-  virtual void InitPipeline(JetPipeline *pLine, JetPipelineSettings const &pset) const ARTUS_CPP11_OVERRIDE {}
+  virtual void InitPipeline(JetPipeline *pLine, JetPipelineSettings const &pset) const override {}
 };

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Artus/Core/interface/Cpp11Support.h"
 
 #include "Artus/Consumer/interface/NtupleConsumerBase.h"
 
@@ -11,7 +10,7 @@ class JetNtupleConsumer : public NtupleConsumerBase<JetTypes> {
   virtual std::string GetConsumerId() { return "JetNtupleConsumer"; }
 
  private:
-  float returnvalue(std::string string, JetEvent const &event, JetProduct const &product) ARTUS_CPP11_OVERRIDE {
+  float returnvalue(std::string string, JetEvent const &event, JetProduct const &product) override {
     std::string trigger("HLT");
     // Observables
     if (string == "Jet1Pt")
