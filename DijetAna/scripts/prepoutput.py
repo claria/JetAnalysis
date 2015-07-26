@@ -14,7 +14,8 @@ def main():
 
     parser = argparse.ArgumentParser(description='Merge and link output files')
     parser.add_argument('output_folder', help='Path to output folder.')
-    parser.add_argument('--nick', help='Restrict to this nick.')
+    parser.add_argument('--nicks', nargs='+', help='Restrict to this nicks.')
+    parser.add_argument('--list-nicks', action='store_true', help='Restrict to this nicks.')
     parser.add_argument('--rename', action='store_true', default=False, help='Prompt user to rename links')
 
     args = vars(parser.parse_args())
@@ -27,27 +28,26 @@ def main():
     for sample in sample_summary:
         sample_summary[sample] = sample_summary[sample].split(',')
 
-    print sample_summary
-
-    print args
     all_dirs = [d for d in os.listdir(args['output_folder']) if os.path.isdir(os.path.join(args['output_folder'], d))]
 
     mergedict = {}
     for sample in sample_summary:
-        mergedict[sample] = []
         for subsample in sample_summary[sample]:
-            print subsample
             for dir in all_dirs:
                 if subsample in dir:
-                    # mergedict[sample].append(dir)
+                    if not sample in  mergedict:
+                        mergedict[sample] = []
                     mergedict[sample] += glob.glob(os.path.join(args['output_folder'], "{0}/*.root".format(dir)))
 
+    if args['list_nicks']:
+        '\n'.join(mergedict.keys())
+
     for sample in mergedict:
-        hdadd(mergedict[sample], '{0}.root'.format(sample))
+        hdadd(mergedict[sample], '{0}.root'.format(sample.upper()))
 
 
 def hdadd(files, output_filename):
-    cmd = 'jethadd {0} {1}'.format(' '.join(files), output_filename)
+    cmd = 'jethadd -f {0} {1}'.format(output_filename, ' '.join(files))
     rc = subprocess.call(cmd.split())
     if rc != 0:
         raise Exception('Merging failed.')
