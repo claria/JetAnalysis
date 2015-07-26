@@ -4,6 +4,10 @@
 
 class JetProduct : public KappaProduct {
  public:
+
+  std::string m_selectedHltName;
+  int m_selectedHltPosition;
+
   std::vector<KLV *> m_matchedGenJets;
   std::vector<KBasicJet *> m_matchedRecoJets;
 
