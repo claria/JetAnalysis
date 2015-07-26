@@ -4,8 +4,8 @@
 
 std::string JetHltProducer::GetProducerId() const { return "JetHltProducer"; }
 
-void JetHltProducer::Init(KappaSettings const &settings) {
-  KappaProducerBase::Init(settings);
+void JetHltProducer::Init(JetSettings const &settings) {
+  JetProducerBase::Init(settings);
   auto const &jetSettings = static_cast<JetSettings const &>(settings);
 
   if (settings.GetHltPaths().empty()) LOG(FATAL) << "No Hlt Trigger path list (tag \"HltPaths\") configured!";
@@ -20,7 +20,7 @@ void JetHltProducer::Init(KappaSettings const &settings) {
   }
 }
 
-void JetHltProducer::Produce(KappaEvent const &event, KappaProduct &product, KappaSettings const &settings) const {
+void JetHltProducer::Produce(JetEvent const &event, JetProduct &product, JetSettings const &settings) const {
   // auto const& jetEvent = static_cast <JetEvent const&> (event);
   // auto const& jetProduct = static_cast <JetProduct const&> (product);
   auto const &jetSettings = static_cast<JetSettings const &>(settings);
