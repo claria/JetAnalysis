@@ -50,9 +50,9 @@ void JetLambdaNtupleConsumer::Init(setting_type const& settings) {
     return SafeMap::GetWithDefault(product.m_weights, std::string("numberGeneratedEventsWeight"), 1.0);
   });
 
-  // Kappa Trigger path index
-  LambdaNtupleConsumer<JetTypes>::AddFloatQuantity(
-      "pathindex", [](JetEvent const& event, JetProduct const& product) { return product.m_selectedHltPosition; });
+  // // Kappa Trigger path index
+  // LambdaNtupleConsumer<JetTypes>::AddFloatQuantity(
+  //     "pathindex", [](JetEvent const& event, JetProduct const& product) { return product.m_selectedHltPosition; });
   // MET
   LambdaNtupleConsumer<JetTypes>::AddFloatQuantity(
       "met", [](JetEvent const& event, JetProduct const& product) { return event.m_met->p4.Pt(); });
