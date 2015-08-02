@@ -115,12 +115,12 @@ def fit_resolution(inputfile):
         resolution_graphs.append(graph)
         # graph.Write()
     for graph in resolution_graphs:
-        print graph.GetName()
         fcn = graph.GetFunction("res_fcn")
-        print "N:", fcn.GetParameter(0)
-        print "S:", fcn.GetParameter(1)
-        print "m:", fcn.GetParameter(2)
-        print "C:", fcn.GetParameter(3)
+        print "\'{0}\' : [{1}, {2}, {3}, {4}]".format(graph.GetName(), fcn.GetParameter(0), fcn.GetParameter(1), fcn.GetParameter(2), fcn.GetParameter(3))
+        # print "N:", fcn.GetParameter(0)
+        # print "S:", fcn.GetParameter(1)
+        # print "m:", fcn.GetParameter(2)
+        # print "C:", fcn.GetParameter(3)
 
     return resolution_graphs
 
