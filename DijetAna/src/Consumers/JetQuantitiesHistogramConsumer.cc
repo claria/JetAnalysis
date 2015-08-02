@@ -29,10 +29,9 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_incjetpt = new TH1D("h_incjetpt", "h_incjetpt", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   m_h_incjetpt->Sumw2();
 
-  // Pt Avg 
+  // Pt Avg
   m_h_ptavg = new TH1D("h_ptavg", "h_ptavg", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   m_h_ptavg->Sumw2();
-
 
   // Triple differential histogram
   m_h3_jet12rap = new TH3D("h3_jet12rap", "h3_jet12rap", settings.GetRapidityBinning().size() - 1,
@@ -92,8 +91,7 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
 
     m_h3_ptavg_yio->Fill(boost::math::sign(product.m_dijet_yinner) * product.m_dijet_youter,
                          std::abs(product.m_dijet_yinner), product.m_dijet_ptavg, eventWeight);
-    m_h3_ptavg_ysb->Fill(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg,
-                         eventWeight);
+    m_h3_ptavg_ysb->Fill(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg, eventWeight);
   }
 
   for (auto jet = product.m_validJets.begin(); jet != product.m_validJets.end(); jet++) {
@@ -134,7 +132,8 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   //   m_h3_jet12rap->GetZaxis()->SetRange(i,i);
   //   TH2D* m_h2_jet12rap = (TH2D*)m_h3_jet12rap->Project3D("yx");
   //   std::stringstream ss;
-  //   ss << m_h3_jet12rap->GetName() << "_" <<  m_h3_jet12rap->GetZaxis()->GetBinLowEdge(i) << "_" <<  m_h3_jet12rap->GetZaxis()->GetBinUpEdge(i);
+  //   ss << m_h3_jet12rap->GetName() << "_" <<  m_h3_jet12rap->GetZaxis()->GetBinLowEdge(i) << "_" <<
+  //   m_h3_jet12rap->GetZaxis()->GetBinUpEdge(i);
   //   m_h2_jet12rap->SetName(ss.str().c_str());
   //   m_h2_jet12rap->Write(m_h2_jet12rap->GetName());
   // }
@@ -146,11 +145,11 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   //   m_h3_ptavg_yio->GetZaxis()->SetRange(i,i);
   //   TH2D* m_h2_ptavg_yio = (TH2D*)m_h3_ptavg_yio->Project3D("yx");
   //   std::stringstream ss;
-  //   ss << m_h3_ptavg_yio->GetName() << "_" <<  m_h3_ptavg_yio->GetZaxis()->GetBinLowEdge(i) << "_" <<  m_h3_ptavg_yio->GetZaxis()->GetBinUpEdge(i);
+  //   ss << m_h3_ptavg_yio->GetName() << "_" <<  m_h3_ptavg_yio->GetZaxis()->GetBinLowEdge(i) << "_" <<
+  //   m_h3_ptavg_yio->GetZaxis()->GetBinUpEdge(i);
   //   m_h2_ptavg_yio->SetName(ss.str().c_str());
   //   m_h2_ptavg_yio->Write(m_h2_ptavg_yio->GetName());
   // }
-
 
   // m_h3_ptavg_ysb->Scale(1.0, "width");
   m_h3_ptavg_ysb->Write(m_h3_ptavg_ysb->GetName());
@@ -159,30 +158,27 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   //   m_h3_ptavg_ysb->GetZaxis()->SetRange(i,i);
   //   TH2D* m_h2_ptavg_ysb = (TH2D*)m_h3_ptavg_ysb->Project3D("yx");
   //   std::stringstream ss;
-  //   ss << m_h3_ptavg_ysb->GetName() << "_" <<  m_h3_ptavg_ysb->GetZaxis()->GetBinLowEdge(i) << "_" <<  m_h3_ptavg_ysb->GetZaxis()->GetBinUpEdge(i);
+  //   ss << m_h3_ptavg_ysb->GetName() << "_" <<  m_h3_ptavg_ysb->GetZaxis()->GetBinLowEdge(i) << "_" <<
+  //   m_h3_ptavg_ysb->GetZaxis()->GetBinUpEdge(i);
   //   m_h2_ptavg_ysb->SetName(ss.str().c_str());
   //   m_h2_ptavg_ysb->Write(m_h2_ptavg_ysb->GetName());
   // }
 
-  //Also need pt slices...
+  // Also need pt slices...
   m_h3_ptavg_ysb->GetZaxis()->SetRange(1, m_h3_ptavg_ysb->GetZaxis()->GetNbins());
-  for (int i=1; i < m_h3_ptavg_ysb->GetNbinsX() + 1; i++) 
-  {
-    for (int j=1; j < m_h3_ptavg_ysb->GetNbinsY() + 1; j++)
-    {
-      m_h3_ptavg_ysb->GetXaxis()->SetRange(i,i);
-      m_h3_ptavg_ysb->GetYaxis()->SetRange(j,j);
+  for (int i = 1; i < m_h3_ptavg_ysb->GetNbinsX() + 1; i++) {
+    for (int j = 1; j < m_h3_ptavg_ysb->GetNbinsY() + 1; j++) {
+      m_h3_ptavg_ysb->GetXaxis()->SetRange(i, i);
+      m_h3_ptavg_ysb->GetYaxis()->SetRange(j, j);
       TH1D* m_h_ptavg_ysb = (TH1D*)m_h3_ptavg_ysb->Project3D("z");
       std::stringstream ss;
-      ss << m_h3_ptavg_ysb->GetName() << "_ys_" << m_h3_ptavg_ysb->GetXaxis()->GetBinLowEdge(i) << "_" <<  m_h3_ptavg_ysb->GetXaxis()->GetBinUpEdge(i)
-                                         << "_yb_" << m_h3_ptavg_ysb->GetYaxis()->GetBinLowEdge(j) << "_" <<  m_h3_ptavg_ysb->GetYaxis()->GetBinUpEdge(j);
+      ss << m_h3_ptavg_ysb->GetName() << "_ys_" << m_h3_ptavg_ysb->GetXaxis()->GetBinLowEdge(i) << "_"
+         << m_h3_ptavg_ysb->GetXaxis()->GetBinUpEdge(i) << "_yb_" << m_h3_ptavg_ysb->GetYaxis()->GetBinLowEdge(j) << "_"
+         << m_h3_ptavg_ysb->GetYaxis()->GetBinUpEdge(j);
       m_h_ptavg_ysb->SetName(ss.str().c_str());
       m_h_ptavg_ysb->Write(m_h_ptavg_ysb->GetName());
-
     }
   }
-
-
 
   // Jet property distributions
   m_h_neutralHadronFraction->Write(m_h_neutralHadronFraction->GetName());

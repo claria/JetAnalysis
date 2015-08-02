@@ -33,9 +33,9 @@ void JetUnfoldingResponseConsumer::Init(setting_type const &settings) {
                              settings.GetTripleDiffGenPtBinning().size() - 1, &settings.GetTripleDiffGenPtBinning()[0]);
 
   TH1D reco_binning_ptavg("reco_binning_ptavg", "reco_binning_ptavg", settings.GetPtBinning().size() - 1,
-                       &settings.GetPtBinning()[0]);
+                          &settings.GetPtBinning()[0]);
   TH1D gen_binning_ptavg("gen_binning_ptavg", "gen_binning_ptavg", settings.GetGenPtBinning().size() - 1,
-                      &settings.GetGenPtBinning()[0]);
+                         &settings.GetGenPtBinning()[0]);
 
   m_unfoldResponse_jet12rap = new RooUnfoldResponse(&reco_binning_jet12rap, &gen_binning_jet12rap,
                                                     "res_matrix_jet12rap", "res_matrix_jet12rap");
@@ -43,16 +43,15 @@ void JetUnfoldingResponseConsumer::Init(setting_type const &settings) {
                                                      "res_matrix_ptavg_yio", "res_matrix_ptavg_yio");
   m_unfoldResponse_ptavg_ysb = new RooUnfoldResponse(&reco_binning_ptavg_ysb, &gen_binning_ptavg_ysb,
                                                      "res_matrix_ptavg_ysb", "res_matrix_ptavg_ysb");
-  m_unfoldResponse_ptavg = new RooUnfoldResponse(&reco_binning_ptavg, &gen_binning_ptavg, "res_matrix_ptavg", "res_matrix_ptavg");
+  m_unfoldResponse_ptavg =
+      new RooUnfoldResponse(&reco_binning_ptavg, &gen_binning_ptavg, "res_matrix_ptavg", "res_matrix_ptavg");
 }
 
 void JetUnfoldingResponseConsumer::ProcessEvent(event_type const &event, product_type const &product,
-                                                setting_type const &settings, FilterResult &fres) 
-{}
+                                                setting_type const &settings, FilterResult &fres) {}
 
 void JetUnfoldingResponseConsumer::ProcessFilteredEvent(event_type const &event, product_type const &product,
-                                                        setting_type const &settings) 
-{
+                                                        setting_type const &settings) {
   double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
 
   bool validGenEvent = false;
@@ -70,7 +69,7 @@ void JetUnfoldingResponseConsumer::ProcessFilteredEvent(event_type const &event,
 
   if (validGenEvent && validRecoEvent) {
     m_unfoldResponse_ptavg->Fill(product.m_dijet_ptavg, product.m_gendijet_ptavg, eventWeight);
- 
+
     m_unfoldResponse_ptavg_ysb->Fill(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg,
                                      product.m_gendijet_yboost, product.m_gendijet_ystar, product.m_gendijet_ptavg,
                                      eventWeight);
@@ -108,9 +107,6 @@ void JetUnfoldingResponseConsumer::ProcessFilteredEvent(event_type const &event,
     m_unfoldResponse_jet12rap->Fake(boost::math::sign(product.m_jet2Rap) * product.m_jet1Rap,
                                     std::abs(product.m_jet2Rap), product.m_jet2Pt, eventWeight);
   }
-
-
-
 }
 
 void JetUnfoldingResponseConsumer::Finish(setting_type const &settings) {
