@@ -47,4 +47,20 @@ class GenConfig(BaseConfig):
 
 
     def expand_pipelines(self):
-        pass
+        for i in range(0, len(self['RapidityAbsBinning']) -1):
+            for j in range(0, len(self['RapidityAbsBinning']) -1):
+                yb_lo = self['RapidityAbsBinning'][i]
+                yb_hi = self['RapidityAbsBinning'][i+1]
+                ys_lo = self['RapidityAbsBinning'][j]
+                ys_hi = self['RapidityAbsBinning'][j+1]
+                # gen pipelines
+                if self.is_data is False:
+                    gen_pipeline_name = 'genptavg_yb_{0}_{1}_ys_{2}_{3}'.format(yb_lo, yb_hi, ys_lo, ys_hi).replace('.','')
+                    self['Pipelines'][gen_pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
+                    self['Pipelines'][gen_pipeline_name]['Processors'].insert(0,'filter:GenYStarFilter')
+                    self['Pipelines'][gen_pipeline_name]['Processors'].insert(0,'filter:GenYBoostFilter')
+                    self['Pipelines'][gen_pipeline_name]['MinGenYStar'] = ys_lo
+                    self['Pipelines'][gen_pipeline_name]['MaxGenYStar'] = ys_hi
+                    self['Pipelines'][gen_pipeline_name]['MinGenYBoost'] = yb_lo
+                    self['Pipelines'][gen_pipeline_name]['MaxGenYBoost'] = yb_hi
+
