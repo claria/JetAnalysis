@@ -26,7 +26,7 @@ class UnfoldingResponseConfig(BaseConfig):
         self['RapidityAbsBinning'] = [0.0, 1.0, 2.0, 3.0]
         self['MinLeadingGenJetPt'] = 0.0
         self['MinValidGenJetPt'] = 00.
-        self['MaxValidGenJetAbsRap'] = '3.0'
+        self['MaxValidGenJetAbsRap'] = 3.0
 
         self['TaggingFilters'] = ['NGenJetsFilter', 'LeadingGenJetPtFilter', 'NJetsFilter', 'LeadingJetPtFilter']
 
