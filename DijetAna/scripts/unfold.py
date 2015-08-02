@@ -17,6 +17,7 @@ def main():
 
     parser.add_argument('--measured-histo', help='Path to root file with the distribution.')
     parser.add_argument('--response-matrix', help='Path to root file with the response matrix')
+    parser.add_argument('--normalize-binwidth', action='store_true',  help='Normalize input histogram by binwidth')
     parser.add_argument('--algo', default='iterative', choices=['iterative', 'binbybin', 'svd'], 
                         help='Unfolding alogrithm.')
     parser.add_argument('--reg-parameter', type=int, default=4, help='Number of iterations in Bayes Unfolding.')
@@ -26,6 +27,10 @@ def main():
     args = vars(parser.parse_args())
 
     measured_histo = get_root_object(args['measured_histo'], option='UPDATE')
+
+    if args['normalize_binwidth']:
+        measured_histo.Scale(1.0, "width")
+
     response_matrix = get_root_object(args['response_matrix'])
 
     if args['algo'] == 'iterative':
