@@ -121,9 +121,9 @@ def main():
 
         nlo_fcn.SetRange(36., 3000.)
 
-        n_evts = 1000000
+        n_evts = 10000000
         for i in xrange(n_evts):
-            pt_truth = ROOT.gRandom.Uniform(62..,4000)
+            pt_truth = ROOT.gRandom.Uniform(62.,4000)
             pt_smeared = smear_pt(rap_bin, pt_truth)
             w = nlo_fcn.Eval(pt_truth)
             if pt_smeared < 62.:
