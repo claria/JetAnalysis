@@ -22,7 +22,7 @@ class RunConfig(BaseConfig):
         default_pipeline = self.get_default_pipeline()
 
         default_pipeline['Consumers'] =  [
-                                  # 'KappaLambdaNtupleConsumer',
+                                  'KappaLambdaNtupleConsumer',
                                   'cutflow_histogram',
                                   'JetQuantitiesHistogramConsumer',
                                   ]
@@ -58,7 +58,7 @@ class RunConfig(BaseConfig):
                                   'dijet_ymax',
                                   'trigweight',
                                   'puweight',
-                                  'pathindex',
+                                  # 'pathindex',
                                   'xsweight',
                                   'ngeneventsweight',
                                   'luminosityWeight',
