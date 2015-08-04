@@ -34,44 +34,36 @@ void JetHltProducer::Produce(JetEvent const &event, JetProduct &product, JetSett
   assert(event.m_eventInfo);
 
   // If no valid Jets return immediately
-  if (product.m_validJets.size() == 0)
-  {
-    product.m_selectedHltName = "";
-    product.m_weights["hltPrescaleWeight"] = 0.;
-    product.m_selectedHltPosition = DefaultValues::UndefinedInt;
-    return;
-  }
+  product.m_selectedHltName = "";
+  product.m_weights["hltPrescaleWeight"] = 0.;
+  product.m_selectedHltPosition = DefaultValues::UndefinedInt;
+
+  if (product.m_validJets.size() == 0) return;
 
   product.m_hltInfo.setLumiInfo(event.m_lumiInfo);
-
   double triggerEffQuantity = product.m_validJets.at(0)->p4.Pt();
+
   for (std::vector<std::string>::const_iterator hltPath = jetSettings.GetHltPaths().begin();
        hltPath != jetSettings.GetHltPaths().end(); ++hltPath) {
+
     std::string hltName = product.m_hltInfo.getHLTName(*hltPath);
-    if (!hltName.empty()) {
+
+    if ( ! hltName.empty() ) {
       if (event.m_eventInfo->hltFired(hltName, event.m_lumiInfo)) {
-        // std::cout << "Trigger " << *hltPath << " fired." << std::endl;
+        LOG(DEBUG) << "Trigger " << *hltPath << " fired." << std::endl;
         if ((triggerEffQuantity >= triggerEffThresholds.at(*hltPath).first) &&
             (triggerEffQuantity < triggerEffThresholds.at(*hltPath).second)) {
-          // std::cout << "Trigger " << *hltPath << " in selected pt range." <<
-          // std::endl;
-          // std::cout << "Trigger " << *hltPath << " prescale: " <<
-          // product.m_hltInfo.getPrescale(hltName) << std::endl;
-          // std::cout << "Trigger " << *hltPath << " leading Jet Pt: " <<
-          // triggerEffQuantity <<
-          // std::endl;
+          LOG(DEBUG) << "Trigger: " << *hltPath << " Jet 1 pT: " << triggerEffQuantity << 
+                        " is in range (" << triggerEffThresholds.at(*hltPath).first << ", " << triggerEffThresholds.at(*hltPath).second << ")." << std::endl;
           product.m_selectedHltName = *hltPath;
           product.m_weights["hltPrescaleWeight"] = product.m_hltInfo.getPrescale(hltName);
           product.m_selectedHltPosition = (int)product.m_hltInfo.getHLTPosition(hltName);
+          LOG(DEBUG) << "Found a valid trigger: " << *hltPath << std::endl;
           break;
-        } else {
-          product.m_selectedHltName = "";
-          product.m_weights["hltPrescaleWeight"] = 0.;
-          product.m_selectedHltPosition = DefaultValues::UndefinedInt;
         }
       }
     } else {
-      std::cout << "Trigger " << *hltPath << " could not be resolved." << std::endl;
+      LOG(FATAL) << "Trigger " << *hltPath << " could not be resolved." << std::endl;
     }
   }
 }
