@@ -1,4 +1,5 @@
-#! /usr/bin/env python2
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import os
 import sys
@@ -21,24 +22,37 @@ def main():
     pretty(key_dir)
 
 
-def get_keys(directory=""):
+def get_keys(directory=''):
     """ Recursive iterate through root file."""
     res = {}
     for key in directory.GetListOfKeys():
         if isinstance(key.ReadObj(), ROOT.TDirectory):
             res[key.GetName()] = get_keys(key.ReadObj())
-        # elif isinstance(key.ReadObj(), ROOT.TTree):
+        elif isinstance(key.ReadObj(), ROOT.TTree):
+            res[key.GetName()] = {}
+            for leaf in sorted(key.ReadObj().GetListOfLeaves(), key=lambda leaf: leaf.GetName()):
+                quantity = leaf.GetName()
+                if leaf.GetBranch().GetMother().GetName() != leaf.GetName():
+                    quantity = leaf.GetBranch().GetMother().GetName()+"."+quantity
+                res[key.GetName()][quantity] = leaf.GetTypeName()
         else:
             res[key.GetName()] = key.GetClassName()
     return res
 
 
-def pretty(d, indent=0):
+def pretty(d, indent=''):
     """Pretty print a nested dictionary with indentation."""
-    for key, value in d.iteritems():
-        print '  ' * indent + "{0}".format(key)
+    for i, (key, value) in enumerate(d.iteritems()):
+        if not indent:
+            fancy_str = ''
+        elif i == len(d) -1:
+            fancy_str = '└─'
+        else:
+            fancy_str = '├─'
+        print indent + fancy_str + "{0}".format(key)
         if isinstance(value, dict):
-            pretty(value, indent+1)
+            add_str = '│' if i != len(d) -1 else ' '
+            pretty(value, indent + add_str +   '  ')
 
 if __name__ == '__main__':
     main()
