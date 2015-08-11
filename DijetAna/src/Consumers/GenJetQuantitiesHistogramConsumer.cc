@@ -42,13 +42,19 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_jet2DeltaR = new TH1D("h_jet2DeltaR", "h_jet2DeltaR", 100, 0.0, 1.0);
   m_h_jet2DeltaR->Sumw2();
 
-  m_h2GenVsRecoPt = new TH2D("h2GenVsRecoPt", "h2GenVsRecoPt", 50, 0.5, 1.5, settings.GetGenPtBinning().size() - 1,
+  m_h2_GenVsRecoPt = new TH2D("h2_GenVsRecoPt", "h2_GenVsRecoPt", 50, 0.5, 1.5, settings.GetGenPtBinning().size() - 1,
                              &settings.GetGenPtBinning()[0]);
-  m_h2GenVsRecoPt->Sumw2();
+  m_h2_GenVsRecoPt->Sumw2();
 
-  m_h2GenVsRecoPtAvg = new TH2D("h2GenVsRecoPtAvg", "h2GenVsRecoPtAvg", 50, 0.5, 1.5,
+  m_h2_GenVsRecoPtAvg = new TH2D("h2_GenVsRecoPtAvg", "h2_GenVsRecoPtAvg", 50, 0.5, 1.5,
                                 settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
-  m_h2GenVsRecoPtAvg->Sumw2();
+  m_h2_GenVsRecoPtAvg->Sumw2();
+
+
+  m_h2_genreco_ptavg = new TH2D("h2_genreco_ptavg", "h2_genreco_ptavg",
+                                settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0],
+                                settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
+  m_h2_genreco_ptavg->Sumw2();
 
   // Triple-differential distribution of y1, y2 and genjet pT
   m_h3_genptavg_ysb = new TH3D("h3_genptavg_ysb", "h3_genptavg_ysb", settings.GetRapidityAbsBinning().size() - 1,
@@ -82,7 +88,7 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
     m_h_genjet1phi->Fill(product.m_genjet1Phi, eventWeight);
 
     if ((product.m_matchedRecoJets.size() > 0) && (product.m_matchedRecoJets.at(0) != NULL)) {
-      m_h2GenVsRecoPt->Fill(product.m_matchedRecoJets.at(0)->p4.Pt() / product.m_validGenJets.at(0)->p4.Pt(),
+      m_h2_GenVsRecoPt->Fill(product.m_matchedRecoJets.at(0)->p4.Pt() / product.m_validGenJets.at(0)->p4.Pt(),
                             product.m_validGenJets.at(0)->p4.Pt(), eventWeight);
       m_h_jet1DeltaR->Fill(
           ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(0)->p4, product.m_validGenJets.at(0)->p4), eventWeight);
@@ -114,11 +120,11 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
 
     // if (product.m_matchedRecoJets.size() > 1 && product.m_matchedRecoJets.at(0) != NULL && product.m_matchedRecoJets.at(1) != NULL) {
       // double ptavg = 0.5 * (product.m_matchedRecoJets.at(0)->p4.Pt() + product.m_matchedRecoJets.at(1)->p4.Pt());
-    m_h2GenVsRecoPtAvg->Fill(product.m_dijet_ptavg / product.m_gendijet_ptavg, product.m_gendijet_ptavg, eventWeight);
+    m_h2_GenVsRecoPtAvg->Fill(product.m_dijet_ptavg / product.m_gendijet_ptavg, product.m_gendijet_ptavg, eventWeight);
+    m_h2_genreco_ptavg->Fill(product.m_dijet_ptavg, product.m_gendijet_ptavg, eventWeight);
     // }
     if (product.m_matchedRecoJets.size() > 1 && product.m_matchedRecoJets.at(1) != NULL) {
-      m_h_jet2DeltaR->Fill(
-          ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(1)->p4, product.m_validGenJets.at(1)->p4), eventWeight);
+      m_h_jet2DeltaR->Fill(ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(1)->p4, product.m_validGenJets.at(1)->p4), eventWeight);
     }
 
   }
@@ -132,8 +138,9 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
 void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   // save histograms
   RootFileHelper::SafeCd(settings.GetRootOutFile(), settings.GetRootFileFolder());
-  m_h2GenVsRecoPt->Write(m_h2GenVsRecoPt->GetName());
-  m_h2GenVsRecoPtAvg->Write(m_h2GenVsRecoPtAvg->GetName());
+  m_h2_GenVsRecoPt->Write(m_h2_GenVsRecoPt->GetName());
+  m_h2_GenVsRecoPtAvg->Write(m_h2_GenVsRecoPtAvg->GetName());
+  m_h2_genreco_ptavg->Write(m_h2_genreco_ptavg->GetName());
   m_h_genjet1pt->Write(m_h_genjet1pt->GetName());
   m_h_genjet1rap->Write(m_h_genjet1rap->GetName());
   m_h_genjet1phi->Write(m_h_genjet1phi->GetName());

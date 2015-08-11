@@ -30,8 +30,9 @@ class GenJetQuantitiesHistogramConsumer : public JetConsumerBase {
   TH3D *m_h3_genptavg_yio = NULL;
   TH3D *m_h3_genptavg_ysb = NULL;
 
-  TH2D *m_h2GenVsRecoPt = NULL;
-  TH2D *m_h2GenVsRecoPtAvg = NULL;
+  TH2D *m_h2_genreco_ptavg = NULL;
+  TH2D *m_h2_GenVsRecoPt = NULL;
+  TH2D *m_h2_GenVsRecoPtAvg = NULL;
   TH1D *m_h_jet1DeltaR = NULL;
   TH1D *m_h_jet2DeltaR = NULL;
 };
