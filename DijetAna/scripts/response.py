@@ -123,11 +123,11 @@ def main():
 
         n_evts = 10000000
         for i in xrange(n_evts):
-            pt_truth = ROOT.gRandom.Uniform(62.,4000)
+            pt_truth = ROOT.gRandom.Uniform(74.,4000)
             pt_smeared = smear_pt(rap_bin, pt_truth)
             w = nlo_fcn.Eval(pt_truth)
-            if pt_smeared < 62.:
-                response_ptavg.Miss(pt_truth, w)
+            # if pt_smeared < 62.:
+                # response_ptavg.Miss(pt_truth, w)
             # else:
             response_ptavg.Fill(pt_smeared, pt_truth, w)
 
