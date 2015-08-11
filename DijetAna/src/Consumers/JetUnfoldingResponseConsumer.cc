@@ -115,4 +115,7 @@ void JetUnfoldingResponseConsumer::Finish(setting_type const &settings) {
   m_unfoldResponse_ptavg_ysb->Write(m_unfoldResponse_ptavg_ysb->GetName());
   m_unfoldResponse_ptavg_yio->Write(m_unfoldResponse_ptavg_yio->GetName());
   m_unfoldResponse_ptavg->Write(m_unfoldResponse_ptavg->GetName());
+  m_unfoldResponse_ptavg->Hmeasured()->Write((std::string(m_unfoldResponse_ptavg->GetName()) + "_measured").c_str());
+  m_unfoldResponse_ptavg->Hresponse()->Write((std::string(m_unfoldResponse_ptavg->GetName()) + "_response").c_str());
+  m_unfoldResponse_ptavg->Htruth()->Write((std::string(m_unfoldResponse_ptavg->GetName()) + "_truth").c_str());
 }
