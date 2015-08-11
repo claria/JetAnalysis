@@ -24,8 +24,8 @@ class UnfoldingResponseConfig(BaseConfig):
         self['TripleDiffPtBinning'] = [30, 40, 50,60,74, 114, 196, 300, 468, 790, 3000]
         self['TripleDiffGenPtBinning'] = [30, 40, 50,60,74, 114, 196, 300, 468, 790, 3000]
         self['RapidityAbsBinning'] = [0.0, 1.0, 2.0, 3.0]
-        self['MinLeadingGenJetPt'] = 0.0
-        self['MinValidGenJetPt'] = 00.
+        self['MinLeadingGenJetPt'] = 74.0
+        self['MinValidGenJetPt'] = 50.
         self['MaxValidGenJetAbsRap'] = 3.0
 
         self['TaggingFilters'] = ['NGenJetsFilter', 'LeadingGenJetPtFilter', 'NJetsFilter', 'LeadingJetPtFilter']
@@ -64,3 +64,13 @@ class UnfoldingResponseConfig(BaseConfig):
                 self['Pipelines'][pipeline_name]['MaxYStar'] = ys_hi
                 self['Pipelines'][pipeline_name]['MinYBoost'] = yb_lo
                 self['Pipelines'][pipeline_name]['MaxYBoost'] = yb_hi
+
+                gen_pipeline_name = 'genptavg_yb_{0}_{1}_ys_{2}_{3}'.format(yb_lo, yb_hi, ys_lo, ys_hi).replace('.','')
+                self['Pipelines'][gen_pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
+                self['Pipelines'][gen_pipeline_name]['Processors'].insert(0,'filter:GenYStarFilter')
+                self['Pipelines'][gen_pipeline_name]['Processors'].insert(0,'filter:GenYBoostFilter')
+                self['Pipelines'][gen_pipeline_name]['MinGenYStar'] = ys_lo
+                self['Pipelines'][gen_pipeline_name]['MaxGenYStar'] = ys_hi
+                self['Pipelines'][gen_pipeline_name]['MinGenYBoost'] = yb_lo
+                self['Pipelines'][gen_pipeline_name]['MaxGenYBoost'] = yb_hi
+
