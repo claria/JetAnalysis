@@ -22,7 +22,7 @@ class RunConfig(BaseConfig):
         default_pipeline = self.get_default_pipeline()
 
         default_pipeline['Consumers'] =  [
-                                  'KappaLambdaNtupleConsumer',
+                                  # 'KappaLambdaNtupleConsumer',
                                   'cutflow_histogram',
                                   'JetQuantitiesHistogramConsumer',
                                   ]
