@@ -11,15 +11,18 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 def main():
 
     parser = argparse.ArgumentParser(description='Print full directory structure of root file')
-    parser.add_argument('rootfile', help='Path to root file.')
+    parser.add_argument('rootfiles', nargs='+', help='Path to root file.')
     parser.add_argument('--folder', default="/", help='Restrict listing to folder.')
     args = vars(parser.parse_args())
 
-    root_file = ROOT.TFile(args['rootfile'], "READ")
-    directory = root_file.GetDirectory(args['folder'])
-    key_dir = get_keys(directory)
+    data = {}
+    for file in args['rootfiles']:
+        root_file = ROOT.TFile(file, "READ")
+        directory = root_file.GetDirectory(args['folder'])
+        data[file] = {}
+        data[file] = get_keys(directory)
 
-    pretty(key_dir)
+    pretty(data)
 
 
 def get_keys(directory=''):
