@@ -33,6 +33,12 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_ptavg = new TH1D("h_ptavg", "h_ptavg", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   m_h_ptavg->Sumw2();
 
+  // 2D histograms
+  m_h2_yb_ys = new TH2D("h2_yb_ys", "h2_yb_ys", settings.GetRapidityAbsBinning().size() - 1,
+                           &settings.GetRapidityAbsBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
+                           &settings.GetRapidityAbsBinning()[0]);
+  m_h2_yb_ys->Sumw2();
+
   // Triple differential histogram
   m_h3_jet12rap = new TH3D("h3_jet12rap", "h3_jet12rap", settings.GetRapidityBinning().size() - 1,
                            &settings.GetRapidityBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
@@ -83,6 +89,9 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
 
     m_h_ptavg->Fill(product.m_dijet_ptavg, eventWeight);
 
+
+    m_h2_yb_ys->Fill(product.m_dijet_yboost, product.m_dijet_ystar, eventWeight);
+
     // Fill double with inverted jet 1<->2
     m_h3_jet12rap->Fill(boost::math::sign(product.m_jet1Rap) * product.m_jet2Rap, std::abs(product.m_jet1Rap),
                         product.m_jet1Pt, eventWeight);
@@ -124,6 +133,9 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   m_h_incjetpt->Write(m_h_incjetpt->GetName());
 
   m_h_ptavg->Write(m_h_ptavg->GetName());
+
+
+  m_h2_yb_ys->Write();
 
   // m_h3_jet12rap->Scale(0.5, "width");
   m_h3_jet12rap->Write(m_h3_jet12rap->GetName());

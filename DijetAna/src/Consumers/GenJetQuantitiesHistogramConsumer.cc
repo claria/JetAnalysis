@@ -37,6 +37,13 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
                              &settings.GetRapidityBinning()[0]);
   m_h_genjet12rap->Sumw2();
 
+
+  m_h2_gen_yb_ys = new TH2D("h2_gen_yb_ys", "h2_gen_yb_ys", settings.GetRapidityAbsBinning().size() - 1,
+                               &settings.GetRapidityAbsBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
+                               &settings.GetRapidityAbsBinning()[0]);
+  m_h2_gen_yb_ys->Sumw2();
+
+
   m_h_jet1DeltaR = new TH1D("h_jet1DeltaR", "h_jet1DeltaR", 100, 0.0, 1.0);
   m_h_jet1DeltaR->Sumw2();
   m_h_jet2DeltaR = new TH1D("h_jet2DeltaR", "h_jet2DeltaR", 100, 0.0, 1.0);
@@ -102,6 +109,9 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
     m_h_genjet2phi->Fill(product.m_validGenJets.at(1)->p4.Phi(), eventWeight);
 
 
+
+    m_h2_gen_yb_ys->Fill(product.m_gendijet_yboost, product.m_gendijet_ystar, eventWeight);
+
     m_h_genjet12rap->Fill(product.m_validGenJets.at(0)->p4.Rapidity(), product.m_validGenJets.at(1)->p4.Rapidity(), eventWeight);
     m_h3_genjet12rap->Fill(
         boost::math::sign(product.m_validGenJets.at(0)->p4.Rapidity()) * product.m_validGenJets.at(1)->p4.Rapidity(),
@@ -151,6 +161,7 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   m_h_genjet12rap->Write(m_h_genjet12rap->GetName());
   m_h_genptavg->Write(m_h_genptavg->GetName());
 
+  m_h2_gen_yb_ys->Write();
   m_h3_genjet12rap->Write(m_h3_genjet12rap->GetName());
   // Also write 2d slices for easier handling in root files
   // for (int i=1; i < m_h3_genjet12rap->GetNbinsZ() + 1; i++){

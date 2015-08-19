@@ -24,6 +24,7 @@ class JetQuantitiesHistogramConsumer : public JetConsumerBase {
   TH1D *m_h_incjetpt = NULL;
   TH1D *m_h_ptavg = NULL;
   TH2D *m_h_jet12rap = NULL;
+  TH2D *m_h2_yb_ys = NULL;
   TH3D *m_h3_jet12rap = NULL;
   TH3D *m_h3_ptavg_yio = NULL;
   TH3D *m_h3_ptavg_ysb = NULL;
