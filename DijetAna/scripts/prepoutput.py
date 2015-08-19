@@ -17,6 +17,7 @@ def main():
     parser.add_argument('--nicks', nargs='+', help='Restrict to this nicks.')
     parser.add_argument('--list-nicks', action='store_true', help='Restrict to this nicks.')
     parser.add_argument('--rename', action='store_true', default=False, help='Prompt user to rename links')
+    parser.add_argument('--prefix', default='', help='Prefix to put into the link name.')
 
     args = vars(parser.parse_args())
 
@@ -43,7 +44,9 @@ def main():
         '\n'.join(mergedict.keys())
 
     for sample in mergedict:
-        hdadd(mergedict[sample], '{0}.root'.format(sample.upper()))
+        target_name = '{0}/{1}.root'.format(args['output_folder'], sample.upper())
+        hdadd(mergedict[sample], target_name)
+        os.symlink(target_name, '{0}_{1}'.format(args['prefix'],os.path.basename(target_name)))
 
 
 def hdadd(files, output_filename):
