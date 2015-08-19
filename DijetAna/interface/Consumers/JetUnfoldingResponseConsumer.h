@@ -24,4 +24,7 @@ class JetUnfoldingResponseConsumer : public JetConsumerBase {
   RooUnfoldResponse *m_unfoldResponse_ptavg_ysb = NULL;
   RooUnfoldResponse *m_unfoldResponse_ptavg_yio = NULL;
   RooUnfoldResponse *m_unfoldResponse_ptavg = NULL;
+  // TH1D *m_h1_ptavg_truth = NULL;
+  // TH1D *m_h1_ptavg_measured = NULL;
+  // TH2D *m_h2_ptavg_response = NULL;
 };
