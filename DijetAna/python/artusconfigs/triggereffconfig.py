@@ -19,6 +19,10 @@ class TriggerEffConfig(BaseConfig):
         if 'filter:JetHltFilter' in self['Processors']:
             self['Processors'].remove('filter:JetHltFilter')
 
+        if self.is_data is True:
+            self['IntLuminosity']  = 19789.
+
+
         default_pipeline = self.get_default_pipeline()
         default_pipeline['Consumers'] =  [
                                   # 'KappaLambdaNtupleConsumer',
