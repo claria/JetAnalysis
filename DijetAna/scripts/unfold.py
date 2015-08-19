@@ -5,7 +5,9 @@ import sys
 import argparse
 
 import ROOT
+import math
 from math import sqrt
+
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 from JetAnalysis.DijetAna.tools import *
 
@@ -57,46 +59,52 @@ def main():
     print input_path
     output_file = input_path.split(':')[0]
     output_path = input_path.split(':')[1].split('/')
-    output_path[-1] = "unf_{0}".format(output_path[-1])
+    output_path[-1] = "{0}".format(output_path[-1])
     output_path = '/'.join(output_path).lstrip('/')
-
     print output_path
 
+    # convert tmatrixd into a th2d
+    cov_matrix = response_matrix.Hresponse().Clone("cov_matrix")
+    cov_matrix.Reset()
+    for x in xrange(1, cov_matrix.GetNbinsX() + 1):
+        for y in xrange(1, cov_matrix.GetNbinsY() + 1):
+            cov_matrix.SetBinContent(x, y, recotruth_cov[x-1][y-1])
+            cov_matrix.SetBinError(x, y, 0.)
+
+
     # ROOT.gDirectory.cd(output_path)
-    recotruth_corr = recotruth_cov.Clone("recotruth_corr")
-    for i in range(0, recotruth_corr.GetNrows()):
-        for j in range(i,recotruth_corr.GetNrows()):
-            tmp = (recotruth_cov[i][i]*recotruth_cov[j][j])
-            if tmp <= 0.:
-                recotruth_corr[i][j] = 0.
-            else:
-                recotruth_corr[i][j] = (recotruth_cov[i][j] / (sqrt(recotruth_cov[i][i])*sqrt(recotruth_cov[j][j])))
-                # if recotruth_corr[i][j] > 1.:
-                    # print i, j, recotruth_corr[i][j]
-                    # recotruth_corr[i][j] = 0.0
-                recotruth_corr[j][i] = recotruth_corr[i][j]
+    corr_matrix = cov_matrix.Clone("corr_matrix")
+    for x in xrange(1, corr_matrix.GetNbinsX() + 1):
+        for y in xrange(1, corr_matrix.GetNbinsY() + 1):
+            try:
+                corr_matrix.SetBinContent(x, y, cov_matrix.GetBinContent(x,y) / (math.sqrt(cov_matrix.GetBinContent(x,x)) * math.sqrt(cov_matrix.GetBinContent(y,y))))
+                corr_matrix.SetBinError(x, y, 0.)
+            except ZeroDivisionError:
+                corr_matrix.SetBinContent(x, y, 0.)
+                corr_matrix.SetBinError(x, y, 0.)
 
     if args['output_file']:
-        out_file = ROOT.TFile(args['output_file'], 'RECREATE')
+        out_file = ROOT.TFile(args['output_file'], 'UPDATE')
         out_file.cd("")
-    else:
-        ROOT.gDirectory.cd(measured_histo.GetDirectory().GetPath())
-        ROOT.gDirectory.cd('/')
 
-        if ROOT.gDirectory.GetDirectory(output_path) != None:
-            print "Folder {0} exists. Will be overwritten".format(output_path)
-            ROOT.gDirectory.Delete('{0};*'.format(output_path))
-        ROOT.gDirectory.mkdir(output_path)
-        ROOT.gDirectory.cd(output_path)
+    # ROOT.gDirectory.cd(measured_histo.GetDirectory().GetPath())
+
+    out_file.cd('/')
+    # ROOT.gDirectory.cd('/')
+
+    if ROOT.gDirectory.GetDirectory(output_path) != None:
+        print "Folder {0} exists. Will be overwritten".format(output_path)
+        ROOT.gDirectory.Delete('{0};*'.format(output_path))
+    ROOT.gDirectory.mkdir(output_path)
+    ROOT.gDirectory.cd(output_path)
  
     # datafile.cd()
     recotruth_histo.Write(measured_histo.GetName())
-    # response_matrix.Hmeasured().Scale(1.0, 'width')
-    response_matrix.Hmeasured().Write(response_matrix.Hmeasured().GetName())
-    # response_matrix.Htruth().Scale(1.0, 'width')
-    response_matrix.Htruth().Write(response_matrix.Htruth().GetName())
-    recotruth_cov.Write('cov_{0}'.format(measured_histo.GetName()))
-    recotruth_corr.Write('corr_{0}'.format(measured_histo.GetName()))
+    response_matrix.Hmeasured().Write()
+    response_matrix.Htruth().Write()
+    response_matrix.Hresponse().Write()
+    cov_matrix.Write('cov_{0}'.format(measured_histo.GetName()))
+    corr_matrix.Write('corr_{0}'.format(measured_histo.GetName()))
 
 
 if __name__ == '__main__':
