@@ -52,7 +52,8 @@ void TriggerEfficiencyHistogramConsumer::ProcessFilteredEvent(event_type const& 
   // Set lumi metadata
   specProduct.m_hltInfo.setLumiInfo(event.m_lumiInfo);
   // Quantity for which the histograms are filled
-  float triggerEffQuantity = specProduct.m_validJets.at(0)->p4.Pt();
+  // float triggerEffQuantity = specProduct.m_validJets.at(0)->p4.Pt();
+  float triggerEffQuantity = specProduct.m_dijet_ptavg;
 
   // Threshold of the L1 and Hlt Filter
   double m_l1FilterThreshold = 0.;
