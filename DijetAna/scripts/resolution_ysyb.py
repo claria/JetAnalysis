@@ -65,7 +65,7 @@ def fit_resolution(inputfile):
     resolution_graphs = []
     for rap_bin in rap_bins:
         print rap_bin
-        histo = get_root_object(inputfile, '{0}/h2GenVsRecoPtAvg'.format(rap_bin))
+        histo = get_root_object(inputfile, '{0}/h2_GenVsRecoPtAvg'.format(rap_bin))
         n_ptbins = histo.GetNbinsY()
 
         # pt_bins = [histo.GetYaxis().GetBinCenter(i) for i in range(1, n_ptbins + 1)]
