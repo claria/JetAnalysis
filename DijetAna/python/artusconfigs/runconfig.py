@@ -113,7 +113,7 @@ class RunConfig(BaseConfig):
                 ys_lo = self['RapidityAbsBinning'][j]
                 ys_hi = self['RapidityAbsBinning'][j+1]
                 # reco pipelines
-                pipeline_name = 'ptavg_yb_{0}_{1}_ys_{2}_{3}'.format(yb_lo, yb_hi, ys_lo, ys_hi).replace('.','')
+                pipeline_name = 'yb{0}ys{1}'.format(i, j)
                 self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
                 self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YStarFilter')
                 self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YBoostFilter')
@@ -123,7 +123,7 @@ class RunConfig(BaseConfig):
                 self['Pipelines'][pipeline_name]['MaxYBoost'] = yb_hi
                 # gen pipelines
                 if self.is_data is False:
-                    gen_pipeline_name = 'genptavg_yb_{0}_{1}_ys_{2}_{3}'.format(yb_lo, yb_hi, ys_lo, ys_hi).replace('.','')
+                    gen_pipeline_name = 'yb{0}ys{1}'.format(i, j)
                     self['Pipelines'][gen_pipeline_name] = copy.deepcopy(self['Pipelines']['gen_default'])
                     self['Pipelines'][gen_pipeline_name]['Processors'].insert(0,'filter:GenYStarFilter')
                     self['Pipelines'][gen_pipeline_name]['Processors'].insert(0,'filter:GenYBoostFilter')
