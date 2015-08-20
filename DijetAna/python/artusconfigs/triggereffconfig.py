@@ -30,38 +30,6 @@ class TriggerEffConfig(BaseConfig):
                                   'JetQuantitiesHistogramConsumer',
                                   'TriggerEfficiencyHistogramConsumer',
                                   ]
-        default_pipeline['Quantities'] = [
-                                  'run',
-                                  'lumi',
-                                  'event',
-                                  'npv',
-                                  # 'npu',
-                                  'weight',
-                                  'njets',
-                                  'incjets_pt',
-                                  # 'incjets_eta',
-                                  'incjets_rap',
-                                  # 'incjets_phi',
-                                  'jet1_pt',
-                                  'jet1_eta',
-                                  'jet1_rap',
-                                  'jet1_phi',
-                                  'jet2_pt',
-                                  'jet2_eta',
-                                  'jet2_rap',
-                                  'jet2_phi',
-                                  # 'dijet_mass',
-                                  # 'dijet_ystar',
-                                  # 'dijet_yboost',
-                                  'trigweight',
-                                  'puweight',
-                                  'pathindex',
-                                  'xsweight',
-                                  'ngeneventsweight',
-                                  'genweight',
-                                  # 'met',
-                                  # 'sumet',
-                                  ]
 
     def expand_pipelines(self):
         pass

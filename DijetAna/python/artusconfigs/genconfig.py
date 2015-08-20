@@ -57,7 +57,7 @@ class GenConfig(BaseConfig):
                 ys_hi = self['RapidityAbsBinning'][j+1]
                 # gen pipelines
                 if self.is_data is False:
-                    gen_pipeline_name = 'genptavg_yb_{0}_{1}_ys_{2}_{3}'.format(yb_lo, yb_hi, ys_lo, ys_hi).replace('.','')
+                    gen_pipeline_name = 'gen_yb{0}ys{1}'.format(i, j)
                     self['Pipelines'][gen_pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
                     self['Pipelines'][gen_pipeline_name]['Processors'].insert(0,'filter:GenYStarFilter')
                     self['Pipelines'][gen_pipeline_name]['Processors'].insert(0,'filter:GenYBoostFilter')

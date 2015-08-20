@@ -123,7 +123,7 @@ class RunConfig(BaseConfig):
                 self['Pipelines'][pipeline_name]['MaxYBoost'] = yb_hi
                 # gen pipelines
                 if self.is_data is False:
-                    gen_pipeline_name = 'yb{0}ys{1}'.format(i, j)
+                    gen_pipeline_name = 'gen_yb{0}ys{1}'.format(i, j)
                     self['Pipelines'][gen_pipeline_name] = copy.deepcopy(self['Pipelines']['gen_default'])
                     self['Pipelines'][gen_pipeline_name]['Processors'].insert(0,'filter:GenYStarFilter')
                     self['Pipelines'][gen_pipeline_name]['Processors'].insert(0,'filter:GenYBoostFilter')
