@@ -27,7 +27,6 @@ class JetSettings : public KappaSettings {
   IMPL_SETTING_DEFAULT(double, MinGenPtAvg, std::numeric_limits<double>::lowest())
   IMPL_SETTING_DEFAULT(double, MaxGenPtAvg, std::numeric_limits<double>::max())
 
-
   IMPL_SETTING_DEFAULT(double, MinLeadingJetPt, std::numeric_limits<double>::lowest())
   IMPL_SETTING_DEFAULT(double, MaxLeadingJetPt, std::numeric_limits<double>::max())
   IMPL_SETTING_DEFAULT(double, MinLeadingGenJetPt, std::numeric_limits<double>::lowest())
@@ -41,7 +40,14 @@ class JetSettings : public KappaSettings {
   IMPL_SETTING_DEFAULT(double, MaxGenYStar, std::numeric_limits<double>::max())
   IMPL_SETTING_DEFAULT(double, MinGenYBoost, std::numeric_limits<double>::lowest())
   IMPL_SETTING_DEFAULT(double, MaxGenYBoost, std::numeric_limits<double>::max())
-
+  IMPL_SETTING_DEFAULT(double, MinYInner, std::numeric_limits<double>::lowest())
+  IMPL_SETTING_DEFAULT(double, MaxYInner, std::numeric_limits<double>::max())
+  IMPL_SETTING_DEFAULT(double, MinYOuter, std::numeric_limits<double>::lowest())
+  IMPL_SETTING_DEFAULT(double, MaxYOuter, std::numeric_limits<double>::max())
+  IMPL_SETTING_DEFAULT(double, MinGenYInner, std::numeric_limits<double>::lowest())
+  IMPL_SETTING_DEFAULT(double, MaxGenYInner, std::numeric_limits<double>::max())
+  IMPL_SETTING_DEFAULT(double, MinGenYOuter, std::numeric_limits<double>::lowest())
+  IMPL_SETTING_DEFAULT(double, MaxGenYOuter, std::numeric_limits<double>::max())
 
   IMPL_SETTING_DEFAULT(double, MinLeadingJetAbsRap, std::numeric_limits<double>::lowest())
   IMPL_SETTING_DEFAULT(double, MaxLeadingJetAbsRap, std::numeric_limits<double>::max())
@@ -73,6 +79,9 @@ class JetSettings : public KappaSettings {
   // Binnings
   IMPL_SETTING_DOUBLELIST(RapidityBinning);
   IMPL_SETTING_DOUBLELIST(RapidityAbsBinning);
+  IMPL_SETTING_DOUBLELIST(FineRapidityBinning);
+  IMPL_SETTING_DOUBLELIST(FineRapidityAbsBinning);
+
   IMPL_SETTING_DOUBLELIST(PtBinning);
   IMPL_SETTING_DOUBLELIST(LogPtBinning);
   IMPL_SETTING_DOUBLELIST(GenPtBinning);

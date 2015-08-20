@@ -24,6 +24,11 @@
 #include "JetAnalysis/DijetAna/interface/Filters/LeadingJetRapFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/YStarFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/YBoostFilter.h"
+#include "JetAnalysis/DijetAna/interface/Filters/YInnerFilter.h"
+#include "JetAnalysis/DijetAna/interface/Filters/YOuterFilter.h"
+#include "JetAnalysis/DijetAna/interface/Filters/GenYInnerFilter.h"
+#include "JetAnalysis/DijetAna/interface/Filters/GenYOuterFilter.h"
+#
 #include "JetAnalysis/DijetAna/interface/Filters/GenYStarFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/GenYBoostFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/SecondJetRapFilter.h"
@@ -104,6 +109,14 @@ FilterBaseUntemplated* JetFactory::createFilter(std::string const& id) {
     return new YStarFilter();
   else if (YBoostFilter().GetFilterId() == id)
     return new YBoostFilter();
+  else if (YInnerFilter().GetFilterId() == id)
+    return new YInnerFilter();
+  else if (YOuterFilter().GetFilterId() == id)
+    return new YOuterFilter();
+  else if (GenYInnerFilter().GetFilterId() == id)
+    return new GenYInnerFilter();
+  else if (GenYOuterFilter().GetFilterId() == id)
+    return new GenYOuterFilter();
   else if (GenYStarFilter().GetFilterId() == id)
     return new GenYStarFilter();
   else if (GenYBoostFilter().GetFilterId() == id)
