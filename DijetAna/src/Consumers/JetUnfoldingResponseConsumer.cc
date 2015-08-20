@@ -153,6 +153,7 @@ void JetUnfoldingResponseConsumer::Finish(setting_type const &settings) {
   m_unfoldResponse_ptavg->Hmeasured()->Write((std::string(m_unfoldResponse_ptavg->GetName()) + "_measured").c_str());
   m_unfoldResponse_ptavg->Hresponse()->Write((std::string(m_unfoldResponse_ptavg->GetName()) + "_response").c_str());
   m_unfoldResponse_ptavg->Htruth()->Write((std::string(m_unfoldResponse_ptavg->GetName()) + "_truth").c_str());
+  m_unfoldResponse_ptavg->Hfakes()->Write((std::string(m_unfoldResponse_ptavg->GetName()) + "_fakes").c_str());
 
   // RooUnfoldResponse res_matrix_ptavg2("res_matrix_ptavg2", "res_matrix_ptavg2");
   // res_matrix_ptavg2.Setup(m_h1_ptavg_measured, m_h1_ptavg_truth, m_h2_ptavg_response);
