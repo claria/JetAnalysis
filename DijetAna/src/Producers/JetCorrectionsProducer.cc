@@ -14,6 +14,7 @@ std::string JetCorrectionsProducer::GetProducerId() const {
 
 void JetCorrectionsProducer::Init(JetSettings const& settings) 
 {
+  LOG(WARNING) << "Using the new JEC corrections producer.";
   LOG(DEBUG) << "\tLoading JEC correction parameters from files...";
   assert(! settings.GetJetEnergyCorrectionParameters().empty());
 
