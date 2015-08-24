@@ -46,7 +46,10 @@ def main():
     for sample in mergedict:
         target_name = '{0}/{1}.root'.format(args['output_folder'], sample.upper())
         hdadd(mergedict[sample], target_name)
-        os.symlink(target_name, '{0}_{1}'.format(args['prefix'],os.path.basename(target_name)))
+        link_name = '{0}{1}'.format(args['prefix'] + '_' if args['prefix'] else '',os.path.basename(target_name))
+        if os.path.exists(link_name) and os.path.islink(link_name):
+            os.remove(link_name)
+        os.symlink(target_name, link_name)
 
 
 def hdadd(files, output_filename):
