@@ -111,7 +111,7 @@ class BaseConfig(dict):
         self['Processors'] = [
             'producer:JetCorrectionsProducer',
             'producer:ValidJetsProducer',
-            #'filter:METSumEtFilter',
+            'filter:METSumEtFilter',
         ]
         self['BasicJets'] = 'ak7PFJets'
         self['PileupDensity'] = 'KT6Area'
