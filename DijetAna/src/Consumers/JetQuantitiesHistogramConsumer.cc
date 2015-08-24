@@ -43,7 +43,7 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
                            &settings.GetRapidityAbsBinning()[0]);
   m_h2_yb_ys->Sumw2();
   // Dijet y1 y2
-  m_h2_y12 = new TH2D("h2_y12", "h2_y12", settings.GetFineRapidityAbsBinning().size(),
+  m_h2_y12 = new TH2D("h2_y12", "h2_y12", settings.GetFineRapidityBinning().size() -1,
                            &settings.GetFineRapidityBinning()[0], settings.GetFineRapidityBinning().size() - 1,
                            &settings.GetFineRapidityBinning()[0]);
   m_h2_y12->Sumw2();
