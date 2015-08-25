@@ -8,6 +8,11 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   RootFileHelper::SafeCd(settings.GetRootOutFile(), settings.GetRootFileFolder());
 
   m_h_nPV = new TH1D("h_nPV", "h_nPV", 61, -0.5, 60.5);
+  m_h_nPV->Sumw2();
+  m_h_hltPosition = new TH1D("h_hltPosition", "h_hltPosition", 11, -0.5, 10.5);
+  m_h_hltPosition->Sumw2();
+
+
 
   // Leading Jet histograms
   m_h_jet1pt = new TH1D("h_jet1pt", "h_jet1pt", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
@@ -24,6 +29,11 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_jet2rap->Sumw2();
   m_h_jet2phi = new TH1D("h_jet2phi", "h_jet2phi", 36, -3.2, 3.2);
   m_h_jet2phi->Sumw2();
+  // MET
+  m_h_METSumEtRatio = new TH1D("h_METSumEtRatio", "h_METSumEtRatio", 50, 0.0, 1.0);
+  m_h_METSumEtRatio->Sumw2();
+
+
 
   // Inclusive Jets
   m_h_incjetpt = new TH1D("h_incjetpt", "h_incjetpt", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
@@ -42,7 +52,7 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
                            &settings.GetRapidityAbsBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
                            &settings.GetRapidityAbsBinning()[0]);
   m_h2_yb_ys->Sumw2();
-  // Dijet y1 y2
+  // Dijet rapidity distribution for two leading jets
   m_h2_y12 = new TH2D("h2_y12", "h2_y12", settings.GetFineRapidityBinning().size() -1,
                            &settings.GetFineRapidityBinning()[0], settings.GetFineRapidityBinning().size() - 1,
                            &settings.GetFineRapidityBinning()[0]);
@@ -82,9 +92,15 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
 
 void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product,
                                                           setting_type const& settings) {
+  // Event Weight
   double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
 
+  // NPV Distribution
   m_h_nPV->Fill(event.m_vertexSummary->nVertices);
+  m_h_hltPosition->Fill(product.m_selectedHltPosition);
+
+  // MET over SumET
+  m_h_METSumEtRatio->Fill(event.m_met->p4.Pt() / event.m_met->sumEt, eventWeight);
 
   // 1+ jet quantities
   if (product.m_validJets.size() > 0) {
@@ -130,63 +146,30 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
 }
 
 void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
-  // save histograms
+  // Save histograms
+
   RootFileHelper::SafeCd(settings.GetRootOutFile(), settings.GetRootFileFolder());
 
-  m_h_nPV->Write(m_h_nPV->GetName());
-  // hist->Scale(1.0 ,"width");
-  m_h_jet1pt->Write(m_h_jet1pt->GetName());
-  m_h_jet1rap->Write(m_h_jet1rap->GetName());
-  m_h_jet1phi->Write(m_h_jet1phi->GetName());
-  m_h_jet2pt->Write(m_h_jet2pt->GetName());
-  m_h_jet2rap->Write(m_h_jet2rap->GetName());
-  m_h_jet2phi->Write(m_h_jet2phi->GetName());
-  m_h_incjetpt->Write(m_h_incjetpt->GetName());
+  m_h_nPV->Write();
+  m_h_METSumEtRatio->Write();
+  m_h_hltPosition->Write();
 
-  m_h_ptavg->Write(m_h_ptavg->GetName());
+  m_h_jet1pt->Write();
+  m_h_jet1rap->Write();
+  m_h_jet1phi->Write();
+  m_h_jet2pt->Write();
+  m_h_jet2rap->Write();
+  m_h_jet2phi->Write();
+  m_h_incjetpt->Write();
 
+  m_h_ptavg->Write();
 
   m_h2_yb_ys->Write();
   m_h2_y12->Write();
 
-  // m_h3_jet12rap->Scale(0.5, "width");
   m_h3_jet12rap->Write(m_h3_jet12rap->GetName());
-  // Also write 2d slices for easier handling in root files
-  // for (int i=1; i < m_h3_jet12rap->GetNbinsZ() + 1; i++){
-  //   m_h3_jet12rap->GetZaxis()->SetRange(i,i);
-  //   TH2D* m_h2_jet12rap = (TH2D*)m_h3_jet12rap->Project3D("yx");
-  //   std::stringstream ss;
-  //   ss << m_h3_jet12rap->GetName() << "_" <<  m_h3_jet12rap->GetZaxis()->GetBinLowEdge(i) << "_" <<
-  //   m_h3_jet12rap->GetZaxis()->GetBinUpEdge(i);
-  //   m_h2_jet12rap->SetName(ss.str().c_str());
-  //   m_h2_jet12rap->Write(m_h2_jet12rap->GetName());
-  // }
-
-  // m_h3_ptavg_yio->Scale(1.0, "width");
   m_h3_ptavg_yio->Write(m_h3_ptavg_yio->GetName());
-  // Also write 2d slices for easier handling in root files
-  // for (int i=1; i < m_h3_ptavg_yio->GetNbinsZ() + 1; i++){
-  //   m_h3_ptavg_yio->GetZaxis()->SetRange(i,i);
-  //   TH2D* m_h2_ptavg_yio = (TH2D*)m_h3_ptavg_yio->Project3D("yx");
-  //   std::stringstream ss;
-  //   ss << m_h3_ptavg_yio->GetName() << "_" <<  m_h3_ptavg_yio->GetZaxis()->GetBinLowEdge(i) << "_" <<
-  //   m_h3_ptavg_yio->GetZaxis()->GetBinUpEdge(i);
-  //   m_h2_ptavg_yio->SetName(ss.str().c_str());
-  //   m_h2_ptavg_yio->Write(m_h2_ptavg_yio->GetName());
-  // }
-
-  // m_h3_ptavg_ysb->Scale(1.0, "width");
   m_h3_ptavg_ysb->Write(m_h3_ptavg_ysb->GetName());
-  // Also write 2d slices for easier handling in root files
-  // for (int i=1; i < m_h3_ptavg_ysb->GetNbinsZ() + 1; i++){
-  //   m_h3_ptavg_ysb->GetZaxis()->SetRange(i,i);
-  //   TH2D* m_h2_ptavg_ysb = (TH2D*)m_h3_ptavg_ysb->Project3D("yx");
-  //   std::stringstream ss;
-  //   ss << m_h3_ptavg_ysb->GetName() << "_" <<  m_h3_ptavg_ysb->GetZaxis()->GetBinLowEdge(i) << "_" <<
-  //   m_h3_ptavg_ysb->GetZaxis()->GetBinUpEdge(i);
-  //   m_h2_ptavg_ysb->SetName(ss.str().c_str());
-  //   m_h2_ptavg_ysb->Write(m_h2_ptavg_ysb->GetName());
-  // }
 
   // Also need pt slices...
   m_h3_ptavg_ysb->GetZaxis()->SetRange(1, m_h3_ptavg_ysb->GetZaxis()->GetNbins());
