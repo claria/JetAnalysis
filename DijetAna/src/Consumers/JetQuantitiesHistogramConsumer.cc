@@ -96,7 +96,7 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
   double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
 
   // NPV Distribution
-  m_h_nPV->Fill(event.m_vertexSummary->nVertices);
+  m_h_nPV->Fill(event.m_vertexSummary->nVertices, eventWeight);
   m_h_hltPosition->Fill(product.m_selectedHltPosition);
 
   // MET over SumET
