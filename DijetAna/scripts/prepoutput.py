@@ -49,6 +49,7 @@ def main():
         link_name = '{0}{1}'.format(args['prefix'] + '_' if args['prefix'] else '',os.path.basename(target_name))
         if os.path.exists(link_name) and os.path.islink(link_name):
             os.remove(link_name)
+        print "Symlinking {0} to linkname {1}".format(target_name, link_name)
         os.symlink(target_name, link_name)
 
 
