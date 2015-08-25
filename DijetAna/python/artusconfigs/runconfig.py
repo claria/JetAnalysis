@@ -10,17 +10,7 @@ class RunConfig(BaseConfig):
     def modify_settings(self):
 
         # Same leading jet Pt cut in MC as induced by first HLT path
-
-        self['GenPtBinning'] = [34, 42, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
-        self['PtBinning'] = [34, 42, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
-
-        # self['TripleDiffPtBinning'] = [30, 40, 50, 60, 74, 114, 196, 300, 468, 790, 3000]
-        # self['TripleDiffGenPtBinning'] = [30, 40, 50, 60, 74, 114, 196, 300, 468, 790, 3000]
-        self['TripleDiffPtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
-        self['TripleDiffGenPtBinning'] = self['TripleDiffPtBinning']
-        # Binnings
         default_pipeline = self.get_default_pipeline()
-
         default_pipeline['Consumers'] =  [
                                   # 'KappaLambdaNtupleConsumer',
                                   'cutflow_histogram',
@@ -117,6 +107,8 @@ class RunConfig(BaseConfig):
                 self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
                 self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YStarFilter')
                 self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YBoostFilter')
+                self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:METSumEtFilter')
+                self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:GoodPrimaryVertexFilter')
                 self['Pipelines'][pipeline_name]['MinYStar'] = ys_lo
                 self['Pipelines'][pipeline_name]['MaxYStar'] = ys_hi
                 self['Pipelines'][pipeline_name]['MinYBoost'] = yb_lo

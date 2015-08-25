@@ -4,6 +4,9 @@ import numpy as np
 from ConfigParser import RawConfigParser
 
 class BaseConfig(dict):
+    """ Starting config all other configs should derive from. Therefore, processors Filters etc should not be dependent
+        if running on MC/DATA or GEN.
+    """
 
     def __init__(self, nick=None, config=None):
 
@@ -60,18 +63,18 @@ class BaseConfig(dict):
         self['Pipelines'] = {}
 
         # Observable binning in leading jet pT
-        # self['ObservableBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
-        # Binnings
+        # Rapidity Binning in steps of 1
         self['RapidityAbsBinning'] = [0.0, 1.0, 2.0, 3.0]
         self['RapidityBinning'] = [-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0]
+        # Rapidity Binning in steps of 0.5
         self['FineRapidityAbsBinning'] = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
         self['FineRapidityBinning'] = [-3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
-        self['PtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
-        self['LogPtBinning'] = list(np.logspace(0, 3, 100))
+        # Pt Binning
+        self['PtBinning'] = [34, 42, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
+        self['GenPtBinning'] = [34, 42, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         # self['GenPtBinning'] = [36, 44, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         self['TripleDiffPtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         self['TripleDiffGenPtBinning'] = self['TripleDiffPtBinning']
-
         # Valid Jet Selection
         self['ValidJetsInput'] = 'corrected'
         self['JetID'] = 'tight'
@@ -98,10 +101,6 @@ class BaseConfig(dict):
         self['MaxPrimaryVertexRho'] = 2.
         self['MinPrimaryVertexFitnDOF'] = 4
 
-        self['TrackSummary'] = 'generalTracksSummary'
-        self['MinPurityRatio'] = 'trackSummary'
-        # self['HCALNoiseSummary'] = 'hcalnoise'
-
         # Event weight
         self['EventWeight'] = 'EventWeight'
 
@@ -111,8 +110,7 @@ class BaseConfig(dict):
         self['Processors'] = [
             'producer:JetCorrectionsProducer',
             'producer:ValidJetsProducer',
-            'filter:METSumEtFilter',
-        ]
+            ]
         self['BasicJets'] = 'ak7PFJets'
         self['PileupDensity'] = 'KT6Area'
         self['Met'] = 'met'
@@ -122,6 +120,7 @@ class BaseConfig(dict):
 
 
     def add_default_pipeline(self):
+        """ Adds an empty pipeline."""
 
         if not self['Pipelines']:
             self['Pipelines'] = {}
@@ -135,10 +134,10 @@ class BaseConfig(dict):
         pipeline['Quantities'] = []
 
     def add_mc_settings(self, sample_size=-1, crosssection=-1.):
+        """ Global settings to be applied for MC."""
+        self['GenJets'] = 'ak7GenJets'
         self['GenLumiMetadata'] = 'lumiInfo'
         self['GenEventMetadata'] = 'eventInfo'
-        self['GenJets'] = 'ak7GenJets'
-        # self['Pipelines']['default']['Quantities'].append('gendijet_mass')
         self['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup/pileup_weights_S10.root'
         self.add_processor('producer:ValidGenJetsProducer', after='producer:JetCorrectionsProducer')
         self.add_processor('producer:GenJetMatchingProducer', after='producer:ValidJetsProducer')
@@ -156,11 +155,6 @@ class BaseConfig(dict):
         self['NumberGeneratedEvents'] = sample_size
         self['CrossSection'] = crosssection
 
-    def producer_before_filter(self, pipeline=None):
-        if pipeline is None:
-            pipeline = self
-        sort_list = pipeline['Processors']
-        pipeline['Processors'] = [item for item in sort_list if item.split(':')[0].lower() == 'producer'] + [item for item in sort_list if item.split(':')[0].lower() == 'filter']
 
     def add_data_settings(self, ilumi=-1., data_stream=''):
         self['LumiMetadata']   = 'lumiInfo'
@@ -176,6 +170,7 @@ class BaseConfig(dict):
         ]
         self['JetEnergyCorrectionUncertaintyParameters'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_UncertaintySources_AK7PF.txt'
         self['JetEnergyCorrectionUncertaintySource'] = 'Total'
+        # No JEC shift, disables the JEC Uncertainties...
         self['JetEnergyCorrectionUncertaintyShift'] = 0.0
 
         self['JsonFiles'] = [
@@ -197,18 +192,32 @@ class BaseConfig(dict):
         self['TriggerEffPaths'] = ['HLT_PFJET40', 'HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
         self['TriggerEffThresholds'] = [74., 133., 220., 300., 395., 507., 2500.]
 
+        # TODO Move to specialized trigger efficency config
         self['HltPathsBlacklist'] = []
         self['L1FilterThresholds'] = [16., 36., 68., 92., 128., 128.]
         self['HltFilterThresholds'] = [40., 80., 140., 200., 260., 320.]
         self['L1FilterPattern'] = '(L1SingleJet)([0-9]+)'
         self['HltFilterPattern'] = '(PFJet)([0-9]+)'
-
         self['Pipelines']['default']['TriggerEfficiencyQuantity'] = 'jet1_pt'
+
         self.add_processor('filter:JsonFilter', idx=0)
         self.add_processor('producer:JetQuantitiesProducer', after='producer:ValidJetsProducer')
         self.add_processor('producer:JetHltProducer')
         self.add_processor('producer:EventWeightProducer', after='producer:JetHltProducer')
         self.add_processor('producer:LuminosityWeightProducer', before='producer:EventWeightProducer')
+
+
+
+# =================================================
+# Starting from here only helper functions defined.
+# =================================================
+
+    def producer_before_filter(self, pipeline=None):
+        if pipeline is None:
+            pipeline = self
+        sort_list = pipeline['Processors']
+        pipeline['Processors'] = [item for item in sort_list if item.split(':')[0].lower() == 'producer'] + [item for item in sort_list if item.split(':')[0].lower() == 'filter']
+
 
 
     def add_pipeline(self, pipeline_name, pipeline=None, level=1):
