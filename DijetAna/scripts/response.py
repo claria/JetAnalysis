@@ -17,23 +17,19 @@ import numpy as np
 
 def smear_pt(rap_bin, pt_truth):
 
-    def nsc_formula(x, N, S, C):
-        # return np.sqrt(np.sign(N)*(N/x)**2 + S**2/x + C**2)
-        return np.sqrt((N/x)**2 + (S**2)/x + C**2)
+    def nsc_formula(x, N, S,  C, s):
+        return np.sqrt(np.sign(N)*(N/x)**2 + (S**2/x)*(x**s) + C**2)
+        # return np.sqrt((N/x)**2 + (S**2)/x + C**2)
 
     res_pars = {
-            'yb0ys0' : [5.22275e+00, 9.60557e-01, 3.49387e-02], 
-            'yb0ys1' : [6.21719e+00, 8.38538e-01, 3.69017e-02],
-            'yb0ys2' : [6.05380e+00, 8.59112e-01, -5.60583e-07],
-            'yb1ys0' : [6.06379e+00, 8.57709e-01, -3.49501e-02],
-            'yb1ys1' : [5.30264e+00, 9.35802e-01, -2.40824e-02],
-            # 'yb1ys2' : [-2828.50171988, 0.5, -7.33267613295e-15, 0.0],
-            'yb2ys0' : [5.85437e+00, 8.73750e-01, 1.76659e-08],
-            # 'yb2ys1' : [-2828.50171988, 0.5, -7.33267613295e-15, 0.0],
-            # 'yb2ys2' : [-2828.50171988, 0.5, -7.33267613295e-15, 0.0],
-
+            'yb0ys0' : [-5.96225e+00, 3.50717e+00, 4.25235e-02, -4.52550e-01], 
+            'yb0ys1' : [-2.52071e+01, 2.29680e+01, 4.64303e-02, -9.26323e-01],
+            'yb0ys2' : [4.02190e+00, 1.86641e+00, 2.18110e-02, -2.92844e-01],
+            'yb1ys0' : [-3.37585e+01, 3.19434e+01, 4.63648e-02, -9.56920e-01],
+            'yb1ys1' : [-1.94071e+00, 2.50898e+00, 3.65491e-02, -3.73551e-01],
+            'yb2ys0' : [4.13130e+00, 1.63916e+00, 1.59900e-02, -2.32467e-01],
             }
-    res = nsc_formula(pt_truth, res_pars[rap_bin][0], res_pars[rap_bin][1], res_pars[rap_bin][2])
+    res = nsc_formula(pt_truth, res_pars[rap_bin][0], res_pars[rap_bin][1], res_pars[rap_bin][2], res_pars[rap_bin][3])
 
     shift = ROOT.gRandom.Gaus(0., res*pt_truth)
     # print shift, pt_truth + shift
@@ -68,7 +64,7 @@ def main():
 
             }
 
-    for rap_bin in rap_bins[0:1]:
+    for rap_bin in rap_bins[0:]:
         print rap_bin
         xsnlo = nlofile.Get("{0}/CT10nlo_xs".format(rap_bin))
         # Fitting spectrum
@@ -106,7 +102,7 @@ def main():
 
         nlo_fcn.SetRange(36., 3000.)
 
-        n_evts = 10000000
+        n_evts = 100000
         for i in xrange(n_evts):
             pt_truth = ROOT.gRandom.Uniform(36.,3000)
             pt_smeared = smear_pt(rap_bin, pt_truth)
@@ -117,14 +113,15 @@ def main():
                 # response_ptavg.Miss(pt_truth, w)
             # else:
             # if pt_truth > 62. and pt_smeared > 62.:
-            response_ptavg.Fill(pt_smeared, pt_truth, w)
             # elif pt_truth > 62. and pt_smeared <=62.:
                 # response_ptavg.Miss(pt_truth, w)
-            # elif pt_truth <= 62. and pt_smeared > 62.:
-                # response_ptavg.Fake(pt_truth, w)
+            if pt_truth <= 74. and pt_smeared <=74.:
+                continue
+            else:
+                response_ptavg.Fill(pt_smeared, pt_truth, w)
 
-            h_genptavg.Fill(pt_truth, w)
-            h_recoptavg.Fill(pt_smeared, w)
+                h_genptavg.Fill(pt_truth, w)
+                h_recoptavg.Fill(pt_smeared, w)
 
         response_ptavg.Write('res_matrix_ptavg')
         # h_recoptavg.Scale(1.0, "width")
