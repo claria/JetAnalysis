@@ -69,15 +69,21 @@ void TriggerEfficiencyHistogramConsumer::ProcessFilteredEvent(event_type const& 
       int l1objIdx = -1;
       int hltobjIdx = -1;
       // identify the l1 and hlt filter in all filters of the trigger path.
-      LOG(DEBUG) << "Event contains the following filters." << std::endl;
+      LOG(DEBUG) << "Event contains the following filters.";
       for (size_t filterIndex = event.m_triggerObjectMetadata->getMinFilterIndex(hltPosition);
            filterIndex < event.m_triggerObjectMetadata->getMaxFilterIndex(hltPosition); filterIndex++) {
         std::string filterName = event.m_triggerObjectMetadata->toFilter[filterIndex];
-        LOG(DEBUG) << "Filtername: " << filterName << " Index " << filterIndex << std::endl;
+        LOG(DEBUG) << "Filtername: " << filterName << " Index " << filterIndex;
         if (boost::regex_search(filterName, m_patternL1Filter)) {
+          for (auto id : event.m_triggerObjects->toIdxFilter[filterIndex]) {
+            LOG(DEBUG) << "L1 Triggerobject Pt: " << event.m_triggerObjects->trgObjects[id].p4.Pt();
+          }
           // Sorted by Pt, we just use the first one
           l1objIdx = event.m_triggerObjects->toIdxFilter[filterIndex][0];
         } else if (boost::regex_search(filterName, m_patternHltFilter)) {
+          for (auto id : event.m_triggerObjects->toIdxFilter[filterIndex]) {
+            LOG(DEBUG) << "HLT Triggerobject Pt: " << event.m_triggerObjects->trgObjects[id].p4.Pt();
+          }
           // Sorted by Pt, we just use the first one
           hltobjIdx = event.m_triggerObjects->toIdxFilter[filterIndex][0];
         }
@@ -87,11 +93,11 @@ void TriggerEfficiencyHistogramConsumer::ProcessFilteredEvent(event_type const& 
                       "were not found."
                    << "This can happen if the filter has saveTags=False set in "
                       "the trigger path. "
-                   << "Event will be skipped." << std::endl;
+                   << "Event will be skipped.";
         return;
       }
       LOG(DEBUG) << "Trigger object pT: L1=" << event.m_triggerObjects->trgObjects[l1objIdx].p4.Pt() << " GeV "
-                 << "HLT=" << event.m_triggerObjects->trgObjects[hltobjIdx].p4.Pt() << " GeV." << std::endl;
+                 << "HLT=" << event.m_triggerObjects->trgObjects[hltobjIdx].p4.Pt() << " GeV.";
       m_triggerResultHists[i]->Fill(triggerEffQuantity);
       if (i < m_hltPaths.size() - 1) m_l1FilterThreshold = m_filterThresholds[m_hltPaths[i + 1]].first;
       m_hltFilterThreshold = m_filterThresholds[m_hltPaths[i + 1]].second;
@@ -127,11 +133,9 @@ double TriggerEfficiencyHistogramConsumer::GetHltFilterThreshold(event_type cons
   for (size_t filterIndex = event.m_triggerObjectMetadata->getMinFilterIndex(hltPosition);
        filterIndex < event.m_triggerObjectMetadata->getMaxFilterIndex(hltPosition); filterIndex++) {
     std::string filterName = event.m_triggerObjectMetadata->toFilter[filterIndex];
-    // std::cout << "filtername" << filterName << std::endl;
     boost::smatch match;
 
     if (boost::regex_search(filterName, match, m_patternHltFilter)) {
-      // std::cout << "filtername" << filterName << std::endl;
       return boost::lexical_cast<double>(std::string(match[2].first, match[2].second));
     }
   }
@@ -145,9 +149,5 @@ void TriggerEfficiencyHistogramConsumer::Finish(setting_type const& settings) {
   for (size_t i = 0; i != (m_hltPaths.size() - 1); ++i) {
     m_triggerResultHists[i]->Write(m_triggerResultHists[i]->GetName());
     m_triggerEmulatedHists[i]->Write(m_triggerEmulatedHists[i]->GetName());
-    // TGraphAsymmErrors eff = TGraphAsymmErrors(m_triggerEmulatedHists[i],
-    // m_triggerResultHists[i], "cp");
-    // eff.Write(("eff_" +
-    // std::string(m_triggerResultHists[i+1]->GetName())).c_str());
   }
 }
