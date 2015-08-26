@@ -64,7 +64,7 @@ def main():
 
             }
 
-    for rap_bin in rap_bins[0:]:
+    for rap_bin in rap_bins:
         print rap_bin
         xsnlo = nlofile.Get("{0}/CT10nlo_xs".format(rap_bin))
         # Fitting spectrum
@@ -89,22 +89,28 @@ def main():
         gen_binning_ptavg = ROOT.TH1D("gen_binning_ptavg","gen_binning_ptavg",len(pt_binning_gen)-1, array('d', pt_binning_gen))
         gen_binning_ptavg.Sumw2()
 
+
         h_recoptavg = ROOT.TH1D("h_recoptavg","h_recoptavg",len(pt_binning_reco)-1, array('d', pt_binning_reco))
         # h_recoptavg = ROOT.TH1D("h_recoptavg","h_recoptavg",100, 0, 5000)
         h_recoptavg.Sumw2()
         h_genptavg = ROOT.TH1D("h_genptavg","h_genptavg",len(pt_binning_gen)-1, array('d', pt_binning_gen))
         # h_genptavg = ROOT.TH1D("h_genptavg","h_genptavg", 100, 0, 5000.)
         h_genptavg.Sumw2()
+        h2_genvsreco = ROOT.TH2D("h2_genvsreco","h2_genvsreco",
+                                      len(pt_binning_gen)-1, array('d', pt_binning_gen),
+                                      len(pt_binning_gen)-1, array('d', pt_binning_gen))
+        h2_genvsreco.Sumw2()
 
 
 
-        response_ptavg = ROOT.RooUnfoldResponse(reco_binning_ptavg, gen_binning_ptavg)
+
+        # response_ptavg = ROOT.RooUnfoldResponse(reco_binning_ptavg, gen_binning_ptavg)
 
         nlo_fcn.SetRange(36., 3000.)
 
-        n_evts = 100000
+        n_evts = 1000000
         for i in xrange(n_evts):
-            pt_truth = ROOT.gRandom.Uniform(36.,3000)
+            pt_truth = ROOT.gRandom.Uniform(50.,3000)
             pt_smeared = smear_pt(rap_bin, pt_truth)
             w = nlo_fcn.Eval(pt_truth)
             if (w< 0.) or math.isnan(w):
@@ -115,23 +121,20 @@ def main():
             # if pt_truth > 62. and pt_smeared > 62.:
             # elif pt_truth > 62. and pt_smeared <=62.:
                 # response_ptavg.Miss(pt_truth, w)
-            if pt_truth <= 74. and pt_smeared <=74.:
-                continue
-            else:
-                response_ptavg.Fill(pt_smeared, pt_truth, w)
+            # if pt_truth <= 62. and pt_smeared <= 62.:
+                # response_ptavg.Miss(pt_truth, w)
+                # response_ptavg.Fake(pt_smeared,  w)
+                # h_recoptavg.Fill(pt_smeared, w)
+                # pass
+            # else:
+            h_genptavg.Fill(pt_truth, w)
+            h_recoptavg.Fill(pt_smeared, w)
+            h2_genvsreco.Fill(pt_smeared, pt_truth, w)
 
-                h_genptavg.Fill(pt_truth, w)
-                h_recoptavg.Fill(pt_smeared, w)
-
-        response_ptavg.Write('res_matrix_ptavg')
-        # h_recoptavg.Scale(1.0, "width")
         h_recoptavg.Write()
-        # h_genptavg.Scale(1.0, "width")
         h_genptavg.Write()
-        del response_ptavg
-        del h_recoptavg
-        del h_genptavg
-
+        response_ptavg = ROOT.RooUnfoldResponse(h_recoptavg, h_genptavg, h2_genvsreco)
+        response_ptavg.Write('res_matrix_ptavg')
 
     f.Close()
 

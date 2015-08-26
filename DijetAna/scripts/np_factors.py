@@ -24,10 +24,7 @@ def main():
     parser.add_argument('--input-mpihad', required=True, nargs='+', help='Path to root file with the distribution')
     parser.add_argument('--input-nompinohad', required=True, nargs='+', help='Path to root file with the distribution')
 
-
-
     args = vars(parser.parse_args())
-
 
     rap_bins = ['genptavg_yb_00_10_ys_00_10',
                 'genptavg_yb_00_10_ys_10_20',
