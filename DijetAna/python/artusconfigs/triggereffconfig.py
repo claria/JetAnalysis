@@ -1,7 +1,7 @@
-
 import copy
 import sys
 
+import numpy as np
 from baseconfig import BaseConfig
 
 class TriggerEffConfig(BaseConfig):
@@ -15,6 +15,8 @@ class TriggerEffConfig(BaseConfig):
 
 
     def modify_settings(self):
+
+        self['LogPtBinning'] = list(np.logspace(0, 3, 100))
 
         if 'filter:JetHltFilter' in self['Processors']:
             self['Processors'].remove('filter:JetHltFilter')
