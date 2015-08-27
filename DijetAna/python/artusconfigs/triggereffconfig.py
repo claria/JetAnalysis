@@ -22,7 +22,7 @@ class TriggerEffConfig(BaseConfig):
             self['Processors'].remove('filter:JetHltFilter')
 
         if self.is_data is True:
-            self['IntLuminosity']  = 19789.
+            self['IntLuminosity']  = 19712.
 
 
         default_pipeline = self.get_default_pipeline()

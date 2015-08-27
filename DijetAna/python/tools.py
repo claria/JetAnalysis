@@ -5,8 +5,8 @@ ROOT.gROOT.SetBatch(True)
 
 def get_root_object(filename, object_path='', option="READ"):
 
-    if ':' in filename and not object_path:
-        filename, object_path = filename.split(':')
+    if '?' in filename and not object_path:
+        filename, object_path = filename.split('?')
 
     rootfile = get_root_file(filename, option=option)
     obj = rootfile.Get(object_path)
