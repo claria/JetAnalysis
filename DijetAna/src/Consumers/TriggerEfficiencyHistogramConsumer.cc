@@ -25,12 +25,15 @@ void TriggerEfficiencyHistogramConsumer::Init(setting_type const& settings) {
   m_patternHltFilter = boost::regex(settings.GetHltFilterPattern());
 
   for (size_t i = 0; i != m_hltPaths.size(); ++i) {
-    m_triggerResultHists.push_back(new TH1F(m_hltPaths[i].c_str(), m_hltPaths[i].c_str(),
-                                            settings.GetLogPtBinning().size() - 1, &settings.GetLogPtBinning()[0]));
+    m_triggerResultHists.push_back(new TH1F(m_hltPaths[i].c_str(),
+                                            m_hltPaths[i].c_str(),
+                                            settings.GetLogPtBinning().size() - 1,
+                                            &settings.GetLogPtBinning()[0]));
     if (i < m_hltPaths.size() - 1) {
       m_triggerEmulatedHists.push_back(new TH1F(("emul_" + m_hltPaths[i + 1]).c_str(),
                                                 ("emul_" + m_hltPaths[i + 1]).c_str(),
-                                                settings.GetLogPtBinning().size() - 1, &settings.GetLogPtBinning()[0]));
+                                                settings.GetLogPtBinning().size() - 1,
+                                                &settings.GetLogPtBinning()[0]));
     }
   }
 
@@ -45,7 +48,8 @@ void TriggerEfficiencyHistogramConsumer::Init(setting_type const& settings) {
   }
 }
 
-void TriggerEfficiencyHistogramConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product,
+void TriggerEfficiencyHistogramConsumer::ProcessFilteredEvent(event_type const& event,
+                                                              product_type const& product,
                                                               setting_type const& settings) {
   // auto const& specEvent = static_cast < JetEvent const&> (event);
   auto const& specProduct = static_cast<JetProduct const&>(product);
@@ -71,7 +75,8 @@ void TriggerEfficiencyHistogramConsumer::ProcessFilteredEvent(event_type const& 
       // identify the l1 and hlt filter in all filters of the trigger path.
       LOG(DEBUG) << "Event contains the following filters.";
       for (size_t filterIndex = event.m_triggerObjectMetadata->getMinFilterIndex(hltPosition);
-           filterIndex < event.m_triggerObjectMetadata->getMaxFilterIndex(hltPosition); filterIndex++) {
+           filterIndex < event.m_triggerObjectMetadata->getMaxFilterIndex(hltPosition);
+           filterIndex++) {
         std::string filterName = event.m_triggerObjectMetadata->toFilter[filterIndex];
         LOG(DEBUG) << "Filtername: " << filterName << " Index " << filterIndex;
         if (boost::regex_search(filterName, m_patternL1Filter)) {
@@ -99,7 +104,8 @@ void TriggerEfficiencyHistogramConsumer::ProcessFilteredEvent(event_type const& 
       LOG(DEBUG) << "Trigger object pT: L1=" << event.m_triggerObjects->trgObjects[l1objIdx].p4.Pt() << " GeV "
                  << "HLT=" << event.m_triggerObjects->trgObjects[hltobjIdx].p4.Pt() << " GeV.";
       m_triggerResultHists[i]->Fill(triggerEffQuantity);
-      if (i < m_hltPaths.size() - 1) m_l1FilterThreshold = m_filterThresholds[m_hltPaths[i + 1]].first;
+      if (i < m_hltPaths.size() - 1)
+        m_l1FilterThreshold = m_filterThresholds[m_hltPaths[i + 1]].first;
       m_hltFilterThreshold = m_filterThresholds[m_hltPaths[i + 1]].second;
 
       if ((event.m_triggerObjects->trgObjects[l1objIdx].p4.Pt() > m_l1FilterThreshold) &&
@@ -110,13 +116,15 @@ void TriggerEfficiencyHistogramConsumer::ProcessFilteredEvent(event_type const& 
   }
 }
 
-double TriggerEfficiencyHistogramConsumer::GetL1FilterThreshold(event_type const& event, product_type const& product,
+double TriggerEfficiencyHistogramConsumer::GetL1FilterThreshold(event_type const& event,
+                                                                product_type const& product,
                                                                 std::string path) {
   size_t hltPosition = product.m_hltInfo.getHLTPosition(path);
   // std::cout << "TriggerEfficiencyHistogramConsumer::GetL1FilterThreshold" <<
   // "hltposition" << hltPosition;
   for (size_t filterIndex = event.m_triggerObjectMetadata->getMinFilterIndex(hltPosition);
-       filterIndex < event.m_triggerObjectMetadata->getMaxFilterIndex(hltPosition); filterIndex++) {
+       filterIndex < event.m_triggerObjectMetadata->getMaxFilterIndex(hltPosition);
+       filterIndex++) {
     std::string filterName = event.m_triggerObjectMetadata->toFilter[filterIndex];
     boost::smatch match;
 
@@ -127,11 +135,13 @@ double TriggerEfficiencyHistogramConsumer::GetL1FilterThreshold(event_type const
   return 0.;
 }
 
-double TriggerEfficiencyHistogramConsumer::GetHltFilterThreshold(event_type const& event, product_type const& product,
+double TriggerEfficiencyHistogramConsumer::GetHltFilterThreshold(event_type const& event,
+                                                                 product_type const& product,
                                                                  std::string path) {
   size_t hltPosition = product.m_hltInfo.getHLTPosition(path);
   for (size_t filterIndex = event.m_triggerObjectMetadata->getMinFilterIndex(hltPosition);
-       filterIndex < event.m_triggerObjectMetadata->getMaxFilterIndex(hltPosition); filterIndex++) {
+       filterIndex < event.m_triggerObjectMetadata->getMaxFilterIndex(hltPosition);
+       filterIndex++) {
     std::string filterName = event.m_triggerObjectMetadata->toFilter[filterIndex];
     boost::smatch match;
 

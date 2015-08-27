@@ -6,10 +6,10 @@ void GenYBoostFilter::Init(JetSettings const& settings) {
   maxGenYBoost = settings.GetMaxGenYBoost();
 }
 
-bool GenYBoostFilter::DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const {
-  if (product.m_gendijet_yboost >= minGenYBoost &&
-     product.m_gendijet_yboost < maxGenYBoost) 
-  {
+bool GenYBoostFilter::DoesEventPass(JetEvent const& event,
+                                    JetProduct const& product,
+                                    JetSettings const& settings) const {
+  if (product.m_gendijet_yboost >= minGenYBoost && product.m_gendijet_yboost < maxGenYBoost) {
     return true;
   }
   return false;

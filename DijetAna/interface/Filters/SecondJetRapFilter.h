@@ -7,8 +7,8 @@
 class SecondJetRapFilter : public JetFilterBase {
  public:
   virtual std::string GetFilterId() const { return "SecondJetRapFilter"; }
-  virtual void Init(JetSettings const &settings);
-  virtual bool DoesEventPass(JetEvent const &event, JetProduct const &product, JetSettings const &settings) const;
+  virtual void Init(JetSettings const& settings);
+  virtual bool DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const;
 
  private:
   double maxSecondJetAbsRap;

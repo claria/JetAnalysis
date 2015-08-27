@@ -6,5 +6,5 @@
 class DiJetsFilter : public JetFilterBase {
  public:
   virtual std::string GetFilterId() const { return "DiJetsFilter"; }
-  virtual bool DoesEventPass(JetEvent const &event, JetProduct const &product, JetSettings const &settings) const;
+  virtual bool DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const;
 };

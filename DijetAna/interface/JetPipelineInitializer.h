@@ -20,5 +20,5 @@
 
 class JetPipelineInitializer : public PipelineInitilizerBase<JetTypes> {
  public:
-  virtual void InitPipeline(JetPipeline *pLine, JetPipelineSettings const &pset) const override {}
+  virtual void InitPipeline(JetPipeline* pLine, JetPipelineSettings const& pset) const override {}
 };

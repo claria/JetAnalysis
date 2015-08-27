@@ -10,16 +10,17 @@
 void JetResolutionConsumer::Init(setting_type const& settings) {
   ConsumerBase<JetTypes>::Init(settings);
   RootFileHelper::SafeCd(settings.GetRootOutFile(), settings.GetRootFileFolder());
-  m_hGenVsRecoPt = new TH2D("hgenvsrecopt", "hgenvsrecopt", 100, 0.5, 1.5, settings.GetPtBinning().size() - 1,
-                            &settings.GetPtBinning()[0]);
+  m_hGenVsRecoPt = new TH2D(
+      "hgenvsrecopt", "hgenvsrecopt", 100, 0.5, 1.5, settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
 }
 
-void JetResolutionConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product,
+void JetResolutionConsumer::ProcessFilteredEvent(event_type const& event,
+                                                 product_type const& product,
                                                  setting_type const& settings) {
   double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
 
-  m_hGenVsRecoPt->Fill(product.m_validJets.at(0)->p4.Pt() / event.m_genJets->at(0).p4.Pt(),
-                       event.m_genJets->at(0).p4.Pt(), eventWeight);
+  m_hGenVsRecoPt->Fill(
+      product.m_validJets.at(0)->p4.Pt() / event.m_genJets->at(0).p4.Pt(), event.m_genJets->at(0).p4.Pt(), eventWeight);
 }
 
 void JetResolutionConsumer::Finish(setting_type const& settings) {
@@ -36,7 +37,8 @@ void JetResolutionConsumer::Finish(setting_type const& settings) {
     proj->Fit("gaus");
     std::cout << "failtest 0" << std::endl;
     TF1* gaussFunction = proj->GetFunction("gaus");
-    if (gaussFunction == NULL) continue;
+    if (gaussFunction == NULL)
+      continue;
     std::cout << "failtest 1" << std::endl;
     // double mu = gaussFunction->GetParameter(0);
     double sigma = gaussFunction->GetParameter(2);

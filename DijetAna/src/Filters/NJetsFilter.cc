@@ -1,8 +1,8 @@
 #include "JetAnalysis/DijetAna/interface/Filters/NJetsFilter.h"
 
-void NJetsFilter::Init(JetSettings const& settings) { 
+void NJetsFilter::Init(JetSettings const& settings) {
   JetFilterBase::Init(settings);
-  minValidJets = settings.GetMinValidJets(); 
+  minValidJets = settings.GetMinValidJets();
 }
 
 bool NJetsFilter::DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const {

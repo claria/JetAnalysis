@@ -7,8 +7,7 @@ void YStarFilter::Init(JetSettings const& settings) {
 }
 
 bool YStarFilter::DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const {
-  if (product.m_dijet_ystar >= minYStar &&
-      product.m_dijet_ystar < maxYStar) {
+  if (product.m_dijet_ystar >= minYStar && product.m_dijet_ystar < maxYStar) {
     return true;
   }
   return false;

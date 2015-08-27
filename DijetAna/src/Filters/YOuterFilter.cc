@@ -7,9 +7,7 @@ void YOuterFilter::Init(JetSettings const& settings) {
 }
 
 bool YOuterFilter::DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const {
-  if (product.m_dijet_youter >= minYOuter &&
-     product.m_dijet_youter < maxYOuter) 
-  {
+  if (product.m_dijet_youter >= minYOuter && product.m_dijet_youter < maxYOuter) {
     return true;
   }
   return false;

@@ -7,9 +7,7 @@ void YBoostFilter::Init(JetSettings const& settings) {
 }
 
 bool YBoostFilter::DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const {
-  if (product.m_dijet_yboost >= minYBoost &&
-     product.m_dijet_yboost < maxYBoost) 
-  {
+  if (product.m_dijet_yboost >= minYBoost && product.m_dijet_yboost < maxYBoost) {
     return true;
   }
   return false;

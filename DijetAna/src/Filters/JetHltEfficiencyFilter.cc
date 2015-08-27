@@ -1,7 +1,9 @@
 #include "JetAnalysis/DijetAna/interface/Filters/JetHltEfficiencyFilter.h"
 #include "JetAnalysis/DijetAna/interface/JetTypes.h"
 
-std::string JetHltEfficiencyFilter::GetFilterId() const { return "JetHltEfficiencyFilter"; }
+std::string JetHltEfficiencyFilter::GetFilterId() const {
+  return "JetHltEfficiencyFilter";
+}
 
 void JetHltEfficiencyFilter::Init(JetSettings const& settings) {
   JetFilterBase::Init(settings);
@@ -16,7 +18,8 @@ void JetHltEfficiencyFilter::Init(JetSettings const& settings) {
   }
 }
 
-bool JetHltEfficiencyFilter::DoesEventPass(JetEvent const& event, JetProduct const& product,
+bool JetHltEfficiencyFilter::DoesEventPass(JetEvent const& event,
+                                           JetProduct const& product,
                                            JetSettings const& settings) const {
   // TODO: Fix this by somehow adding the analysis specific quantities in the
   // beginning

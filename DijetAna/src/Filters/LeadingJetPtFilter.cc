@@ -6,7 +6,8 @@ void LeadingJetPtFilter::Init(JetSettings const& settings) {
   maxLeadingJetPt = settings.GetMaxLeadingJetPt();
 }
 
-bool LeadingJetPtFilter::DoesEventPass(JetEvent const& event, JetProduct const& product,
+bool LeadingJetPtFilter::DoesEventPass(JetEvent const& event,
+                                       JetProduct const& product,
                                        JetSettings const& settings) const {
   if ((product.m_jet1Pt >= minLeadingJetPt) && product.m_jet1Pt < maxLeadingJetPt) {
     return true;

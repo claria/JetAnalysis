@@ -6,7 +6,8 @@ void DijetsRapFilter::Init(JetSettings const& settings) {
   maxDijetsAbsRap = settings.GetMaxDijetsAbsRap();
 }
 
-bool DijetsRapFilter::DoesEventPass(JetEvent const& event, JetProduct const& product,
+bool DijetsRapFilter::DoesEventPass(JetEvent const& event,
+                                    JetProduct const& product,
                                     JetSettings const& settings) const {
   bool pass = false;
   if ((std::abs(product.m_validJets.at(0)->p4.Rapidity()) >= minDijetsAbsRap) &&

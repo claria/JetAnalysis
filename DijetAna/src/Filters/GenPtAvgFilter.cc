@@ -6,9 +6,10 @@ void GenPtAvgFilter::Init(JetSettings const& settings) {
   maxGenPtAvg = settings.GetMaxGenPtAvg();
 }
 
-bool GenPtAvgFilter::DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const {
-  if ((product.m_gendijet_ptavg >= minGenPtAvg) && product.m_gendijet_ptavg < maxGenPtAvg) 
-  {
+bool GenPtAvgFilter::DoesEventPass(JetEvent const& event,
+                                   JetProduct const& product,
+                                   JetSettings const& settings) const {
+  if ((product.m_gendijet_ptavg >= minGenPtAvg) && product.m_gendijet_ptavg < maxGenPtAvg) {
     return true;
   }
   return false;

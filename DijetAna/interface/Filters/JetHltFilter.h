@@ -7,5 +7,5 @@
 class JetHltFilter : public JetFilterBase {
  public:
   virtual std::string GetFilterId() const;
-  virtual bool DoesEventPass(JetEvent const &event, JetProduct const &product, JetSettings const &settings) const;
+  virtual bool DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const;
 };

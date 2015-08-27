@@ -1,6 +1,8 @@
 #include "JetAnalysis/DijetAna/interface/Producers/JetQuantitiesProducer.h"
 
-std::string JetQuantitiesProducer::GetProducerId() const { return "JetQuantitiesProducer"; }
+std::string JetQuantitiesProducer::GetProducerId() const {
+  return "JetQuantitiesProducer";
+}
 
 void JetQuantitiesProducer::Produce(JetEvent const& event, JetProduct& product, JetSettings const& settings) const {
   auto& jetProduct = static_cast<JetProduct&>(product);

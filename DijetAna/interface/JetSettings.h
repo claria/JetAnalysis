@@ -17,7 +17,6 @@ class JetSettings : public KappaSettings {
   IMPL_SETTING_DEFAULT(double, MinValidGenJetAbsRap, std::numeric_limits<double>::lowest())
   IMPL_SETTING_DEFAULT(double, MaxValidGenJetAbsRap, std::numeric_limits<double>::max())
 
-
   // Number of minimum required valid jets
   IMPL_SETTING_DEFAULT(int, MinValidJets, 0)
   IMPL_SETTING_DEFAULT(int, MinValidGenJets, 0)

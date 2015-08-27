@@ -10,12 +10,12 @@ class DiJetsPtFilter : public JetFilterBase {
 
   virtual std::string GetFilterId() const { return "DiJetsPtFilter"; }
 
-  virtual void Init(JetSettings const &settings) {
+  virtual void Init(JetSettings const& settings) {
     JetFilterBase::Init(settings);
     minJetPtCut = settings.GetMinJetPtCut();
   }
 
-  virtual bool DoesEventPass(JetEvent const &event, JetProduct const &product, JetSettings const &settings) const {
+  virtual bool DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const {
     bool pass = false;
 
     if (product.m_validJets.at(0)->p4.Pt() >= minJetPtCut && product.m_validJets.at(1)->p4.Pt() >= minJetPtCut) {

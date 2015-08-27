@@ -44,8 +44,10 @@
 #include "JetAnalysis/DijetAna/interface/Consumers/JetUnfoldingResponseConsumer.h"
 // #include "JetAnalysis/DijetAna/interface/Consumers/TriggerHistogramFitConsumer.h"
 
-JetFactory::JetFactory() : KappaFactory() {}
-JetFactory::~JetFactory() {}
+JetFactory::JetFactory() : KappaFactory() {
+}
+JetFactory::~JetFactory() {
+}
 
 ProducerBaseUntemplated* JetFactory::createProducer(std::string const& id) {
   if (JetQuantitiesProducer().GetProducerId() == id)

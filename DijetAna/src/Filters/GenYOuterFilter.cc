@@ -6,10 +6,10 @@ void GenYOuterFilter::Init(JetSettings const& settings) {
   maxGenYOuter = settings.GetMaxGenYOuter();
 }
 
-bool GenYOuterFilter::DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const {
-  if (product.m_gendijet_youter >= minGenYOuter &&
-     product.m_gendijet_youter < maxGenYOuter) 
-  {
+bool GenYOuterFilter::DoesEventPass(JetEvent const& event,
+                                    JetProduct const& product,
+                                    JetSettings const& settings) const {
+  if (product.m_gendijet_youter >= minGenYOuter && product.m_gendijet_youter < maxGenYOuter) {
     return true;
   }
   return false;

@@ -7,9 +7,7 @@ void YInnerFilter::Init(JetSettings const& settings) {
 }
 
 bool YInnerFilter::DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const {
-  if (product.m_dijet_yinner >= minYInner &&
-     product.m_dijet_yinner < maxYInner) 
-  {
+  if (product.m_dijet_yinner >= minYInner && product.m_dijet_yinner < maxYInner) {
     return true;
   }
   return false;

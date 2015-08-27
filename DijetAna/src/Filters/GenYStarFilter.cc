@@ -6,9 +6,10 @@ void GenYStarFilter::Init(JetSettings const& settings) {
   maxGenYStar = settings.GetMaxGenYStar();
 }
 
-bool GenYStarFilter::DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const {
-  if (product.m_gendijet_ystar >= minGenYStar &&
-      product.m_gendijet_ystar < maxGenYStar) {
+bool GenYStarFilter::DoesEventPass(JetEvent const& event,
+                                   JetProduct const& product,
+                                   JetSettings const& settings) const {
+  if (product.m_gendijet_ystar >= minGenYStar && product.m_gendijet_ystar < maxGenYStar) {
     return true;
   }
   return false;

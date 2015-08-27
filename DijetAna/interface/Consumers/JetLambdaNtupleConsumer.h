@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "Artus/KappaAnalysis/interface/Consumers/KappaLambdaNtupleConsumer.h"
 
 #include "../JetTypes.h"
@@ -12,5 +11,5 @@ class JetLambdaNtupleConsumer : public KappaLambdaNtupleConsumer<JetTypes> {
   typedef typename JetTypes::setting_type setting_type;
 
   //	virtual std::string GetConsumerId() const override;
-  virtual void Init(setting_type const &settings) override;
+  virtual void Init(setting_type const& settings) override;
 };

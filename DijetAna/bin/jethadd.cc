@@ -75,7 +75,7 @@
 #include "TFileMerger.h"
 
 //___________________________________________________________________________
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   if (argc < 3 || "-h" == std::string(argv[1]) || "--help" == std::string(argv[1])) {
     std::cout << "Usage: " << argv[0] << " [-f[0-9]] [-k] [-T] [-O] [-n maxopenedfiles] [-v verbosity] "
                                          "targetfile source1 [source2 source3 ...]" << std::endl;
@@ -184,7 +184,7 @@ int main(int argc, char **argv) {
 
   gSystem->Load("libTreePlayer");
 
-  const char *targetname = 0;
+  const char* targetname = 0;
   if (outputPlace) {
     targetname = argv[outputPlace];
   } else {

@@ -7,8 +7,7 @@ void PtAvgFilter::Init(JetSettings const& settings) {
 }
 
 bool PtAvgFilter::DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const {
-  if ((product.m_dijet_ptavg >= minPtAvg) && product.m_dijet_ptavg < maxPtAvg) 
-  {
+  if ((product.m_dijet_ptavg >= minPtAvg) && product.m_dijet_ptavg < maxPtAvg) {
     return true;
   }
   return false;

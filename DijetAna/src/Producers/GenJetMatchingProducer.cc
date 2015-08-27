@@ -1,7 +1,9 @@
 #include "JetAnalysis/DijetAna/interface/Producers/GenJetMatchingProducer.h"
 #include <KappaTools/RootTools/Matching.h>
 
-std::string GenJetMatchingProducer::GetProducerId() const { return "GenJetMatchingProducer"; }
+std::string GenJetMatchingProducer::GetProducerId() const {
+  return "GenJetMatchingProducer";
+}
 
 void GenJetMatchingProducer::Init(JetSettings const& settings) {
   maxDeltaR = settings.GetMaxDeltaR();
@@ -14,12 +16,13 @@ void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct& product,
   // Produce matched genjets to vector of valid reco jets
   //
   std::vector<KBasicJet> validJets;
-  for (auto jet : product.m_validJets) validJets.push_back(*jet);
+  for (auto jet : product.m_validJets)
+    validJets.push_back(*jet);
 
   static matchSort_deltaRdeltaPtRel metric(maxDeltaR, maxDeltaPtRel);
 
-  std::vector<int> match_result_genjets = matchSort_Matrix<KLV, KBasicJet>(*(event.m_genJets), event.m_genJets->size(),
-                                                                           validJets, validJets.size(), metric);
+  std::vector<int> match_result_genjets = matchSort_Matrix<KLV, KBasicJet>(
+      *(event.m_genJets), event.m_genJets->size(), validJets, validJets.size(), metric);
   std::vector<int> match_result_recojets = matchSort_Matrix<KBasicJet, KLV>(
       validJets, validJets.size(), *(event.m_genJets), event.m_genJets->size(), metric);
 
@@ -30,7 +33,6 @@ void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct& product,
 
   product.m_matchedGenJets.resize(product.m_validJets.size());
   product.m_matchedRecoJets.resize(event.m_genJets->size());
-
 
   for (std::vector<KBasicJet*>::iterator validJet = product.m_validJets.begin(); validJet != product.m_validJets.end();
        ++validJet) {
@@ -48,5 +50,4 @@ void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct& product,
     else
       product.m_matchedRecoJets.at(idx) = product.m_validJets.at(match_result_recojets[idx]);
   }
-
 }

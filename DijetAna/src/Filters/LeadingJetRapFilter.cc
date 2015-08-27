@@ -6,7 +6,8 @@ void LeadingJetRapFilter::Init(JetSettings const& settings) {
   maxLeadingJetAbsRap = settings.GetMaxLeadingJetAbsRap();
 }
 
-bool LeadingJetRapFilter::DoesEventPass(JetEvent const& event, JetProduct const& product,
+bool LeadingJetRapFilter::DoesEventPass(JetEvent const& event,
+                                        JetProduct const& product,
                                         JetSettings const& settings) const {
   bool pass = false;
   if ((std::abs(product.m_validJets.at(0)->p4.Rapidity()) >= minLeadingJetAbsRap) &&

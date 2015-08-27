@@ -12,8 +12,6 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_hltPosition = new TH1D("h_hltPosition", "h_hltPosition", 11, -0.5, 10.5);
   m_h_hltPosition->Sumw2();
 
-
-
   // Leading Jet histograms
   m_h_jet1pt = new TH1D("h_jet1pt", "h_jet1pt", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   m_h_jet1pt->Sumw2();
@@ -33,8 +31,6 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_METSumEtRatio = new TH1D("h_METSumEtRatio", "h_METSumEtRatio", 50, 0.0, 1.0);
   m_h_METSumEtRatio->Sumw2();
 
-
-
   // Inclusive Jets
   m_h_incjetpt = new TH1D("h_incjetpt", "h_incjetpt", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   m_h_incjetpt->Sumw2();
@@ -46,36 +42,51 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   // m_h_pt12 = new TH1D("h_pt12", "h_jet12pt", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   // m_h_pt12->Sumw2();
 
-
   // 2D histograms
-  m_h2_yb_ys = new TH2D("h2_yb_ys", "h2_yb_ys", settings.GetRapidityAbsBinning().size() - 1,
-                           &settings.GetRapidityAbsBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
-                           &settings.GetRapidityAbsBinning()[0]);
+  m_h2_yb_ys = new TH2D("h2_yb_ys",
+                        "h2_yb_ys",
+                        settings.GetRapidityAbsBinning().size() - 1,
+                        &settings.GetRapidityAbsBinning()[0],
+                        settings.GetRapidityAbsBinning().size() - 1,
+                        &settings.GetRapidityAbsBinning()[0]);
   m_h2_yb_ys->Sumw2();
   // Dijet rapidity distribution for two leading jets
-  m_h2_y12 = new TH2D("h2_y12", "h2_y12", settings.GetFineRapidityBinning().size() -1,
-                           &settings.GetFineRapidityBinning()[0], settings.GetFineRapidityBinning().size() - 1,
-                           &settings.GetFineRapidityBinning()[0]);
+  m_h2_y12 = new TH2D("h2_y12",
+                      "h2_y12",
+                      settings.GetFineRapidityBinning().size() - 1,
+                      &settings.GetFineRapidityBinning()[0],
+                      settings.GetFineRapidityBinning().size() - 1,
+                      &settings.GetFineRapidityBinning()[0]);
   m_h2_y12->Sumw2();
 
-
-
   // Triple differential histogram
-  m_h3_jet12rap = new TH3D("h3_jet12rap", "h3_jet12rap", settings.GetRapidityBinning().size() - 1,
-                           &settings.GetRapidityBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
-                           &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffPtBinning().size() - 1,
+  m_h3_jet12rap = new TH3D("h3_jet12rap",
+                           "h3_jet12rap",
+                           settings.GetRapidityBinning().size() - 1,
+                           &settings.GetRapidityBinning()[0],
+                           settings.GetRapidityAbsBinning().size() - 1,
+                           &settings.GetRapidityAbsBinning()[0],
+                           settings.GetTripleDiffPtBinning().size() - 1,
                            &settings.GetTripleDiffPtBinning()[0]);
   m_h3_jet12rap->Sumw2();
 
-  m_h3_ptavg_yio = new TH3D("h3_ptavg_yio", "h3_ptavg_yio", settings.GetRapidityBinning().size() - 1,
-                            &settings.GetRapidityBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
-                            &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffPtBinning().size() - 1,
+  m_h3_ptavg_yio = new TH3D("h3_ptavg_yio",
+                            "h3_ptavg_yio",
+                            settings.GetRapidityBinning().size() - 1,
+                            &settings.GetRapidityBinning()[0],
+                            settings.GetRapidityAbsBinning().size() - 1,
+                            &settings.GetRapidityAbsBinning()[0],
+                            settings.GetTripleDiffPtBinning().size() - 1,
                             &settings.GetTripleDiffPtBinning()[0]);
   m_h3_ptavg_yio->Sumw2();
 
-  m_h3_ptavg_ysb = new TH3D("h3_ptavg_ysb", "h3_ptavg_ysb", settings.GetRapidityAbsBinning().size() - 1,
-                            &settings.GetRapidityAbsBinning()[0], settings.GetRapidityAbsBinning().size() - 1,
-                            &settings.GetRapidityAbsBinning()[0], settings.GetTripleDiffPtBinning().size() - 1,
+  m_h3_ptavg_ysb = new TH3D("h3_ptavg_ysb",
+                            "h3_ptavg_ysb",
+                            settings.GetRapidityAbsBinning().size() - 1,
+                            &settings.GetRapidityAbsBinning()[0],
+                            settings.GetRapidityAbsBinning().size() - 1,
+                            &settings.GetRapidityAbsBinning()[0],
+                            settings.GetTripleDiffPtBinning().size() - 1,
                             &settings.GetTripleDiffPtBinning()[0]);
   m_h3_ptavg_ysb->Sumw2();
 
@@ -90,7 +101,8 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_nCharged = new TH1D("h_nCharged", "h_nCharged", 250, -0.5, 249.5);
 }
 
-void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event, product_type const& product,
+void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event,
+                                                          product_type const& product,
                                                           setting_type const& settings) {
   // Event Weight
   double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
@@ -120,13 +132,19 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
     m_h2_y12->Fill(product.m_jet1Rap, product.m_jet2Rap, eventWeight);
 
     // Fill double with inverted jet 1<->2
-    m_h3_jet12rap->Fill(boost::math::sign(product.m_jet1Rap) * product.m_jet2Rap, std::abs(product.m_jet1Rap),
-                        product.m_jet1Pt, eventWeight);
-    m_h3_jet12rap->Fill(boost::math::sign(product.m_jet2Rap) * product.m_jet1Rap, std::abs(product.m_jet2Rap),
-                        product.m_jet2Pt, eventWeight);
+    m_h3_jet12rap->Fill(boost::math::sign(product.m_jet1Rap) * product.m_jet2Rap,
+                        std::abs(product.m_jet1Rap),
+                        product.m_jet1Pt,
+                        eventWeight);
+    m_h3_jet12rap->Fill(boost::math::sign(product.m_jet2Rap) * product.m_jet1Rap,
+                        std::abs(product.m_jet2Rap),
+                        product.m_jet2Pt,
+                        eventWeight);
 
     m_h3_ptavg_yio->Fill(boost::math::sign(product.m_dijet_yinner) * product.m_dijet_youter,
-                         std::abs(product.m_dijet_yinner), product.m_dijet_ptavg, eventWeight);
+                         std::abs(product.m_dijet_yinner),
+                         product.m_dijet_ptavg,
+                         eventWeight);
     m_h3_ptavg_ysb->Fill(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg, eventWeight);
   }
 

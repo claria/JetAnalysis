@@ -6,10 +6,10 @@ void LeadingGenJetPtFilter::Init(JetSettings const& settings) {
   maxLeadingGenJetPt = settings.GetMaxLeadingGenJetPt();
 }
 
-bool LeadingGenJetPtFilter::DoesEventPass(JetEvent const& event, JetProduct const& product,
-                                       JetSettings const& settings) const {
-  if ((product.m_genjet1Pt >= minLeadingGenJetPt) &&
-      (product.m_genjet1Pt < maxLeadingGenJetPt)) {
+bool LeadingGenJetPtFilter::DoesEventPass(JetEvent const& event,
+                                          JetProduct const& product,
+                                          JetSettings const& settings) const {
+  if ((product.m_genjet1Pt >= minLeadingGenJetPt) && (product.m_genjet1Pt < maxLeadingGenJetPt)) {
     return true;
   }
   return false;
