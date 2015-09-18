@@ -44,6 +44,7 @@ class GenConfig(BaseConfig):
 
         default_pipeline = self.get_default_pipeline()
         default_pipeline['Consumers'] =  [
+                                  'cutflow_histogram',
                                   'GenJetQuantitiesHistogramConsumer',
                                   ]
 
