@@ -57,6 +57,8 @@ def main():
                         help="Write config to file. If not specified temp file is used.")
     parser.add_argument("-b", "--batch", default=False, action="store_true",
                         help="Submit to batch system using gc.")
+    parser.add_argument("--files-per-job", default=20, type=int,
+                        help="Process n files per job.")
     parser.add_argument("--log-level", default="info",
                         help="Log level.")
 
@@ -84,6 +86,7 @@ def main():
         work_directory = '/nfs/dust/cms/user/gsieber/ARTUS'
         project_directory = prepare_gc_input(args['input_files'], 
                                              config=args['config'], 
+                                             files_per_job=args['files_per_job'],
                                              work_directory=work_directory)
 
         gc_command = os.path.expandvars('$HOME/grid-control/go.py')
@@ -137,8 +140,6 @@ def main():
                     log.info("Config written to \"{0}\"".format(path))
                     log.error("Error in called program.")
                     sys.exit(1)
-
-
 
 
 def get_tty_fg():
@@ -266,7 +267,7 @@ def write_dbsfile(filelist, path=None, work_directory=None):
     log.debug('Wrote dbs file to work directory.')
 
 
-def prepare_gc_input(filelist, config, work_directory):
+def prepare_gc_input(filelist, config, work_directory, files_per_job=20):
     """Prepare gridcontrol configs and work directory."""
 
     date_now = datetime.now().strftime("%Y-%m-%d_%H-%M")
@@ -303,6 +304,7 @@ def prepare_gc_input(filelist, config, work_directory):
     replace_dict['DBS_PATH'] = dbs_filepath
     replace_dict['CONFIG'] = config
     replace_dict['PROJECT_DIR'] = project_directory
+    replace_dict['FILES_PER_JOB'] = str(files_per_job)
     replace(gc_config_path, replace_dict)
 
     return project_directory
