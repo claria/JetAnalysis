@@ -3,7 +3,7 @@ import copy
 import numpy as np
 from ConfigParser import RawConfigParser
 
-def get_pt_binning(ybys_bin)
+def get_pt_binning(ybys_bin):
 
     pt_binning = {
             'yb0ys0' : [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116],
