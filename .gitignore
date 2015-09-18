@@ -1,3 +1,6 @@
+#
+DijetAna/python/pep8.py
+DijetAna/scripts/autopep8.py
 # vim
 *.swp
 # CMSSW
