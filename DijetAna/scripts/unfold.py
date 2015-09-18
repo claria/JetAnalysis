@@ -3,6 +3,7 @@
 import os
 import sys
 import argparse
+import array
 
 import ROOT
 import math
@@ -99,7 +100,10 @@ def main():
     ROOT.gDirectory.cd(output_path)
  
     # datafile.cd()
-    recotruth_histo.Write(measured_histo.GetName())
+    recotruth_histo.Write('unf_{0}'.format(measured_histo.GetName()))
+    recotruth_histo_binedges = array.array("d", [recotruth_histo.GetBinLowEdge(i+1) for i in xrange(recotruth_histo.GetNbinsX() +1)])
+    recotruth_histo_rebinned = recotruth_histo.Rebin(len(recotruth_histo_binedges)-1, "{0}_rebinned".format(measured_histo.GetName()), recotruth_histo_binedges)
+    recotruth_histo_rebinned.Write()
     response_matrix.Hmeasured().Write()
     response_matrix.Htruth().Write()
     response_matrix.Hresponse().Write()
