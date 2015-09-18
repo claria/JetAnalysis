@@ -30,7 +30,7 @@ echo "---------------------------------"
 echo "Running with the following config"
 echo "---------------------------------"
 # $FILE_NAMES=echo "${FILE_NAMES//\"}"
-dijetana.py -i ${FILE_NAMES//\"} --save-config config.json -c $CONFIG --log-level debug 2>&1 | tee out.log
+dijetana.py -i ${FILE_NAMES//\"} --save-config config.json -c $CONFIG --log-level info 2>&1 | tee out.log
 
 RC=${PIPESTATUS[0]}
 if [ ${RC} -eq 0 ]
