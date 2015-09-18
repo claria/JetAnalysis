@@ -30,14 +30,16 @@ def main():
         sample_summary[sample] = sample_summary[sample].split(',')
 
     all_dirs = [d for d in os.listdir(args['output_folder']) if os.path.isdir(os.path.join(args['output_folder'], d))]
+    print 'all dirs', all_dirs
 
     mergedict = {}
     for sample in sample_summary:
         for subsample in sample_summary[sample]:
             for dir in all_dirs:
-                if subsample in dir:
+                if subsample == dir:
                     if not sample in  mergedict:
                         mergedict[sample] = []
+                    print 'globbing with ', args['output_folder'], "{0}/*.root".format(dir)
                     mergedict[sample] += glob.glob(os.path.join(args['output_folder'], "{0}/*.root".format(dir)))
 
     if args['list_nicks']:
