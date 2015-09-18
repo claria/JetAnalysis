@@ -10,9 +10,20 @@ class JECConfig(RunConfig):
     def modify_settings(self):
         super(JECConfig, self).modify_settings()
         default_pipeline = self.get_default_pipeline()
-        default_pipeline['Processors'] = self['Processors'] + default_pipeline['Processors']
-        default_pipeline['Processors'].insert(2, 'producer:JetCorrectionsUncertaintyProducer')
         self['Processors'] = []
+        default_pipeline['Processors'] = [
+                "filter:JsonFilter", 
+                "producer:JetCorrectionsProducer", 
+                "producer:JetCorrectionsUncertaintyProducer", 
+                "producer:ValidJetsProducer", 
+                "producer:LuminosityWeightProducer", 
+                "producer:EventWeightProducer", 
+                "producer:JetHltProducer", 
+                "filter:JetHltFilter",
+                "filter:NJetsFilter", 
+                "producer:JetQuantitiesProducer", 
+                ]
+
 
     def expand_pipelines(self):
 
@@ -44,8 +55,8 @@ class JECConfig(RunConfig):
                 # reco pipelines
                 pipeline_name = 'yb{0}ys{1}'.format(i, j)
                 self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
-                self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YStarFilter')
-                self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YBoostFilter')
+                self['Pipelines'][pipeline_name]['Processors'].insert(self['Pipelines'][pipeline_name]['Processors'].index('producer:JetQuantitiesProducer') + 1,'filter:YBoostFilter')
+                self['Pipelines'][pipeline_name]['Processors'].insert(self['Pipelines'][pipeline_name]['Processors'].index('producer:JetQuantitiesProducer') + 1,'filter:YStarFilter')
                 self['Pipelines'][pipeline_name]['MinYStar'] = ys_lo
                 self['Pipelines'][pipeline_name]['MaxYStar'] = ys_hi
                 self['Pipelines'][pipeline_name]['MinYBoost'] = yb_lo
