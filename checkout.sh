@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # set -e
-set -x
+trap 'echo "# $BASH_COMMAND"' DEBUG
 shopt -s expand_aliases
 
 # Checkout script for the dijet analysis.
