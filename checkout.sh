@@ -7,7 +7,7 @@ set -e
 # Prepares a CMSSW area, checks out and compiles all neccessary packages.
 
 # Setup a scram env
-scramenv
+. $VO_CMS_SW_DIR/cmsset_default.sh
 
 # Setup CMSSW env
 scram project CMSSW_7_2_3
