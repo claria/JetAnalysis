@@ -13,10 +13,13 @@ shopt -s expand_aliases
 
 # Setup CMSSW env
 scram project CMSSW_7_2_3
-
-cd CMSSW_7_2_3
+cd CMSSW_7_2_3/src
 cmsenv
-cd src
+
+# Need git credentials for cms package chekout
+git config --global user.name 'Georg Sieber'
+git config --global user.email 'sieber@cern.ch'
+git config --global user.github 'claria'
 
 git-cms-addpkg CondFormats/JetMETObjects
 git-cms-addpkg RecoLuminosity
