@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+# set -e
 set -x
 shopt -s expand_aliases
 
