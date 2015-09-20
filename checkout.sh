@@ -13,7 +13,9 @@ set -x
 # Setup CMSSW env
 scram project CMSSW_7_2_3
 
-cd CMSSW_7_2_3/src
+cd CMSSW_7_2_3
+cmsenv
+cd src
 
 git-cms-addpkg CondFormats/JetMETObjects
 git-cms-addpkg RecoLuminosity
