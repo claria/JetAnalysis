@@ -25,27 +25,27 @@ git-cms-addpkg CondFormats/JetMETObjects
 git-cms-addpkg RecoLuminosity
 
 # Checkout development branch of Kappa
-git clone -b development git@github.com:KappaAnalysis/Kappa.git Kappa
+git clone -b development https://github.com/KappaAnalysis/Kappa.git Kappa
 make -C Kappa/DataFormats/test/ -j4
 
 # Checkout master of KappaTools
-git clone git@github.com:KappaAnalysis/KappaTools.git KappaTools
+git clone https://github.com/KappaAnalysis/KappaTools.git KappaTools
 make -C KappaTools -j4
 
 # Checkout master of Artus
-git clone git@github.com:artus-analysis/Artus.git
+git clone https://github.com/artus-analysis/Artus.git Artus
 
 # Checkout master of DijetAna
 if [ "$TRAVIS" = true ] ; then
-  git clone git@github.com:claria/JetAnalysis.git JetAnalysis
-else
-  git clone --branch ${TRAVIS_BRANCH} git@github.com:claria/JetAnalysis.git JetAnalysis
+  git clone --branch ${TRAVIS_BRANCH} https://github.com/claria/JetAnalysis.git JetAnalysis
   cd JetAnalysis && git checkout -qf ${TRAVIS_COMMIT} && cd ..
+else
+  git clone https://github.com/claria/JetAnalysis.git JetAnalysis
 fi
 
 # JetAnalysis needs RooUnfold for the Unfolding part
 
-git clone git@github.com:skluth/RooUnfold.git RooUnfold
+git clone https://github.com/skluth/RooUnfold.git RooUnfold
 make -C RooUnfold -j4
 
 # Moving the tool files for the parts not built within scram
