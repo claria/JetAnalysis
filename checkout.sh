@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -x
 
 # Checkout script for the dijet analysis.
 #
@@ -13,8 +14,6 @@ set -e
 scram project CMSSW_7_2_3
 
 cd CMSSW_7_2_3/src
-
-cmsenv
 
 git-cms-addpkg CondFormats/JetMETObjects
 git-cms-addpkg RecoLuminosity
