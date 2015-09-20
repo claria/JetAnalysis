@@ -2,6 +2,7 @@
 
 set -e
 set -x
+shopt -s expand_aliases
 
 # Checkout script for the dijet analysis.
 #
