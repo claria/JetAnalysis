@@ -62,5 +62,4 @@ scram setup roounfold
 cmsenv
 
 # Build the stuff
-scram b -j4
-
+scram b -j4o

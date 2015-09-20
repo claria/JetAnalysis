@@ -1,8 +1,7 @@
 #!/bin/sh
 
-set -x
 set -e
-
+trap 'echo "# $BASH_COMMAND"' DEBUG
 
 # Mount cvmfs
 /etc/cvmfs/run-cvmfs.sh
