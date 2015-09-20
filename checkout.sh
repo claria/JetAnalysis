@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -e
 
 # Checkout script for the dijet analysis.
 #
@@ -30,7 +31,12 @@ make -C KappaTools -j4
 git clone git@github.com:artus-analysis/Artus.git
 
 # Checkout master of DijetAna
-git clone git@github.com:claria/JetAnalysis.git JetAnalysis
+if [ "$TRAVIS" = true ] ; then
+  git clone git@github.com:claria/JetAnalysis.git JetAnalysis
+else
+  git clone --branch ${TRAVIS_BRANCH} git@github.com:claria/JetAnalysis.git JetAnalysis
+  cd JetAnalysis && git checkout -qf ${TRAVIS_COMMIT} && cd ..
+fi
 
 # JetAnalysis needs RooUnfold for the Unfolding part
 
