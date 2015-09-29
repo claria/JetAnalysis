@@ -108,9 +108,9 @@ def main():
 
         nlo_fcn.SetRange(36., 3000.)
 
-        n_evts = 1000000
+        n_evts = 10000000
         for i in xrange(n_evts):
-            pt_truth = ROOT.gRandom.Uniform(50.,3000)
+            pt_truth = ROOT.gRandom.Uniform(40.,3000)
             pt_smeared = smear_pt(rap_bin, pt_truth)
             w = nlo_fcn.Eval(pt_truth)
             if (w< 0.) or math.isnan(w):
@@ -118,17 +118,10 @@ def main():
             # if pt_smeared < 62.:
                 # response_ptavg.Miss(pt_truth, w)
             # else:
-            # if pt_truth > 62. and pt_smeared > 62.:
-            # elif pt_truth > 62. and pt_smeared <=62.:
-                # response_ptavg.Miss(pt_truth, w)
-            # if pt_truth <= 62. and pt_smeared <= 62.:
-                # response_ptavg.Miss(pt_truth, w)
-                # response_ptavg.Fake(pt_smeared,  w)
-                # h_recoptavg.Fill(pt_smeared, w)
-                # pass
-            # else:
-            h_genptavg.Fill(pt_truth, w)
-            h_recoptavg.Fill(pt_smeared, w)
+            if pt_truth > 62.:
+                h_genptavg.Fill(pt_truth, w)
+            if pt_smeared > 62.:
+                h_recoptavg.Fill(pt_smeared, w)
             h2_genvsreco.Fill(pt_smeared, pt_truth, w)
 
         h_recoptavg.Write()
