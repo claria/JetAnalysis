@@ -63,6 +63,7 @@ class RunConfig(BaseConfig):
             gen_default_pipeline['Processors'].append('filter:NGenJetsFilter')
             gen_default_pipeline['Processors'].append('filter:LeadingGenJetPtFilter')
             gen_default_pipeline['Consumers'].append('GenJetQuantitiesHistogramConsumer')
+            default_pipeline['Consumers'].append('GenJetQuantitiesHistogramConsumer')
             gen_default_pipeline['Quantities'] += ['genjet1_pt',
                                                    'genjet1_eta',
                                                    'genjet1_rap',
