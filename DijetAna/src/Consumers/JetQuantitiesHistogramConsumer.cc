@@ -38,9 +38,14 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   // Pt Avg
   m_h_ptavg = new TH1D("h_ptavg", "h_ptavg", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   m_h_ptavg->Sumw2();
+  // Dijet delta Phi
+  m_h_jet12dphi = new TH1D("h_jet12dphi", "h_jet12dphi", 36, -3.2, 3.2);
+  m_h_jet12dphi->Sumw2();
   // Jet12 Pt
-  // m_h_pt12 = new TH1D("h_pt12", "h_jet12pt", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
-  // m_h_pt12->Sumw2();
+  m_h2_jet12PtRVsPtavg = new TH2D("h2_jet12ptrvsptavg", "h2_jet12ptrvsptavg",
+                        50, 0.0, 1.0, 
+                        settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
+  m_h2_jet12PtRVsPtavg->Sumw2();
 
   // 2D histograms
   m_h2_yb_ys = new TH2D("h2_yb_ys",
@@ -131,6 +136,9 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
     m_h2_yb_ys->Fill(product.m_dijet_yboost, product.m_dijet_ystar, eventWeight);
     m_h2_y12->Fill(product.m_jet1Rap, product.m_jet2Rap, eventWeight);
 
+    m_h_jet12dphi->Fill(product.m_dijet_deltaPhi, eventWeight);
+    m_h2_jet12PtRVsPtavg->Fill(product.m_dijet_jet12PtRatio, product.m_dijet_ptavg, eventWeight);
+
     // Fill double with inverted jet 1<->2
     m_h3_jet12rap->Fill(boost::math::sign(product.m_jet1Rap) * product.m_jet2Rap,
                         std::abs(product.m_jet1Rap),
@@ -181,13 +189,15 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   m_h_incjetpt->Write();
 
   m_h_ptavg->Write();
+  m_h_jet12dphi->Write();
+  m_h2_jet12PtRVsPtavg->Write();
 
   m_h2_yb_ys->Write();
   m_h2_y12->Write();
 
-  m_h3_jet12rap->Write(m_h3_jet12rap->GetName());
-  m_h3_ptavg_yio->Write(m_h3_ptavg_yio->GetName());
-  m_h3_ptavg_ysb->Write(m_h3_ptavg_ysb->GetName());
+  m_h3_jet12rap->Write();
+  m_h3_ptavg_yio->Write();
+  m_h3_ptavg_ysb->Write();
 
   // Also need pt slices...
   m_h3_ptavg_ysb->GetZaxis()->SetRange(1, m_h3_ptavg_ysb->GetZaxis()->GetNbins());
@@ -206,13 +216,13 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   }
 
   // Jet property distributions
-  m_h_neutralHadronFraction->Write(m_h_neutralHadronFraction->GetName());
-  m_h_chargedHadronFraction->Write(m_h_chargedHadronFraction->GetName());
-  m_h_photonFraction->Write(m_h_photonFraction->GetName());
-  m_h_electronFraction->Write(m_h_electronFraction->GetName());
-  m_h_hfHadronFraction->Write(m_h_hfHadronFraction->GetName());
-  m_h_hfEMFraction->Write(m_h_hfEMFraction->GetName());
-  m_h_muonFraction->Write(m_h_muonFraction->GetName());
-  m_h_nConstituents->Write(m_h_nConstituents->GetName());
-  m_h_nCharged->Write(m_h_nCharged->GetName());
+  m_h_neutralHadronFraction->Write();
+  m_h_chargedHadronFraction->Write();
+  m_h_photonFraction->Write();
+  m_h_electronFraction->Write();
+  m_h_hfHadronFraction->Write();
+  m_h_hfEMFraction->Write();
+  m_h_muonFraction->Write();
+  m_h_nConstituents->Write();
+  m_h_nCharged->Write();
 }

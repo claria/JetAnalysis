@@ -50,6 +50,10 @@ void JetQuantitiesProducer::Produce(JetEvent const& event, JetProduct& product, 
       (jetProduct.m_validJets.size() > 1)
           ? std::abs(jetProduct.m_validJets.at(0)->p4.Phi() - jetProduct.m_validJets.at(1)->p4.Phi())
           : -999.;
+  jetProduct.m_dijet_jet12PtRatio =
+      (jetProduct.m_validJets.size() > 1)
+          ? jetProduct.m_validJets.at(1)->p4.Pt()/jetProduct.m_validJets.at(0)->p4.Pt()
+          : -999.;
   jetProduct.m_dijet_cosThetaStar =
       (jetProduct.m_validJets.size() > 1)
           ? std::tanh(jetProduct.m_validJets.at(0)->p4.Rapidity() - jetProduct.m_validJets.at(1)->p4.Rapidity())

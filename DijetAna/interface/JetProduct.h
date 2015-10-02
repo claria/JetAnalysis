@@ -34,6 +34,7 @@ class JetProduct : public KappaProduct {
 
   double m_dijet_mass = -99999.;
   double m_dijet_ptavg = -99999.;
+  double m_dijet_jet12PtRatio = -99999.;
   double m_dijet_ymax = -99999.;
   double m_dijet_yinner = -99999.;
   double m_dijet_youter = -99999.;
@@ -54,6 +55,7 @@ class JetProduct : public KappaProduct {
 
   double m_gendijet_mass = -99999.;
   double m_gendijet_ptavg = -99999.;
+  double m_gendijet_jet12PtRatio = -99999.;
   double m_gendijet_ymax = -99999.;
   double m_gendijet_yinner = -99999.;
   double m_gendijet_youter = -99999.;

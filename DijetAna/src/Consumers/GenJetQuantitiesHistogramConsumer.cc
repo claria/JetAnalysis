@@ -33,6 +33,15 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
       new TH1D("h_genptavg", "h_genptavg", settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
   m_h_genptavg->Sumw2();
 
+  m_h_genjet12dphi = new TH1D("h_genjet12dphi", "h_genjet12dphi", 36, -3.2, 3.2);
+  m_h_genjet12dphi->Sumw2();
+  // Jet12 Pt
+  m_h2_genjet12PtRVsPtavg = new TH2D("h2_genjet12ptrvsptavg", "h2_genjet12ptrvsptavg",
+                        50, 0.0, 1.0, 
+                        settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
+  m_h2_genjet12PtRVsPtavg->Sumw2();
+
+
   // Triple differential histogram
   m_h_genjet12rap = new TH2D("h_genjet12rap",
                              "h_genjet12rap",
@@ -141,6 +150,9 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
 
     m_h2_gen_yb_ys->Fill(product.m_gendijet_yboost, product.m_gendijet_ystar, eventWeight);
 
+    m_h_genjet12dphi->Fill(product.m_gendijet_deltaPhi, eventWeight);
+    m_h2_genjet12PtRVsPtavg->Fill(product.m_gendijet_jet12PtRatio, product.m_gendijet_ptavg, eventWeight);
+
     m_h_genjet12rap->Fill(
         product.m_validGenJets.at(0)->p4.Rapidity(), product.m_validGenJets.at(1)->p4.Rapidity(), eventWeight);
     m_h3_genjet12rap->Fill(
@@ -182,21 +194,23 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
 void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   // save histograms
   RootFileHelper::SafeCd(settings.GetRootOutFile(), settings.GetRootFileFolder());
-  m_h2_GenVsRecoPt->Write(m_h2_GenVsRecoPt->GetName());
-  m_h2_GenVsRecoPtAvg->Write(m_h2_GenVsRecoPtAvg->GetName());
-  m_h2_genreco_ptavg->Write(m_h2_genreco_ptavg->GetName());
-  m_h_genjet1pt->Write(m_h_genjet1pt->GetName());
-  m_h_genjet1rap->Write(m_h_genjet1rap->GetName());
-  m_h_genjet1phi->Write(m_h_genjet1phi->GetName());
-  m_h_genjet2pt->Write(m_h_genjet2pt->GetName());
-  m_h_genjet2rap->Write(m_h_genjet2rap->GetName());
-  m_h_genjet2phi->Write(m_h_genjet2phi->GetName());
-  m_h_incgenjetpt->Write(m_h_incgenjetpt->GetName());
-  m_h_genjet12rap->Write(m_h_genjet12rap->GetName());
-  m_h_genptavg->Write(m_h_genptavg->GetName());
+  m_h_genjet12dphi->Write();
+  m_h2_genjet12PtRVsPtavg->Write();
+  m_h2_GenVsRecoPt->Write();
+  m_h2_GenVsRecoPtAvg->Write();
+  m_h2_genreco_ptavg->Write();
+  m_h_genjet1pt->Write();
+  m_h_genjet1rap->Write();
+  m_h_genjet1phi->Write();
+  m_h_genjet2pt->Write();
+  m_h_genjet2rap->Write();
+  m_h_genjet2phi->Write();
+  m_h_incgenjetpt->Write();
+  m_h_genjet12rap->Write();
+  m_h_genptavg->Write();
 
   m_h2_gen_yb_ys->Write();
-  m_h3_genjet12rap->Write(m_h3_genjet12rap->GetName());
+  m_h3_genjet12rap->Write();
   // Also write 2d slices for easier handling in root files
   // for (int i=1; i < m_h3_genjet12rap->GetNbinsZ() + 1; i++){
   //   m_h3_genjet12rap->GetZaxis()->SetRange(i,i);
@@ -236,7 +250,7 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
     }
   }
 
-  m_h3_genptavg_yio->Write(m_h3_genptavg_yio->GetName());
+  m_h3_genptavg_yio->Write();
   // Also write 2d slices for easier handling in root files
   // for (int i=1; i < m_h3_genptavg_yio->GetNbinsZ() + 1; i++){
   //   m_h3_genptavg_yio->GetZaxis()->SetRange(i,i);
@@ -248,6 +262,6 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   //   m_h2_ptavg_yio->Write(m_h2_ptavg_yio->GetName());
   // }
 
-  m_h_jet1DeltaR->Write(m_h_jet1DeltaR->GetName());
-  m_h_jet2DeltaR->Write(m_h_jet2DeltaR->GetName());
+  m_h_jet1DeltaR->Write();
+  m_h_jet2DeltaR->Write();
 }

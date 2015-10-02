@@ -24,6 +24,11 @@ void GenJetQuantitiesProducer::Produce(JetEvent const& event, JetProduct& produc
       (product.m_validGenJets.size() > 1)
           ? 0.5 * (product.m_validGenJets.at(0)->p4.Pt() + product.m_validGenJets.at(1)->p4.Pt())
           : -999.;
+  jetProduct.m_gendijet_jet12PtRatio =
+      (product.m_validGenJets.size() > 1)
+          ? (product.m_validGenJets.at(1)->p4.Pt()/product.m_validGenJets.at(0)->p4.Pt())
+          : -999.;
+
   jetProduct.m_gendijet_ymax =
       (product.m_validGenJets.size() > 1)
           ? std::max(product.m_validGenJets.at(0)->p4.Rapidity(), product.m_validGenJets.at(1)->p4.Rapidity())
