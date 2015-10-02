@@ -45,7 +45,7 @@ void JetHltProducer::Produce(JetEvent const& event, JetProduct& product, JetSett
     return;
 
   product.m_hltInfo.setLumiInfo(event.m_lumiInfo);
-  double triggerEffQuantity = product.m_validJets.at(0)->p4.Pt();
+  double triggerEffQuantity = product.m_dijet_ptavg;
 
   for (std::vector<std::string>::const_iterator hltPath = jetSettings.GetHltPaths().begin();
        hltPath != jetSettings.GetHltPaths().end();
