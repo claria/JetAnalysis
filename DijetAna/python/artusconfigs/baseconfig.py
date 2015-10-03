@@ -203,7 +203,7 @@ class BaseConfig(dict):
 
         # Thresholds when a path gets efficient, need to be ordered increasingly
         self['TriggerEffPaths'] = ['HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
-        self['TriggerEffThresholds'] = [110., 185., 258., 334., 398., 3000.]
+        self['TriggerEffThresholds'] = [123., 192., 263., 353., 412., 3000.]
 
         # TODO Move to specialized trigger efficency config
         self['HltPathsBlacklist'] = []
