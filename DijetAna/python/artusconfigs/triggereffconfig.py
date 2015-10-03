@@ -20,18 +20,27 @@ class TriggerEffConfig(BaseConfig):
 
         if 'filter:JetHltFilter' in self['Processors']:
             self['Processors'].remove('filter:JetHltFilter')
-        if 'filter:JetHltProducer' in self['Processors']:
+        if 'producer:JetHltProducer' in self['Processors']:
             self['Processors'].remove('producer:JetHltProducer')
 
         if self.is_data is True:
             self['IntLuminosity']  = 19712.
 
+        # TODO Move to specialized trigger efficency config
+        self['HltPathsBlacklist'] = []
+        self['TriggerEffPaths'] = ['HLT_PFJET40', 'HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
+        self['L1FilterThresholds'] = [16., 36., 68., 92., 128., 128.]
+        self['HltFilterThresholds'] = [40., 80., 140., 200., 260., 320.]
+        self['L1FilterPattern'] = '(L1SingleJet)([0-9]+)'
+        self['HltFilterPattern'] = '(PFJet)([0-9]+)'
+        self['Pipelines']['default']['TriggerEfficiencyQuantity'] = 'jet1_pt'
 
         default_pipeline = self.get_default_pipeline()
         default_pipeline['Consumers'] =  [
                                   # 'KappaLambdaNtupleConsumer',
                                   'cutflow_histogram',
                                   'JetQuantitiesHistogramConsumer',
+                                  'TriggerEfficiencyHistogramConsumer'
                                   ]
 
     def expand_pipelines(self):
@@ -54,4 +63,3 @@ class TriggerEffConfig(BaseConfig):
                 self['Pipelines'][pipeline_name]['MinYBoost'] = yb_lo
                 self['Pipelines'][pipeline_name]['MaxYBoost'] = yb_hi
 
-                self['Pipelines'][pipeline_name]['Consumers'].append('TriggerEfficiencyHistogramConsumer')
