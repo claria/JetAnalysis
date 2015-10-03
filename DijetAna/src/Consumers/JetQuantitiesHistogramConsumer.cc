@@ -39,12 +39,12 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_ptavg = new TH1D("h_ptavg", "h_ptavg", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   m_h_ptavg->Sumw2();
   // Dijet delta Phi
-  m_h_jet12dphi = new TH1D("h_jet12dphi", "h_jet12dphi", 36, -3.2, 3.2);
+  m_h_jet12dphi = new TH1D("h_jet12dphi", "h_jet12dphi", 63, 0., 6.3);
   m_h_jet12dphi->Sumw2();
   // Jet12 Pt
   m_h2_jet12PtRVsPtavg = new TH2D("h2_jet12ptrvsptavg", "h2_jet12ptrvsptavg",
-                        50, 0.0, 1.0, 
-                        settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
+                        settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0],
+                        50, 0.0, 1.0 );
   m_h2_jet12PtRVsPtavg->Sumw2();
 
   // 2D histograms
@@ -137,7 +137,7 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
     m_h2_y12->Fill(product.m_jet1Rap, product.m_jet2Rap, eventWeight);
 
     m_h_jet12dphi->Fill(product.m_dijet_deltaPhi, eventWeight);
-    m_h2_jet12PtRVsPtavg->Fill(product.m_dijet_jet12PtRatio, product.m_dijet_ptavg, eventWeight);
+    m_h2_jet12PtRVsPtavg->Fill(product.m_dijet_ptavg, product.m_dijet_jet12PtRatio, eventWeight);
 
     // Fill double with inverted jet 1<->2
     m_h3_jet12rap->Fill(boost::math::sign(product.m_jet1Rap) * product.m_jet2Rap,

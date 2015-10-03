@@ -33,7 +33,7 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
       new TH1D("h_genptavg", "h_genptavg", settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
   m_h_genptavg->Sumw2();
 
-  m_h_genjet12dphi = new TH1D("h_genjet12dphi", "h_genjet12dphi", 36, -3.2, 3.2);
+  m_h_genjet12dphi = new TH1D("h_genjet12dphi", "h_genjet12dphi", 63, 0, 6.3);
   m_h_genjet12dphi->Sumw2();
   // Jet12 Pt
   m_h2_genjet12PtRVsPtavg = new TH2D("h2_genjet12ptrvsptavg", "h2_genjet12ptrvsptavg",
