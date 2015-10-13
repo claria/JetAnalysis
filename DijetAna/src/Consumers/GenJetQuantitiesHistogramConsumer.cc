@@ -37,8 +37,8 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_genjet12dphi->Sumw2();
   // Jet12 Pt
   m_h2_genjet12PtRVsPtavg = new TH2D("h2_genjet12ptrvsptavg", "h2_genjet12ptrvsptavg",
-                        50, 0.0, 1.0, 
-                        settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
+                        settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0],
+                        50, 0.0, 1.0);
   m_h2_genjet12PtRVsPtavg->Sumw2();
 
 
@@ -151,7 +151,7 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
     m_h2_gen_yb_ys->Fill(product.m_gendijet_yboost, product.m_gendijet_ystar, eventWeight);
 
     m_h_genjet12dphi->Fill(product.m_gendijet_deltaPhi, eventWeight);
-    m_h2_genjet12PtRVsPtavg->Fill(product.m_gendijet_jet12PtRatio, product.m_gendijet_ptavg, eventWeight);
+    m_h2_genjet12PtRVsPtavg->Fill(product.m_gendijet_ptavg, product.m_gendijet_jet12PtRatio, eventWeight);
 
     m_h_genjet12rap->Fill(
         product.m_validGenJets.at(0)->p4.Rapidity(), product.m_validGenJets.at(1)->p4.Rapidity(), eventWeight);
