@@ -137,16 +137,18 @@ def main():
 
         nlo_fcn.SetRange(50., 3000.)
 
-        n_evts = 10000000
+        n_evts = 100000000
         for i in xrange(n_evts):
-            pt_truth = ROOT.gRandom.Uniform(50.,3000)
+            pt_truth = ROOT.gRandom.Uniform(74.,2500)
             pt_smeared = smear_pt(rap_bin, pt_truth)
             w = nlo_fcn.Eval(pt_truth)
-            if (w< 0.) or math.isnan(w):
-                w = 0.
+            if (w <= 0.) or math.isnan(w):
+                continue
+            if pt_smeared >= 133.:
+                h_recoptavg.Fill(pt_smeared, w)
             h_genptavg.Fill(pt_truth, w)
-            h_recoptavg.Fill(pt_smeared, w)
-            h2_genvsreco.Fill(pt_smeared, pt_truth, w)
+            if pt_smeared >= 133.:
+                h2_genvsreco.Fill(pt_smeared, pt_truth, w)
 
         h_recoptavg.Write()
         h_genptavg.Write()
