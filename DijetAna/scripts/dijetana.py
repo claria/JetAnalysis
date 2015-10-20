@@ -122,7 +122,7 @@ def main():
                     config['OutputPath'] = "output.root"
             else:
                 config['OutputPath'] = args['output_file']
-            config['nickname'] = nickname
+            config['nick'] = nickname
             configs.append(config)
         # Run over each config
         for config in configs:
@@ -177,7 +177,7 @@ def save_config(config, path=None, indent=4):
     """Save json config to file."""
 
     if path is None:
-        basename = "artus_{0}.json".format(get_hash(str(config)))
+        basename = "artus_{0}_{1}.json".format(config.get('nick', 'NONICK').upper(), get_hash(str(config)))
         path = os.path.join(tempfile.gettempdir(), basename)
     with open(path, "w") as f:
         json.dump(config, f, indent=indent, sort_keys=True)
