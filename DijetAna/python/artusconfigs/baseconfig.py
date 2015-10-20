@@ -101,8 +101,11 @@ class BaseConfig(dict):
         self['MinValidJets'] = '2'
         self['MinValidGenJets'] = '2'
 
-        self['MinLeadingJetPt'] = '74.'
-        self['MinLeadingGenJetPt'] = '74.'
+        # self['MinLeadingJetPt'] = '133.'
+        # self['MinLeadingGenJetPt'] = '133.'
+        self['MinPtAvg'] = '133.'
+        self['MinGentPtAvg'] = '133.'
+
 
         # Gen Jet Matching
         self['MaxDeltaR'] = 0.3
@@ -191,7 +194,6 @@ class BaseConfig(dict):
         ]
 
         # Trigger Selection
-        print "Running on nick", self['nick']
         if self['nick'] == 'Jet_2012A_MON':
             self['HltPaths'] = ['HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
         elif data_stream == 'MON':
