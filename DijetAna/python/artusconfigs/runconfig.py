@@ -61,7 +61,7 @@ class RunConfig(BaseConfig):
             self['Pipelines']['gen_default'] = copy.deepcopy(default_pipeline)
             gen_default_pipeline = self['Pipelines']['gen_default']
             gen_default_pipeline['Processors'].append('filter:NGenJetsFilter')
-            gen_default_pipeline['Processors'].append('filter:LeadingGenJetPtFilter')
+            gen_default_pipeline['Processors'].append('filter:GenPtAvgFilter')
             gen_default_pipeline['Consumers'].append('GenJetQuantitiesHistogramConsumer')
             default_pipeline['Consumers'].append('GenJetQuantitiesHistogramConsumer')
             gen_default_pipeline['Quantities'] += ['genjet1_pt',
@@ -85,9 +85,7 @@ class RunConfig(BaseConfig):
                                                    ]
 
         default_pipeline['Processors'].append('filter:NJetsFilter')
-
-        if self.is_data is False:
-            default_pipeline['Processors'].append('filter:LeadingJetPtFilter')
+        default_pipeline['Processors'].append('filter:PtAvgFilter')
 
 
         if self.is_data is True:
