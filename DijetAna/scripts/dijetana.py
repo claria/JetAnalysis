@@ -49,7 +49,7 @@ def main():
                         help="Name of output file.")
     parser.add_argument("-p", "--print-config", default=False, action="store_true",
                         help="Print out the JSON config before running Artus.")
-    parser.add_argument('-f', '--fast', type=int, default=None,
+    parser.add_argument('-f', '--fast', type=str, default=None,
                         help="limit number of input files or grid-control jobs. 3=files[0:3].")
     parser.add_argument("-d", "--dry-run", default=False, action="store_true",
                         help="Exit before running Artus to only check the configs.")
@@ -73,7 +73,10 @@ def main():
     # Prepare input files
     args['input_files'] = expand_glob(args['input_files'])
     if args['fast'] is not None:
-        args['input_files'] = args['input_files'][:args['fast']]
+        if ':' in args['fast']:
+            args['input_files'] = args['input_files'][int(args['fast'].split(':')[0]):int(args['fast'].split(':')[1])]
+        else:
+            args['input_files'] = args['input_files'][:int(args['fast'])]
 
     # Empty filelist
     if not args['input_files']:
