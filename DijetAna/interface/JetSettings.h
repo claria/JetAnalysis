@@ -55,6 +55,8 @@ class JetSettings : public KappaSettings {
 
   IMPL_SETTING_DEFAULT(double, MinDijetsAbsRap, std::numeric_limits<double>::lowest())
   IMPL_SETTING_DEFAULT(double, MaxDijetsAbsRap, std::numeric_limits<double>::max())
+  IMPL_SETTING_DEFAULT(double, MinGenDijetsAbsRap, std::numeric_limits<double>::lowest())
+  IMPL_SETTING_DEFAULT(double, MaxGenDijetsAbsRap, std::numeric_limits<double>::max())
   // MET Filter
   IMPL_SETTING_DEFAULT(double, MaxMETSumEtRatio, std::numeric_limits<double>::max())
 
