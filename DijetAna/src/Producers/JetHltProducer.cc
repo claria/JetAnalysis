@@ -57,7 +57,7 @@ void JetHltProducer::Produce(JetEvent const& event, JetProduct& product, JetSett
         LOG(DEBUG) << "Trigger " << *hltPath << " fired." << std::endl;
         if ((triggerEffQuantity >= triggerEffThresholds.at(*hltPath).first) &&
             (triggerEffQuantity < triggerEffThresholds.at(*hltPath).second)) {
-          LOG(DEBUG) << "Trigger: " << *hltPath << " Jet 1 pT: " << triggerEffQuantity << " is in range ("
+          LOG(DEBUG) << "Trigger: " << *hltPath << " Jet 12 pTavg: " << triggerEffQuantity << " is in range ("
                      << triggerEffThresholds.at(*hltPath).first << ", " << triggerEffThresholds.at(*hltPath).second
                      << ")." << std::endl;
           product.m_selectedHltName = *hltPath;

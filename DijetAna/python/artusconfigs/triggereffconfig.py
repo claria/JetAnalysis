@@ -26,14 +26,12 @@ class TriggerEffConfig(BaseConfig):
         if self.is_data is True:
             self['IntLuminosity']  = 19712.
 
-        # TODO Move to specialized trigger efficency config
         self['HltPathsBlacklist'] = []
-        self['TriggerEffPaths'] = ['HLT_PFJET40', 'HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
-        self['L1FilterThresholds'] = [16., 36., 68., 92., 128., 128.]
-        self['HltFilterThresholds'] = [40., 80., 140., 200., 260., 320.]
+        self['TriggerEffPaths'] = ['HLT_DiPFJETAve40', 'HLT_DiPFJETAve80','HLT_DiPFJETAve140','HLT_DiPFJETAve200','HLT_DiPFJETAve260','HLT_DiPFJETAve320','HLT_DiPFJETAve400']
+        self['L1FilterThresholds'] = [16., 36., 68., 92., 128., 128., 128.]
+        self['HltFilterThresholds'] = [40., 80., 140., 200., 260., 320., 400.]
         self['L1FilterPattern'] = '(L1SingleJet)([0-9]+)'
-        self['HltFilterPattern'] = '(PFJet)([0-9]+)'
-        self['Pipelines']['default']['TriggerEfficiencyQuantity'] = 'jet1_pt'
+        self['HltFilterPattern'] = '(DiPFJetAve)([0-9]+)'
 
         default_pipeline = self.get_default_pipeline()
         default_pipeline['Consumers'] =  [
