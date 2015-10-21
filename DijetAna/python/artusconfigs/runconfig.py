@@ -86,6 +86,7 @@ class RunConfig(BaseConfig):
 
         default_pipeline['Processors'].append('filter:NJetsFilter')
         default_pipeline['Processors'].append('filter:PtAvgFilter')
+        default_pipeline['Processors'].append('filter:DijetsRapFilter')
 
 
         if self.is_data is True:

@@ -95,12 +95,14 @@ class BaseConfig(dict):
         # Valid Jet Selection
         self['MinValidJetPt'] = '50.'
         self['MinValidGenJetPt'] = '50.'
-        self['MaxValidJetAbsRap'] = '3.0'
-        self['MaxValidGenJetAbsRap'] = '3.0'
+        self['MaxValidJetAbsRap'] = '5.0'
+        self['MaxValidGenJetAbsRap'] = '5.0'
         # Global Cuts
         self['MinValidJets'] = '2'
         self['MinValidGenJets'] = '2'
-
+        # Rapidity cuts on leading two jets
+        self['MaxDijetsAbsRap'] = '3.0'
+        self['MaxGenDijetsAbsRap'] = '3.0'
         # self['MinLeadingJetPt'] = '133.'
         # self['MinLeadingGenJetPt'] = '133.'
         self['MinPtAvg'] = '133.'
@@ -206,14 +208,6 @@ class BaseConfig(dict):
         # Thresholds when a path gets efficient, need to be ordered increasingly
         self['TriggerEffPaths'] = ['HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
         self['TriggerEffThresholds'] = [123., 192., 263., 353., 412., 3000.]
-
-        # TODO Move to specialized trigger efficency config
-        self['HltPathsBlacklist'] = []
-        self['L1FilterThresholds'] = [16., 36., 68., 92., 128., 128.]
-        self['HltFilterThresholds'] = [40., 80., 140., 200., 260., 320.]
-        self['L1FilterPattern'] = '(L1SingleJet)([0-9]+)'
-        self['HltFilterPattern'] = '(PFJet)([0-9]+)'
-        self['Pipelines']['default']['TriggerEfficiencyQuantity'] = 'jet1_pt'
 
         self.add_processor('filter:JsonFilter', idx=0)
         self.add_processor('producer:JetQuantitiesProducer', after='producer:ValidJetsProducer')
