@@ -195,17 +195,25 @@ class BaseConfig(dict):
 
         # Trigger Selection
         if self['nick'] == 'Jet_2012A_MON':
-            self['HltPaths'] = ['HLT_DiPFJETAve80','HLT_DiPFJETAve140','HLT_DiPFJETAve200','HLT_DiPFJETAve260','HLT_DiPFJETAve320','HLT_DiPFJETAve400']
+            self['HltPaths'] = ['HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
         elif data_stream == 'MON':
-            self['HltPaths'] = ['HLT_DiPFJETAve80','HLT_DiPFJETAve140','HLT_DiPFJETAve200','HLT_DiPFJETAve260']
+            self['HltPaths'] = ['HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260']
         elif data_stream == 'HT':
-            self['HltPaths'] = ['HLT_DiPFJETAve320','HLT_DiPFJETAve400',]
+            self['HltPaths'] = ['HLT_PFJET320']
         else:
             raise ValueError('No stream supplied for dataset')
 
         # Thresholds when a path gets efficient, need to be ordered increasingly
-        self['TriggerEffPaths'] = ['HLT_DiPFJETAve80','HLT_DiPFJETAve140','HLT_DiPFJETAve200','HLT_DiPFJETAve260','HLT_DiPFJETAve320','HLT_DiPFJETAve400']
-        self['TriggerEffThresholds'] = [121., 193., 262., 337., 419., 510., 3000.]
+        self['TriggerEffPaths'] = ['HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
+        self['TriggerEffThresholds'] = [123., 192., 263., 353., 412., 3000.]
+
+        # TODO Move to specialized trigger efficency config
+        self['HltPathsBlacklist'] = []
+        self['L1FilterThresholds'] = [16., 36., 68., 92., 128., 128.]
+        self['HltFilterThresholds'] = [40., 80., 140., 200., 260., 320.]
+        self['L1FilterPattern'] = '(L1SingleJet)([0-9]+)'
+        self['HltFilterPattern'] = '(PFJet)([0-9]+)'
+        self['Pipelines']['default']['TriggerEfficiencyQuantity'] = 'jet1_pt'
 
         self.add_processor('filter:JsonFilter', idx=0)
         self.add_processor('producer:JetQuantitiesProducer', after='producer:ValidJetsProducer')
