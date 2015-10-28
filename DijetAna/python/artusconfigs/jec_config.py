@@ -70,5 +70,6 @@ class JECConfig(RunConfig):
                 # Downwards 
                 pipeline_name_dn = '{0}_{1}_dn'.format(pipeline_name, source)
                 self['Pipelines'][pipeline_name_dn] = copy.deepcopy(self['Pipelines'][pipeline_name])
+                self['Pipelines'][pipeline_name_dn]['JetEnergyCorrectionUncertaintySource'] = source
                 self['Pipelines'][pipeline_name_dn]['JetEnergyCorrectionUncertaintyShift'] = -1.0
 
