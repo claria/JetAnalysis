@@ -10,18 +10,21 @@ class JECConfig(RunConfig):
     def modify_settings(self):
         super(JECConfig, self).modify_settings()
         default_pipeline = self.get_default_pipeline()
-        self['Processors'] = []
+        self['Processors'] = ["filter:JsonFilter", 
+                              "filter:GoodPrimaryVertexFilter", 
+                              "filter:METSumEtFilter",
+                              "producer:JetCorrectionsProducer",]
         default_pipeline['Processors'] = [
-                "filter:JsonFilter", 
-                "producer:JetCorrectionsProducer", 
                 "producer:JetCorrectionsUncertaintyProducer", 
                 "producer:ValidJetsProducer", 
                 "producer:LuminosityWeightProducer", 
-                "producer:EventWeightProducer", 
+                "producer:JetQuantitiesProducer", 
                 "producer:JetHltProducer", 
+                "producer:EventWeightProducer", 
+                "filter:PtAvgFilter",
+                "filter:DijetsRapFilter",
                 "filter:JetHltFilter",
                 "filter:NJetsFilter", 
-                "producer:JetQuantitiesProducer", 
                 ]
 
 
