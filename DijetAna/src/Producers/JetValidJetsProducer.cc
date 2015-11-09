@@ -74,8 +74,6 @@ void JetValidJetsProducer::Produce(JetEvent const& event, JetProduct& product, J
         && (jet->nCharged > minChargedMultiplicity)
         && (jet->electronFraction < maxChargedEMFraction);  // == CEM
     }
-    if (noJetID)
-      validJet = true;
     // additional kinematic cuts
     bool kinematicCuts = true;
     kinematicCuts = kinematicCuts 
@@ -84,6 +82,9 @@ void JetValidJetsProducer::Produce(JetEvent const& event, JetProduct& product, J
       && std::abs(jet->p4.Rapidity()) < maxValidJetAbsRap;
 
     product.m_doPassID[&(*jet)] = validJet;
+
+    if (noJetID)
+      validJet = true;
 
     if (validJet && kinematicCuts)
       product.m_validJets.push_back(&(*jet));
