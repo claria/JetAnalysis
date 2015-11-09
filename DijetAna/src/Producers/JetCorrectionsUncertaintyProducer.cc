@@ -13,7 +13,7 @@ std::string JetCorrectionsUncertaintyProducer::GetProducerId() const {
 }
 
 void JetCorrectionsUncertaintyProducer::Init(JetSettings const& settings) {
-  LOG(WARNING) << "Using the new JEC Uncertainty producer.";
+  LOG(WARNING) << "Using the jetana JEC Uncertainty producer.";
   LOG(DEBUG) << "\tLoading JetCorrectionUncertainty from files...";
   assert(!settings.GetJetEnergyCorrectionUncertaintyParameters().empty());
 
