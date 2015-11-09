@@ -20,8 +20,7 @@ class JetValidJetsProducer : public JetProducerBase {
   int minChargedMultiplicity;
   float maxChargedEMFraction;
 
-
-
+  bool noJetID;
 
  public:
   virtual std::string GetProducerId() const override;
