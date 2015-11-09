@@ -12,14 +12,14 @@ void ValidGenJetsProducer::Init(JetSettings const& settings) {
 }
 void ValidGenJetsProducer::Produce(JetEvent const& event, JetProduct& product, JetSettings const& settings) const {
   for (auto jet = event.m_genJets->begin(); jet != event.m_genJets->end(); jet++) {
-    bool validJet = true:
+    bool validJet = true;
     validJet = validJet
       && (jet->p4.Pt() > minValidGenJetPt) 
       && (std::abs(jet->p4.Rapidity()) >= minValidGenJetAbsRap) 
-      && (std::abs(jet->p4.Rapidity()) < maxValidGenJetAbsRap)
+      && (std::abs(jet->p4.Rapidity()) < maxValidGenJetAbsRap);
     if (validJet) 
     {
-      product.m_validGenJets.push_back(&(*genjet));
+      product.m_validGenJets.push_back(&(*jet));
     }
   }
 }
