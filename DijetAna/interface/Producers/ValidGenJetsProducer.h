@@ -16,8 +16,4 @@ class ValidGenJetsProducer : public JetProducerBase {
   virtual std::string GetProducerId() const override;
   virtual void Init(JetSettings const& settings) override;
   virtual void Produce(JetEvent const& event, JetProduct& product, JetSettings const& settings) const override;
-  virtual bool AdditionalCriteria(KLV* genjet,
-                                  JetEvent const& event,
-                                  JetProduct& product,
-                                  JetSettings const& settings) const;
 };
