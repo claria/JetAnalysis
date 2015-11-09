@@ -19,6 +19,8 @@ class JetProduct : public KappaProduct {
 
   std::vector<int> m_match_result_genjets;
   std::vector<int> m_match_result_recojets;
+
+  std::map<KBasicJet*, bool> m_doPassID;
   // Main observables to be set in the JetQuantities Producer
   // Dijet observables
   double m_njets = -99999.;
