@@ -22,6 +22,7 @@ void JetValidJetsProducer::Init(JetSettings const& settings) {
   std::string jetID = boost::algorithm::to_lower_copy(settings.GetJetID());
 
   if (jetID == "tight") {
+    noJetID = false;
     maxNeutralHadronFraction = 0.90f;
     maxNeutralEMFraction = 0.90f;
     minNConstituents = 1;
@@ -31,6 +32,7 @@ void JetValidJetsProducer::Init(JetSettings const& settings) {
     maxChargedEMFraction = 0.90f;
   }
   else if (jetID == "loose") {
+    noJetID = false;
     maxNeutralHadronFraction = 0.99;
     maxNeutralEMFraction = 0.99;
     minNConstituents = 1;
@@ -40,13 +42,14 @@ void JetValidJetsProducer::Init(JetSettings const& settings) {
     maxChargedEMFraction = 0.99;
   }
   else if (jetID == "noid") {
-    maxNeutralHadronFraction = 9999.;
-    maxNeutralEMFraction = 9999.;
-    minNConstituents = -1;
-    maxMuonFraction = 9999.;
-    minChargedHadronFraction = -9999.;
-    minChargedMultiplicity = -99;
-    maxChargedEMFraction = 9999;
+    noJetID = true;
+    maxNeutralHadronFraction = 0.90f;
+    maxNeutralEMFraction = 0.90f;
+    minNConstituents = 1;
+    maxMuonFraction = 0.8f;
+    minChargedHadronFraction = 0.0f;
+    minChargedMultiplicity = 0;
+    maxChargedEMFraction = 0.90f;
   }
   else {
     LOG(FATAL) << "The provided jet id is not implemented." << std::endl;
@@ -58,6 +61,7 @@ void JetValidJetsProducer::Produce(JetEvent const& event, JetProduct& product, J
   for (auto &jet : product.m_correctedJets) {
     bool validJet = true;
     validJet = validJet
+      // TODO: Works only with old cmssw version 5.x  because of hfhadronfraction
       && (jet->neutralHadronFraction + jet->hfHadronFraction < maxNeutralHadronFraction)
       && (jet->photonFraction + jet->hfEMFraction < maxNeutralEMFraction)
       && (jet->nConstituents > minNConstituents)
@@ -70,13 +74,18 @@ void JetValidJetsProducer::Produce(JetEvent const& event, JetProduct& product, J
         && (jet->nCharged > minChargedMultiplicity)
         && (jet->electronFraction < maxChargedEMFraction);  // == CEM
     }
+    if (noJetID)
+      validJet = true;
     // additional kinematic cuts
-    validJet = validJet 
+    bool kinematicCuts = true;
+    kinematicCuts = kinematicCuts 
       && jet->p4.Pt() > minValidJetPt 
       && std::abs(jet->p4.Rapidity()) >= minValidJetAbsRap 
       && std::abs(jet->p4.Rapidity()) < maxValidJetAbsRap;
 
-    if (validJet)
+    product.m_doPassID[&(*jet)] = validJet;
+
+    if (validJet && kinematicCuts)
       product.m_validJets.push_back(&(*jet));
     else
       product.m_invalidJets.push_back(&(*jet));
