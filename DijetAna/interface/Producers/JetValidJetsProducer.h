@@ -1,22 +1,30 @@
 #pragma once
 
 #include "Artus/KappaAnalysis/interface/Producers/ValidJetsProducer.h"
-#include "Artus/KappaAnalysis/interface/KappaTypes.h"
-
+#include "../JetTypes.h"
 /**
    \brief Producer for valid jets (simple PF jets).
 
 */
-class JetValidJetsProducer : public ValidJetsProducer {
+class JetValidJetsProducer : public JetProducerBase {
  private:
   float minValidJetPt;
   float minValidJetAbsRap;
   float maxValidJetAbsRap;
 
- protected:
-  virtual bool AdditionalCriteria(KBasicJet* jet,
-                                  KappaEvent const& event,
-                                  KappaProduct& product,
-                                  KappaSettings const& settings) const override;
-  virtual void Init(KappaSettings const& settings) override;
+  float maxNeutralHadronFraction;
+  float maxNeutralEMFraction;
+  int minNConstituents;
+  float maxMuonFraction;
+  float minChargedHadronFraction;
+  int minChargedMultiplicity;
+  float maxChargedEMFraction;
+
+
+
+
+ public:
+  virtual std::string GetProducerId() const override;
+  virtual void Init(JetSettings const& settings) override;
+  virtual void Produce(JetEvent const& event, JetProduct& product, JetSettings const& settings) const override;
 };
