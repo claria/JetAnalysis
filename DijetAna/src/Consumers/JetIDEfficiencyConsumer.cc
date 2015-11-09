@@ -14,25 +14,34 @@
 void JetIDEfficiencyConsumer::Init(JetSettings const& settings) {
   ConsumerBase<JetTypes>::Init(settings);
 
-  m_h_doPassJetID = new TH1D("h_dopassjetid", "h_dopassjetid", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
+  m_h_doPassJetID = new TH1D("h_probepassjetid", "h_probepassjetid", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   m_h_doPassJetID->Sumw2();
-  m_h_noPassJetID = new TH1D("h_nopassjetid", "h_nopassjetid", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
-  m_h_noPassJetID->Sumw2();
+  m_h_allPassJetID = new TH1D("h_allpassjetid", "h_allpassjetid", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
+  m_h_allPassJetID->Sumw2();
 }
 
 void JetIDEfficiencyConsumer::ProcessFilteredEvent(JetEvent const& event, JetProduct const& product,
-                                                              JetSettings const& settings) {
-  if (product.m_dijet_deltaPhi >= 2.7) {
+    JetSettings const& settings) {
+  // Event Weight
+  // double eventWeight = product.m_weights.find(settings.GetEventWeight())->second;
+  if (product.m_dijet_deltaPhi >= 0.0) {
     if (product.m_doPassID.at(product.m_validJets.at(0)) == true) {
-      m_h_noPassJetID->Fill(product.m_dijet_ptavg);
+      m_h_allPassJetID->Fill(product.m_dijet_ptavg);
       if (product.m_doPassID.at(product.m_validJets.at(1)) == true) {
         m_h_doPassJetID->Fill(product.m_dijet_ptavg);
       }
+      if (product.m_doPassID.at(product.m_validJets.at(1)) == true) {
+        m_h_allPassJetID->Fill(product.m_dijet_ptavg);
+        if (product.m_doPassID.at(product.m_validJets.at(0)) == true) {
+          m_h_doPassJetID->Fill(product.m_dijet_ptavg);
+        }
+      }
+
     }
   }
 }
 
 void JetIDEfficiencyConsumer::Finish(JetSettings const& settings) {
   m_h_doPassJetID->Write();
-  m_h_noPassJetID->Write();
+  m_h_allPassJetID->Write();
 }

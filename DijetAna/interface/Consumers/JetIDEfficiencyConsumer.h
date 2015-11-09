@@ -12,5 +12,5 @@ class JetIDEfficiencyConsumer : public JetConsumerBase {
   virtual void Finish(JetSettings const& settings);
  private:
   TH1D* m_h_doPassJetID = NULL;
-  TH1D* m_h_noPassJetID = NULL;
+  TH1D* m_h_allPassJetID = NULL;
 };
