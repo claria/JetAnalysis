@@ -18,6 +18,7 @@ def main():
     parser.add_argument('--list-nicks', action='store_true', help='Restrict to this nicks.')
     parser.add_argument('--rename', action='store_true', default=False, help='Prompt user to rename links')
     parser.add_argument('--prefix', default='', help='Prefix to put into the link name.')
+    parser.add_argument('--no-link', default=False, action='store_true', help='Do not create symlink')
 
     args = vars(parser.parse_args())
 
@@ -48,11 +49,12 @@ def main():
     for sample in mergedict:
         target_name = '{0}/{1}.root'.format(args['output_folder'], sample.upper())
         hdadd(mergedict[sample], target_name)
-        link_name = '{0}{1}'.format(args['prefix'] + '_' if args['prefix'] else '',os.path.basename(target_name))
-        if os.path.exists(link_name) and os.path.islink(link_name):
-            os.remove(link_name)
-        print "Symlinking {0} to linkname {1}".format(target_name, link_name)
-        os.symlink(target_name, link_name)
+        if not args['no_link']:
+            link_name = '{0}{1}'.format(args['prefix'] + '_' if args['prefix'] else '',os.path.basename(target_name))
+            if os.path.exists(link_name) and os.path.islink(link_name):
+                os.remove(link_name)
+            print "Symlinking {0} to linkname {1}".format(target_name, link_name)
+            os.symlink(target_name, link_name)
 
 
 def hdadd(files, output_filename):
