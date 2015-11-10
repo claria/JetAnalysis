@@ -3,6 +3,20 @@ import sys
 
 import numpy as np
 from baseconfig import BaseConfig
+from runconfig import RunConfig
+
+class TriggerEffMCConfig(RunConfig):
+
+    def __init__(self, nick=None, config=None):
+        super(TriggerEffMCConfig, self).__init__(nick=nick, config=config)
+
+    def modify_settings(self):
+
+        # Same leading jet Pt cut in MC as induced by first HLT path
+        super(TriggerEffMCConfig, self).modify_settings()
+        default_pipeline = self.get_default_pipeline()
+        default_pipeline['Consumers'].append('SimpleTriggerEfficiencyConsumer')
+ 
 
 class TriggerEffConfig(BaseConfig):
 
@@ -11,7 +25,7 @@ class TriggerEffConfig(BaseConfig):
 
         if not self.is_data:
             print "Trigger config only valid for data."
-            sys.exit(1)
+            # sys.exit(1)
 
 
     def modify_settings(self):
