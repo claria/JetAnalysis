@@ -88,6 +88,7 @@ class BaseConfig(dict):
         # self['GenPtBinning'] = [36, 44, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         self['TripleDiffPtBinning'] = [74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
         self['TripleDiffGenPtBinning'] = self['TripleDiffPtBinning']
+        self['LogPtBinning'] = list(np.logspace(0, 3, 100))
         # Valid Jet Selection
         self['ValidJetsInput'] = 'corrected'
         self['JetID'] = 'tight'
@@ -170,6 +171,8 @@ class BaseConfig(dict):
                                                  '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L2Relative_AK7PF.txt',
                                                  '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L3Absolute_AK7PF.txt'
                                                 ]
+        # For HLT trigger studies in MC
+        self['HltPaths'] = ['HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
         self['NumberGeneratedEvents'] = sample_size
         self['CrossSection'] = crosssection
 
