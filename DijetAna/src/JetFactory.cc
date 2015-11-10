@@ -41,6 +41,7 @@
 #include "JetAnalysis/DijetAna/interface/Consumers/JetLambdaNtupleConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/JetResolutionConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/TriggerEfficiencyHistogramConsumer.h"
+#include "JetAnalysis/DijetAna/interface/Consumers/SimpleTriggerEfficiencyConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/JetIDEfficiencyConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/JetQuantitiesHistogramConsumer.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/GenJetQuantitiesHistogramConsumer.h"
@@ -81,6 +82,8 @@ ConsumerBaseUntemplated* JetFactory::createConsumer(std::string const& id) {
     return new JetLambdaNtupleConsumer();
   else if (TriggerEfficiencyHistogramConsumer().GetConsumerId() == id)
     return new TriggerEfficiencyHistogramConsumer();
+  else if (SimpleTriggerEfficiencyConsumer().GetConsumerId() == id)
+    return new SimpleTriggerEfficiencyConsumer();
   else if (JetIDEfficiencyConsumer().GetConsumerId() == id)
     return new JetIDEfficiencyConsumer();
   else if (JetQuantitiesHistogramConsumer().GetConsumerId() == id)
