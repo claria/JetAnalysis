@@ -8,6 +8,7 @@ void JetQuantitiesProducer::Produce(JetEvent const& event, JetProduct& product, 
   auto& jetProduct = static_cast<JetProduct&>(product);
 
   // Inclusive Jets
+  std::cout << "leading jet pt " << jetProduct.m_validJets.at(0)->p4.Pt() << std::endl;
   for (auto i = product.m_validJets.begin(); i != product.m_validJets.end(); i++) {
     jetProduct.m_incJetsPt.push_back((*i)->p4.Pt());
     jetProduct.m_incJetsEta.push_back((*i)->p4.Eta());

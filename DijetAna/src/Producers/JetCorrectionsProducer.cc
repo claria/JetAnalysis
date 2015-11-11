@@ -30,18 +30,18 @@ void JetCorrectionsProducer::Init(JetSettings const& settings) {
 void JetCorrectionsProducer::Produce(JetEvent const& event, JetProduct& product, JetSettings const& settings) const {
   // Copy jets from event.
   for (auto jet : *event.m_basicJets) {
-    product.m_correctedJets.push_back(std::shared_ptr<KBasicJet>(new KBasicJet(jet)));
+    product.m_corrJets.push_back(jet);
   }
 
   // Apply correction in place
-  for (auto jet : product.m_correctedJets) {
+  for (auto jet : product.m_corrJets) {
     factorizedJetCorrector->setRho(static_cast<float>(event.m_pileupDensity->rho));
     factorizedJetCorrector->setNPV(event.m_vertexSummary->nVertices);
-    correctSingleJet(*jet, factorizedJetCorrector);
+    correctSingleJet(jet, factorizedJetCorrector);
   }
   // Sort jets after pT
-  std::sort(product.m_correctedJets.begin(),
-            product.m_correctedJets.end(),
-            [](std::shared_ptr<KBasicJet> jet1, std::shared_ptr<KBasicJet> jet2)
-                -> bool { return jet1->p4.Pt() > jet2->p4.Pt(); });
+  std::sort(product.m_corrJets.begin(),
+            product.m_corrJets.end(),
+            [](KBasicJet jet1, KBasicJet jet2)
+                -> bool { return jet1.p4.Pt() > jet2.p4.Pt(); });
 }

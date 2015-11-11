@@ -58,37 +58,37 @@ void JetValidJetsProducer::Init(JetSettings const& settings) {
 
 void JetValidJetsProducer::Produce(JetEvent const& event, JetProduct& product, JetSettings const& settings) const
 {
-  for (auto &jet : product.m_correctedJets) {
+  for (auto &jet : product.m_corrJets) {
     bool validJet = true;
     validJet = validJet
       // TODO: Works only with old cmssw version 5.x  because of hfhadronfraction
-      && (jet->neutralHadronFraction + jet->hfHadronFraction < maxNeutralHadronFraction)
-      && (jet->photonFraction + jet->hfEMFraction < maxNeutralEMFraction)
-      && (jet->nConstituents > minNConstituents)
-      && (jet->muonFraction < maxMuonFraction);
+      && (jet.neutralHadronFraction + jet.hfHadronFraction < maxNeutralHadronFraction)
+      && (jet.photonFraction + jet.hfEMFraction < maxNeutralEMFraction)
+      && (jet.nConstituents > minNConstituents)
+      && (jet.muonFraction < maxMuonFraction);
     // jets inside tracker
-    if (std::abs(jet->p4.eta()) <= 2.4f)
+    if (std::abs(jet.p4.eta()) <= 2.4f)
     {
       validJet = validJet
-        && (jet->chargedHadronFraction > minChargedHadronFraction)
-        && (jet->nCharged > minChargedMultiplicity)
-        && (jet->electronFraction < maxChargedEMFraction);  // == CEM
+        && (jet.chargedHadronFraction > minChargedHadronFraction)
+        && (jet.nCharged > minChargedMultiplicity)
+        && (jet.electronFraction < maxChargedEMFraction);  // == CEM
     }
     // additional kinematic cuts
     bool kinematicCuts = true;
     kinematicCuts = kinematicCuts 
-      && jet->p4.Pt() > minValidJetPt 
-      && std::abs(jet->p4.Rapidity()) >= minValidJetAbsRap 
-      && std::abs(jet->p4.Rapidity()) < maxValidJetAbsRap;
+      && jet.p4.Pt() > minValidJetPt 
+      && std::abs(jet.p4.Rapidity()) >= minValidJetAbsRap 
+      && std::abs(jet.p4.Rapidity()) < maxValidJetAbsRap;
 
-    product.m_doPassID[&(*jet)] = validJet;
+    product.m_doPassID[&jet] = validJet;
 
     if (noJetID)
       validJet = true;
 
     if (validJet && kinematicCuts)
-      product.m_validJets.push_back(&(*jet));
+      product.m_validJets.push_back(&jet);
     else
-      product.m_invalidJets.push_back(&(*jet));
+      product.m_invalidJets.push_back(&jet);
   }
 }

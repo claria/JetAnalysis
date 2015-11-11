@@ -33,18 +33,19 @@ void JetCorrectionsUncertaintyProducer::Init(JetSettings const& settings) {
   jetCorrectionUncertaintyShift = settings.GetJetEnergyCorrectionUncertaintyShift();
 
   LOG(DEBUG) << "\t\t" << settings.GetJetEnergyCorrectionUncertaintySource();
+  LOG(DEBUG) << "\t\t" << settings.GetJetEnergyCorrectionUncertaintyShift();
   LOG(DEBUG) << "\t\t" << settings.GetJetEnergyCorrectionUncertaintyParameters();
 }
 
 void JetCorrectionsUncertaintyProducer::Produce(JetEvent const& event,
                                                 JetProduct& product,
                                                 JetSettings const& settings) const {
-  for (auto jet : product.m_correctedJets) {
-    applyUncertainty(*jet, jetCorrectionUncertainty, jetCorrectionUncertaintyShift);
+  for (auto &jet : product.m_corrJets) {
+    applyUncertainty(jet, jetCorrectionUncertainty, jetCorrectionUncertaintyShift);
   }
 
-  std::sort(product.m_correctedJets.begin(),
-            product.m_correctedJets.end(),
-            [](std::shared_ptr<KBasicJet> jet1, std::shared_ptr<KBasicJet> jet2)
-                -> bool { return jet1->p4.Pt() > jet2->p4.Pt(); });
+  std::sort(product.m_corrJets.begin(),
+            product.m_corrJets.end(),
+            [](KBasicJet jet1, KBasicJet jet2)
+                -> bool { return jet1.p4.Pt() > jet2.p4.Pt(); });
 }
