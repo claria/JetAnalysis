@@ -63,6 +63,8 @@ class JECConfig(RunConfig):
             self['Pipelines'][pipeline_name]['MaxYStar'] = ys_hi
             self['Pipelines'][pipeline_name]['MinYBoost'] = yb_lo
             self['Pipelines'][pipeline_name]['MaxYBoost'] = yb_hi
+            self['Pipelines'][pipeline_name]['JetEnergyCorrectionUncertaintyShift'] = 0.0
+            self['Pipelines'][pipeline_name]['JetEnergyCorrectionUncertaintySource'] = "Total"
 
             for source in jec_unc_names:
                 # Upwards 
@@ -76,3 +78,4 @@ class JECConfig(RunConfig):
                 self['Pipelines'][pipeline_name_dn]['JetEnergyCorrectionUncertaintySource'] = source
                 self['Pipelines'][pipeline_name_dn]['JetEnergyCorrectionUncertaintyShift'] = -1.0
 
+        del self['Pipelines']['default']
