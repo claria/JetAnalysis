@@ -18,9 +18,7 @@ void ValidGenJetsProducer::Produce(JetEvent const& event, JetProduct& product, J
       && (std::abs(jet->p4.Rapidity()) >= minValidGenJetAbsRap) 
       && (std::abs(jet->p4.Rapidity()) < maxValidGenJetAbsRap);
     if (validJet) 
-    {
       product.m_validGenJets.push_back(&(*jet));
-    }
   }
 }
 
