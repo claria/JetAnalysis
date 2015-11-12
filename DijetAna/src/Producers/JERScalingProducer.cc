@@ -13,15 +13,13 @@ void JERScalingProducer::Produce(JetEvent const& event, JetProduct& product, Jet
     size_t idx = jet - product.m_validJets.begin();
     double corr = this->GetScalingFactor( (*jet)->p4.Eta() );
     // double oldpt = (*jet)->p4.Pt();
-    if (product.m_matchedGenJets.at(idx) != NULL) {
+    if (product.m_matchedGenJets.at(idx)) {
       (*jet)->p4.SetPt(  std::max(0., product.m_matchedGenJets.at(idx)->p4.Pt() + corr * ((*jet)->p4.Pt() - product.m_matchedGenJets.at(idx)->p4.Pt())));
-      // std::cout << "Shifting old pt " << oldpt << " to " << (*jet)->p4.Pt() << std::endl;
     }
-    //Scale reco (corrected) jet pT based on the pT difference between matched reco and gen jets:
-    //pT->max[0.,pTgen+c*(pT–pTgen)], 
   }
 }
 
+// These are the JER MC--> Data Scaling factors for th 2012 run
 double JERScalingProducer::GetScalingFactor(double eta) const {
   double abseta = std::abs(eta);
   if (abseta > 0.0 && abseta <= 0.5) {
