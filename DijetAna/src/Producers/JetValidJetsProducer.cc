@@ -43,13 +43,13 @@ void JetValidJetsProducer::Init(JetSettings const& settings) {
   }
   else if (jetID == "noid") {
     noJetID = true;
-    maxNeutralHadronFraction = 0.90f;
-    maxNeutralEMFraction = 0.90f;
+    maxNeutralHadronFraction = 0.99f;
+    maxNeutralEMFraction = 0.99f;
     minNConstituents = 1;
     maxMuonFraction = 0.8f;
     minChargedHadronFraction = 0.0f;
     minChargedMultiplicity = 0;
-    maxChargedEMFraction = 0.90f;
+    maxChargedEMFraction = 0.99f;
   }
   else {
     LOG(FATAL) << "The provided jet id is not implemented." << std::endl;
