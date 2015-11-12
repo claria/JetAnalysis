@@ -7,6 +7,8 @@ class JetProduct : public KappaProduct {
   std::string m_selectedHltName;
   int m_selectedHltPosition;
 
+  // Jets are always matched from gen --> reco 
+  // if there is no match for a genjet a nullptr is returned
   std::vector<KLV*> m_matchedGenJets;
   std::vector<KBasicJet*> m_matchedRecoJets;
 
