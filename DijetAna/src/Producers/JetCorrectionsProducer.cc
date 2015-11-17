@@ -34,7 +34,7 @@ void JetCorrectionsProducer::Produce(JetEvent const& event, JetProduct& product,
   }
 
   // Apply correction in place
-  for (auto jet : product.m_corrJets) {
+  for (auto & jet : product.m_corrJets) {
     factorizedJetCorrector->setRho(static_cast<float>(event.m_pileupDensity->rho));
     factorizedJetCorrector->setNPV(event.m_vertexSummary->nVertices);
     correctSingleJet(jet, factorizedJetCorrector);
