@@ -25,9 +25,6 @@ class ResolutionConfig(BaseConfig):
         self['Processors'].insert(self['Processors'].index('producer:ValidJetsProducer') + 1, 'producer:GenJetMatchingProducer')
         self['Processors'].insert(self['Processors'].index('producer:GenJetMatchingProducer') + 1, 'producer:JERScalingProducer')
         default_pipeline = self.get_default_pipeline()
-        # default_pipeline['Processors'] =  [
-                                    # 'producer:JERScalingProducer'
-                                  # ]
         default_pipeline['Consumers'] =  [
                                   'cutflow_histogram',
                                   'GenJetQuantitiesHistogramConsumer',
