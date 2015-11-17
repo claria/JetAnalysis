@@ -96,8 +96,8 @@ class BaseConfig(dict):
         # Valid Jet Selection
         self['MinValidJetPt'] = '50.'
         self['MinValidGenJetPt'] = '50.'
-        self['MaxValidJetAbsRap'] = '5.0'
-        self['MaxValidGenJetAbsRap'] = '5.0'
+        self['MaxValidJetAbsRap'] = '3.0'
+        self['MaxValidGenJetAbsRap'] = '3.0'
         # Global Cuts
         self['MinValidJets'] = '2'
         self['MinValidGenJets'] = '2'
@@ -108,8 +108,6 @@ class BaseConfig(dict):
         self['MinLeadingGenJetPt'] = '74.'
         self['MinPtAvg'] = '133.'
         self['MinGentPtAvg'] = '133.'
-
-
         # Gen Jet Matching
         self['MaxDeltaR'] = 0.3
         self['MaxDeltaPtRel'] = 1E9
@@ -132,6 +130,7 @@ class BaseConfig(dict):
             ]
         self['BasicJets'] = 'ak7PFJets'
         self['PileupDensity'] = 'KT6Area'
+        # self['PileupDensity'] = 'pileupDensity'
         self['Met'] = 'met'
         # No pipelines
         self['Pipelines'] = {}
@@ -194,6 +193,8 @@ class BaseConfig(dict):
         # No JEC shift, disables the JEC Uncertainties...
         self['JetEnergyCorrectionUncertaintyShift'] = 0.0
 
+        # self['PileupDensity'] = 'pileupDensity'
+
         self['JsonFiles'] = [
             '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/json/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt'
         ]
@@ -210,7 +211,7 @@ class BaseConfig(dict):
 
         # Thresholds when a path gets efficient, need to be ordered increasingly
         self['TriggerEffPaths'] = ['HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
-        self['TriggerEffThresholds'] = [123., 192., 263., 353., 412., 3000.]
+        self['TriggerEffThresholds'] = [123., 192., 263., 353., 412., 99999999.]
 
         self.add_processor('filter:JsonFilter', idx=0)
         self.add_processor('producer:JetQuantitiesProducer', after='producer:ValidJetsProducer')
