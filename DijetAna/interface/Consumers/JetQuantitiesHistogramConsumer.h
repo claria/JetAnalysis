@@ -20,9 +20,11 @@ class JetQuantitiesHistogramConsumer : public JetConsumerBase {
   TH1D* m_h_hltPosition = NULL;
   TH1D* m_h_jet1pt = NULL;
   TH1D* m_h_jet1rap = NULL;
+  TH1D* m_h_jet1eta = NULL;
   TH1D* m_h_jet1phi = NULL;
   TH1D* m_h_jet2pt = NULL;
   TH1D* m_h_jet2rap = NULL;
+  TH1D* m_h_jet2eta = NULL;
   TH1D* m_h_jet2phi = NULL;
   TH1D* m_h_incjetpt = NULL;
   TH1D* m_h_ptavg = NULL;

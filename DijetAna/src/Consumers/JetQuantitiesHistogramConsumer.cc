@@ -15,16 +15,20 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   // Leading Jet histograms
   m_h_jet1pt = new TH1D("h_jet1pt", "h_jet1pt", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   m_h_jet1pt->Sumw2();
-  m_h_jet1rap = new TH1D("h_jet1rap", "h_jet1rap", 36, -3.0, 3.0);
+  m_h_jet1rap = new TH1D("h_jet1rap", "h_jet1rap", 50, -5.0, 5.0);
   m_h_jet1rap->Sumw2();
+  m_h_jet1eta = new TH1D("h_jet1eta", "h_jet1eta", 50, -5.0, 5.0);
+  m_h_jet1eta->Sumw2();
   m_h_jet1phi = new TH1D("h_jet1phi", "h_jet1phi", 36, -3.2, 3.2);
   m_h_jet1phi->Sumw2();
 
   // Second Jet histograms
   m_h_jet2pt = new TH1D("h_jet2pt", "h_jet2pt", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   m_h_jet2pt->Sumw2();
-  m_h_jet2rap = new TH1D("h_jet2rap", "h_jet2rap", 36, -3.0, 3.0);
+  m_h_jet2rap = new TH1D("h_jet2rap", "h_jet2rap", 50, -5.0, 5.0);
   m_h_jet2rap->Sumw2();
+  m_h_jet2eta = new TH1D("h_jet2eta", "h_jet2eta", 50, -5.0, 5.0);
+  m_h_jet2eta->Sumw2();
   m_h_jet2phi = new TH1D("h_jet2phi", "h_jet2phi", 36, -3.2, 3.2);
   m_h_jet2phi->Sumw2();
 
@@ -129,12 +133,14 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
   if (product.m_validJets.size() > 0) {
     m_h_jet1pt->Fill(product.m_jet1Pt, eventWeight);
     m_h_jet1rap->Fill(product.m_jet1Rap, eventWeight);
+    m_h_jet1eta->Fill(product.m_jet1Eta, eventWeight);
     m_h_jet1phi->Fill(product.m_jet1Phi, eventWeight);
   }
   // 2+ jet quantities
   if (product.m_validJets.size() > 1) {
     m_h_jet2pt->Fill(product.m_jet2Pt, eventWeight);
     m_h_jet2rap->Fill(product.m_jet2Rap, eventWeight);
+    m_h_jet2eta->Fill(product.m_jet2Eta, eventWeight);
     m_h_jet2phi->Fill(product.m_jet2Phi, eventWeight);
 
     m_h_ptavg->Fill(product.m_dijet_ptavg, eventWeight);
@@ -189,9 +195,11 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
 
   m_h_jet1pt->Write();
   m_h_jet1rap->Write();
+  m_h_jet1eta->Write();
   m_h_jet1phi->Write();
   m_h_jet2pt->Write();
   m_h_jet2rap->Write();
+  m_h_jet2eta->Write();
   m_h_jet2phi->Write();
   m_h_incjetpt->Write();
 
