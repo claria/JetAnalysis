@@ -193,7 +193,7 @@ class BaseConfig(dict):
         # No JEC shift, disables the JEC Uncertainties...
         self['JetEnergyCorrectionUncertaintyShift'] = 0.0
 
-        # self['PileupDensity'] = 'pileupDensity'
+        self['PileupDensity'] = 'pileupDensity'
 
         self['JsonFiles'] = [
             '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/json/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt'
@@ -211,7 +211,7 @@ class BaseConfig(dict):
 
         # Thresholds when a path gets efficient, need to be ordered increasingly
         self['TriggerEffPaths'] = ['HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
-        self['TriggerEffThresholds'] = [123., 192., 263., 353., 412., 99999999.]
+        self['TriggerEffThresholds'] = [123., 192., 263., 353., 412., 2500.]
 
         self.add_processor('filter:JsonFilter', idx=0)
         self.add_processor('producer:JetQuantitiesProducer', after='producer:ValidJetsProducer')
