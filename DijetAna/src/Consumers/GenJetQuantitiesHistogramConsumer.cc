@@ -173,12 +173,10 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
                             product.m_gendijet_ptavg,
                             eventWeight);
 
-    // if (product.m_matchedRecoJets.size() > 1 && product.m_matchedRecoJets.at(0) != NULL &&
-    // product.m_matchedRecoJets.at(1) != NULL) {
-    // double ptavg = 0.5 * (product.m_matchedRecoJets.at(0)->p4.Pt() + product.m_matchedRecoJets.at(1)->p4.Pt());
-    m_h2_GenVsRecoPtAvg->Fill(product.m_dijet_ptavg / product.m_gendijet_ptavg, product.m_gendijet_ptavg, eventWeight);
-    m_h2_genreco_ptavg->Fill(product.m_dijet_ptavg, product.m_gendijet_ptavg, eventWeight);
-    // }
+    if (product.m_matchedRecoJets.at(0) != NULL && product.m_matchedRecoJets.at(1) != NULL) {
+      m_h2_GenVsRecoPtAvg->Fill(product.m_dijet_ptavg / product.m_gendijet_ptavg, product.m_gendijet_ptavg, eventWeight);
+      m_h2_genreco_ptavg->Fill(product.m_dijet_ptavg, product.m_gendijet_ptavg, eventWeight);
+    }
     if (product.m_matchedRecoJets.size() > 1 && product.m_matchedRecoJets.at(1) != NULL) {
       m_h_jet2DeltaR->Fill(
           ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(1)->p4, product.m_validGenJets.at(1)->p4),
