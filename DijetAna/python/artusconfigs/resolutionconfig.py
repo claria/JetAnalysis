@@ -32,19 +32,19 @@ class ResolutionConfig(BaseConfig):
 
 
     def expand_pipelines(self):
-        pass
-        for i in range(0, len(self['RapidityAbsBinning']) -1):
-            for j in range(0, len(self['RapidityAbsBinning']) -1):
-                yb_lo = self['RapidityAbsBinning'][i]
-                yb_hi = self['RapidityAbsBinning'][i+1]
-                ys_lo = self['RapidityAbsBinning'][j]
-                ys_hi = self['RapidityAbsBinning'][j+1]
-                # reco pipelines
-                pipeline_name = 'yb{0}ys{1}'.format(i, j)
-                self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
-                self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YStarFilter')
-                self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YBoostFilter')
-                self['Pipelines'][pipeline_name]['MinYStar'] = ys_lo
-                self['Pipelines'][pipeline_name]['MaxYStar'] = ys_hi
-                self['Pipelines'][pipeline_name]['MinYBoost'] = yb_lo
-                self['Pipelines'][pipeline_name]['MaxYBoost'] = yb_hi
+        for i, j in [(0,0), (0, 1), (0, 2), (1, 0), (1, 1), (2, 0)]:
+        # for i, j in [(1, 1)]:
+            yb_lo = self['RapidityAbsBinning'][i]
+            yb_hi = self['RapidityAbsBinning'][i+1]
+            ys_lo = self['RapidityAbsBinning'][j]
+            ys_hi = self['RapidityAbsBinning'][j+1]
+            # reco pipelines
+            pipeline_name = 'yb{0}ys{1}'.format(i, j)
+            self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
+            self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:GenYStarFilter')
+            self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:GenYBoostFilter')
+            self['Pipelines'][pipeline_name]['MinGenYStar'] = ys_lo
+            self['Pipelines'][pipeline_name]['MaxGenYStar'] = ys_hi
+            self['Pipelines'][pipeline_name]['MinGenYBoost'] = yb_lo
+            self['Pipelines'][pipeline_name]['MaxGenYBoost'] = yb_hi
+
