@@ -91,7 +91,7 @@ class BaseConfig(dict):
         self['LogPtBinning'] = list(np.logspace(0, 3, 100))
         # Valid Jet Selection
         self['ValidJetsInput'] = 'corrected'
-        self['JetID'] = 'tight'
+        self['JetID'] = 'loose'
         self['JetIDVersion'] = '2014'
         # Valid Jet Selection
         self['MinValidJetPt'] = '50.'
