@@ -57,6 +57,12 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
                         50, 0.0, 1.0 );
   m_h2_jet12PtRVsPtavg->Sumw2();
 
+  m_h2_jet1PtVsPtavg = new TH2D("h2_jet1ptvsptavg", "h2_jet1ptvsptavg",
+                        settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0],
+                        settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
+  m_h2_jet1PtVsPtavg->Sumw2();
+
+
   // 2D histograms
   m_h2_yb_ys = new TH2D("h2_yb_ys",
                         "h2_yb_ys",
@@ -150,6 +156,7 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
 
     m_h_jet12dphi->Fill(product.m_dijet_deltaPhi, eventWeight);
     m_h2_jet12PtRVsPtavg->Fill(product.m_dijet_ptavg, product.m_dijet_jet12PtRatio, eventWeight);
+    m_h2_jet1PtVsPtavg->Fill(product.m_dijet_ptavg, product.m_jet1Pt, eventWeight);
     m_h2_jet12Pt->Fill(product.m_jet1Pt, product.m_jet2Pt, eventWeight);
 
     // Fill double with inverted jet 1<->2
@@ -207,6 +214,7 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   m_h_jet12dphi->Write();
   m_h2_jet12Pt->Write();
   m_h2_jet12PtRVsPtavg->Write();
+  m_h2_jet1PtVsPtavg->Write();
 
   m_h2_yb_ys->Write();
   m_h2_y12->Write();

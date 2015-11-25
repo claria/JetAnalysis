@@ -13,21 +13,12 @@ class JetUnfoldingResponseConsumer : public JetConsumerBase {
  public:
   virtual std::string GetConsumerId() const { return "JetUnfoldingResponseConsumer"; }
   virtual void Init(setting_type const& settings) override;
-  virtual void ProcessEvent(event_type const& event,
-                            product_type const& product,
-                            setting_type const& setting,
-                            FilterResult& result) override;
   virtual void ProcessFilteredEvent(event_type const& event,
                                     product_type const& product,
                                     setting_type const& settings) override;
   virtual void Finish(setting_type const& settings) override;
 
  private:
-  RooUnfoldResponse* m_unfoldResponse_jet12rap = NULL;
   RooUnfoldResponse* m_unfoldResponse_ptavg_ysb = NULL;
-  RooUnfoldResponse* m_unfoldResponse_ptavg_yio = NULL;
   RooUnfoldResponse* m_unfoldResponse_ptavg = NULL;
-  // TH1D *m_h1_ptavg_truth = NULL;
-  // TH1D *m_h1_ptavg_measured = NULL;
-  // TH2D *m_h2_ptavg_response = NULL;
 };
