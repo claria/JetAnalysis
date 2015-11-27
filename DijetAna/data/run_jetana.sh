@@ -1,15 +1,17 @@
 #!/bin/bash
 
-# source $MY_LANDINGZONE/gc-run.lib || exit 101
+# source $MY_LANDINGZONE/gc-:run.lib || exit 101
+set -x
+printenv
 
 echo "---------------------"
 echo "Prepare to run JetAna"
 echo "---------------------"
 
-if [ -z "$CMSSWDIR" ]; then
+if [ -z "$CMSSW_BASE" ]; then
     echo "No CMSSW environment found."
     echo "Try to setup one."
-    export SCRAM_ARCH=slc6_amd64_gcc48
+    export SCRAM_ARCH=slc6_amd64_gcc481
     # export VO_CMS_SW_DIR=/afs/cern.ch/cms
     export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch
     source $VO_CMS_SW_DIR/cmsset_default.sh
@@ -17,6 +19,8 @@ if [ -z "$CMSSWDIR" ]; then
     export CMSSW_DIR=${CMSSW_DIR}
     eval $(cd $CMSSW_DIR && scramv1 runtime -sh)
 fi
+
+echo $PATH
 
 echo "-------------------------"
 echo "Listing current directory"
