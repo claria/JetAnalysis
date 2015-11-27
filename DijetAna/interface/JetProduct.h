@@ -11,6 +11,8 @@ class JetProduct : public KappaProduct {
   // if there is no match for a genjet a nullptr is returned
   std::vector<KLV*> m_matchedGenJets;
   std::vector<KBasicJet*> m_matchedRecoJets;
+  // matched partons to Reco Jets
+  std::vector<KGenParticle*> m_matchedPartons;
 
   std::vector<KLV*> m_validGenJets;
 
