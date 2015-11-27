@@ -83,7 +83,7 @@ def main():
     nicknames = get_nicknames(args['input_files'])
 
     if args['batch']:
-        work_directory = '/nfs/dust/cms/user/gsieber/ARTUS'
+        work_directory = os.path.expandvars('$ARTUS_WORKDIR/ARTUS')
         project_directory = prepare_gc_input(args['input_files'], 
                                              config=args['config'], 
                                              files_per_job=args['files_per_job'],
@@ -271,7 +271,7 @@ def prepare_gc_input(filelist, config, work_directory, files_per_job=20):
     """Prepare gridcontrol configs and work directory."""
 
     date_now = datetime.now().strftime("%Y-%m-%d_%H-%M")
-    cmssw_directory = os.getenv('CMSSW_BASE')
+    cmssw_directory = os.path.realpath(os.getenv('CMSSW_BASE'))
     jetana_directory = os.path.join(cmssw_directory, 'src/JetAnalysis/DijetAna')
 
 
