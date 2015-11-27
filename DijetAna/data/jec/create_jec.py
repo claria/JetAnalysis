@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-gt = 'FT53_V21A_AN6'
+gt = 'START53_V27'
 
 process = cms.Process("jectxt")
 process.load('Configuration.StandardSequences.Services_cff')
@@ -29,14 +29,18 @@ process.readAK5PF    = cms.EDAnalyzer('JetCorrectorDBReader',
       createTextFile = cms.untracked.bool(True)
 )
 process.readAK5Calo = process.readAK5PF.clone(payloadName = 'AK5Calo')
+process.readAK5PFCHS = process.readAK7PF.clone(payloadName = 'AK5PFchs')
 process.readAK5JPT = process.readAK5PF.clone(payloadName = 'AK5JPT')
 
 process.readAK7Calo = process.readAK7PF.clone(payloadName = 'AK7Calo')
+process.readAK7PFCHS = process.readAK7PF.clone(payloadName = 'AK7PFchs')
 process.readAK7JPT = process.readAK7PF.clone(payloadName = 'AK7JPT')
 
 process.p = cms.Path(process.readAK5PF*
                      process.readAK5JPT*
+                     process.readAK5PFCHS*
                      process.readAK5Calo*
                      process.readAK7PF*
+                     process.readAK7PFCHS*
                      process.readAK7Calo*
                      process.readAK7JPT)
