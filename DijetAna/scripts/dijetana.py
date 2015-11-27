@@ -24,9 +24,6 @@ from sys import stdin
 
 from ConfigParser import RawConfigParser
 
-from Artus.Configuration.artusWrapper import ArtusWrapper
-from Artus.Utility import jsonTools
-
 import logging
 log = logging.getLogger(__name__)
 
