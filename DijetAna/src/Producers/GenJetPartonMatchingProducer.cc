@@ -10,12 +10,12 @@ void GenJetPartonMatchingProducer::Produce(KappaEvent const& kappaEvent, KappaPr
   auto & product = static_cast<JetProduct &>(kappaProduct);
   auto const& settings = static_cast<JetSettings const&>(kappaSettings);
 
+  assert(event.m_genParticles);
+
   product.m_matchedPartons.clear();
   for (auto & jet : product.m_validJets) {
-    // size_t idx = jet - product.m_validJets.begin();
     KGenParticle* matchedParton = Match(event, product, settings, static_cast<KLV*>(&(*jet)));
     if (matchedParton != nullptr) {
-      // Map of reco jets and matched gen partons for all requested correction levels
       product.m_matchedPartons.push_back(matchedParton);
     }
   }

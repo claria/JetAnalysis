@@ -29,9 +29,17 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_incgenjetpt->Sumw2();
 
   // Gen Pt Avg
-  m_h_genptavg =
-      new TH1D("h_genptavg", "h_genptavg", settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
+  m_h_genptavg = new TH1D("h_genptavg", "h_genptavg", settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
   m_h_genptavg->Sumw2();
+
+  // Jet flavours vs. ptavg
+  m_h_dijet_flavour_qq = new TH1D("h_dijet_flavour_qq", "h_dijet_flavour_qq", settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
+  m_h_dijet_flavour_qq->Sumw2();
+  m_h_dijet_flavour_qg = new TH1D("h_dijet_flavour_qg", "h_dijet_flavour_qg", settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
+  m_h_dijet_flavour_qg->Sumw2();
+  m_h_dijet_flavour_gg = new TH1D("h_dijet_flavour_gg", "h_dijet_flavour_gg", settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
+  m_h_dijet_flavour_gg->Sumw2();
+
 
   m_h_genjet12dphi = new TH1D("h_genjet12dphi", "h_genjet12dphi", 63, 0, 6.3);
   m_h_genjet12dphi->Sumw2();
@@ -183,6 +191,26 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
           ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(1)->p4, product.m_validGenJets.at(1)->p4),
           eventWeight);
     }
+    // Dijet flavour
+    if (product.m_matchedPartons.at(0) != nullptr && product.m_matchedPartons.at(1) != nullptr) {
+      // gg
+      if ((product.m_matchedPartons.at(0)->pdgId() == 21) && (product.m_matchedPartons.at(1)->pdgId() == 21))
+      {
+        m_h_dijet_flavour_gg->Fill(product.m_dijet_ptavg);
+      }
+      // qq
+      else if ((std::abs(product.m_matchedPartons.at(0)->pdgId()) < 6) 
+          && (std::abs(product.m_matchedPartons.at(1)->pdgId()) < 6))
+      {
+        m_h_dijet_flavour_qq->Fill(product.m_dijet_ptavg);
+      }
+      // gq case
+      else if (((std::abs(product.m_matchedPartons.at(0)->pdgId()) < 6) && (product.m_matchedPartons.at(1)->pdgId() == 21))
+          || ((std::abs(product.m_matchedPartons.at(1)->pdgId()) < 6) && (product.m_matchedPartons.at(0)->pdgId() == 21)))
+      {
+        m_h_dijet_flavour_qg->Fill(product.m_dijet_ptavg);
+      }
+    }
   }
 
   for (auto jet = product.m_validGenJets.begin(); jet != product.m_validGenJets.end(); jet++) {
@@ -207,6 +235,10 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   m_h_incgenjetpt->Write();
   m_h_genjet12rap->Write();
   m_h_genptavg->Write();
+
+  m_h_dijet_flavour_qq->Write();
+  m_h_dijet_flavour_qg->Write();
+  m_h_dijet_flavour_gg->Write();
 
   m_h2_gen_yb_ys->Write();
   m_h3_genjet12rap->Write();
