@@ -129,6 +129,7 @@ class BaseConfig(dict):
             'producer:ValidJetsProducer',
             ]
         self['BasicJets'] = 'ak7PFJetsCHS'
+        self['GenParticles'] = 'genParticles'
         self['PileupDensity'] = 'pileupDensity'
         self['Met'] = 'met'
         # No pipelines
@@ -158,6 +159,7 @@ class BaseConfig(dict):
         self['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup/pileup_weights_S10.root'
         self.add_processor('producer:ValidGenJetsProducer', after='producer:JetCorrectionsProducer')
         self.add_processor('producer:GenJetMatchingProducer', after='producer:ValidJetsProducer')
+        self.add_processor('producer:GenJetPartonMatchingProducer', after='producer:ValidJetsProducer')
         self.add_processor('producer:GenJetQuantitiesProducer', after='producer:ValidGenJetsProducer')
         self.add_processor('producer:JetQuantitiesProducer', after='producer:ValidJetsProducer')
         self.add_processor('producer:PUWeightProducer', after='producer:ValidJetsProducer')
