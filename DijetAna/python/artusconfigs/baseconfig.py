@@ -128,7 +128,7 @@ class BaseConfig(dict):
             'producer:JetCorrectionsProducer',
             'producer:ValidJetsProducer',
             ]
-        self['BasicJets'] = 'ak7PFJets'
+        self['BasicJets'] = 'ak7PFJetsCHS'
         self['PileupDensity'] = 'pileupDensity'
         self['Met'] = 'met'
         # No pipelines
@@ -165,9 +165,9 @@ class BaseConfig(dict):
         self.add_processor('producer:GeneratorWeightProducer', after='producer:ValidJetsProducer')
         self.add_processor('producer:NumberGeneratedEventsWeightProducer', after='producer:ValidJetsProducer')
         self.add_processor('EventWeightProducer', after='producer:GenJetMatchingProducer')
-        self['JetEnergyCorrectionParameters'] = ['$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L1FastJet_AK7PF.txt',
-                                                 '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L2Relative_AK7PF.txt',
-                                                 '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L3Absolute_AK7PF.txt'
+        self['JetEnergyCorrectionParameters'] = ['$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L1FastJet_AK7PFchs.txt',
+                                                 '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L2Relative_AK7PFchs.txt',
+                                                 '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L3Absolute_AK7PFchs.txt'
                                                 ]
         # For HLT trigger studies in MC
         self['HltPaths'] = ['HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
@@ -182,10 +182,10 @@ class BaseConfig(dict):
         self['TriggerObjects'] = 'triggerObjects'
         self['TriggerInfos']   = 'triggerObjectMetadata'
         self['JetEnergyCorrectionParameters'] = [
-            '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_L1FastJet_AK7PF.txt',
-            '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_L2Relative_AK7PF.txt',
-            '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_L3Absolute_AK7PF.txt',
-            '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_L2L3Residual_AK7PF.txt'
+            '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_L1FastJet_AK7PFchs.txt',
+            '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_L2Relative_AK7PFchs.txt',
+            '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_L3Absolute_AK7PFchs.txt',
+            '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_L2L3Residual_AK7PFchs.txt'
         ]
         self['JetEnergyCorrectionUncertaintyParameters'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/Winter14_V8_DATA_UncertaintySources_AK7PF.txt'
         self['JetEnergyCorrectionUncertaintySource'] = 'Total'
