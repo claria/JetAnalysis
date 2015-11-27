@@ -129,8 +129,7 @@ class BaseConfig(dict):
             'producer:ValidJetsProducer',
             ]
         self['BasicJets'] = 'ak7PFJets'
-        self['PileupDensity'] = 'KT6Area'
-        # self['PileupDensity'] = 'pileupDensity'
+        self['PileupDensity'] = 'pileupDensity'
         self['Met'] = 'met'
         # No pipelines
         self['Pipelines'] = {}
