@@ -1,0 +1,14 @@
+{
+    "naf" : {
+        "gsieber" : {
+            "artus_workdir" : "/nfs/dust/cms/user/gsieber/ARTUS",
+            "gc_dir" : "/afs/desy.de/user/g/gsieber/grid-control"
+        }
+    },
+    "ekp" : {
+        "sieber" : {
+            "artus_workdir" : "/storage/a/ARTUS",
+            "gc_dir" : "/home/sieber/grid-control"
+        }
+    }
+}
