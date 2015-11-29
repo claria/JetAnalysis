@@ -159,7 +159,7 @@ def get_tty_fg():
     signal.signal(signal.SIGTTOU, hdlr)
 
 def run(executable, arguments='',ncurses=False):
-    """Execute and wait for command to complete. Returns returncode attribute."""
+    """Execute and wait for command to complete. Returns exit code."""
 
     cmd = '{0} {1}'.format(executable, arguments)
     log.debug("Executing command: \"{0}\"".format(cmd))
