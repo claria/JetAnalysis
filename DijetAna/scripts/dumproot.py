@@ -1,5 +1,9 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+Dumps the content of the root file recursively for all subfolders
+and all trees to the screen.
+"""
 
 import os
 import sys

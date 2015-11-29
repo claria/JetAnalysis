@@ -1,5 +1,11 @@
 #! /usr/bin/env python2
 
+"""
+Unfolds a given distribution using the supplied
+response matrix with the possibility to choose the
+unfolding algorithm and the error calculation.
+"""
+
 import os
 import sys
 import argparse

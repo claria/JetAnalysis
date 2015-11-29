@@ -1,4 +1,12 @@
 #! /usr/bin/env python2
+"""
+Usage: prepoutput.py /folder/to/artus/output/
+
+Groups the Artus root outputs according to samples and
+hadd all the samples correctly. By default a symlink
+to the root files is created in the current directory.
+"""
+
 
 import glob
 import os
@@ -55,7 +63,6 @@ def main():
                 os.remove(link_name)
             print "Symlinking {0} to linkname {1}".format(target_name, link_name)
             os.symlink(target_name, link_name)
-
 
 def hdadd(files, output_filename):
     cmd = 'jethadd -f {0} {1}'.format(output_filename, ' '.join(files))

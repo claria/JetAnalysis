@@ -1,5 +1,11 @@
 #! /usr/bin/env python2.6
 
+"""
+Simple script to fill the response matrix using
+the (hardcoded) resolution parameters for the 
+triple-differential dijet measurement.
+"""
+
 import os
 import sys
 import argparse
