@@ -313,12 +313,36 @@ def prepare_gc_input(filelist, config, work_directory, files_per_job=20):
 
     return project_directory
 
+def get_user_data():
+    """Tries to find user defined directories in config or in environment variable."""
+    user_data_config = os.expandvars('${CMSSW_BASE}/src/JetAnalysis/DijetAna/data/user_settings.json')
+    with open(user_data_config) as json_file:
+        try:
+            settings = json.load(json_file)
+    user = os.getenv('USER')
+    host = os.getenv('HOST')
+    if 'naf' in host:
+        host = 'naf'
+    elif 'ekp' in host:
+        host = 'ekp'
+    else:
+        log.error('Host is not configure in data/user_settings.json file. Please add settings there.')
+
+    out = {}
+    if user in settings[host]:
+        out['artus_workdir'] = settings[host][user]['artus_workdir']
+        out['gc_dir'] = settings[host][user]['gc_dir']
+    else:
+        out['artus_workdir'] = os.expandvars(settings[host]['default']['artus_workdir'])
+        out['gc_dir'] = os.expandvars(settings[host]['default']['gc_dir'])
+
+    return out
+
 
 def replace(source_file_path, replace_dict):
     """ Replace all occurences of keys in replace_dict with the related
         value in the file source_file_path.
     """
-
     fh, target_file_path = tempfile.mkstemp()
     with open(target_file_path, 'w') as target_file:
         with open(source_file_path, 'r') as source_file:
