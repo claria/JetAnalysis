@@ -242,6 +242,11 @@ def expand_glob(l):
         item = item.strip().strip(',')
         if os.path.isdir(item):
             expanded.append(glob.glob(os.path.expandvars(item + '/*.root')))
+        elif os.path.isfile(item) and item.endswith('.txt'):
+            with open(item) as f:
+                expanded += [x.strip('\n') for filename in f.readlines())
+        elif os.path.isfile(item) and item.endswith('.root'):
+            expanded.append(item)
         else:
             expanded.append(glob.glob(os.path.expandvars(item)))
     # Flatten list of lists and return
@@ -292,7 +297,6 @@ def prepare_gc_input(filelist, config, work_directory, files_per_job=20):
     shutil.copy(os.path.join(jetana_directory, 'data/run_jetana.sh'),
                 os.path.join(project_directory, 'run_jetana.sh'))
     log.debug('Copied run script to work directory.')
-
 
     # Write dbs file to project directory.
     dbs_filepath = os.path.join(project_directory, 'datasets.dbs')
