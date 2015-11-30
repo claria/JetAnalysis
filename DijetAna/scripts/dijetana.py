@@ -83,13 +83,15 @@ def main():
     nicknames = get_nicknames(args['input_files'])
 
     if args['batch']:
-        work_directory = os.path.expandvars('$ARTUS_WORKDIR/ARTUS')
+        # reads user configured paths from json
+        user_settings = get_user_data()
+        print user_settings
         project_directory = prepare_gc_input(args['input_files'], 
                                              config=args['config'], 
                                              files_per_job=args['files_per_job'],
-                                             work_directory=work_directory)
+                                             work_directory=user_settings['artus_workdir'])
 
-        gc_command = os.path.expandvars('$HOME/grid-control/go.py')
+        gc_command = os.path.join(user_settings['gc_dir'], 'go.py')
         arguments = '-Gc {0}'.format(os.path.join(project_directory, 'jetana.conf'))
         if args['dry_run']:
             log.debug('Exit since only dry run requested.')
@@ -97,7 +99,7 @@ def main():
         else:
             run(gc_command, arguments=arguments)
         # Creates a symlink 'latest' in work directory pointing to project directory
-        dest = os.path.join(work_directory, 'latest')
+        dest = os.path.join(user_settings['artus_workdir'], 'latest')
         if os.path.lexists(dest):
             os.remove(dest)
         os.symlink(project_directory, dest )
@@ -272,7 +274,7 @@ def write_dbsfile(filelist, path=None, work_directory=None):
     log.debug('Wrote dbs file to work directory.')
 
 
-def prepare_gc_input(filelist, config, work_directory, files_per_job=20):
+def prepare_gc_input(filelist, config, work_directory, files_per_job=10):
     """Prepare gridcontrol configs and work directory."""
 
     date_now = datetime.now().strftime("%Y-%m-%d_%H-%M")
@@ -315,10 +317,14 @@ def prepare_gc_input(filelist, config, work_directory, files_per_job=20):
 
 def get_user_data():
     """Tries to find user defined directories in config or in environment variable."""
-    user_data_config = os.expandvars('${CMSSW_BASE}/src/JetAnalysis/DijetAna/data/user_settings.json')
+    user_data_config = os.path.expandvars('${CMSSW_BASE}/src/JetAnalysis/DijetAna/data/user_settings.json')
     with open(user_data_config) as json_file:
         try:
             settings = json.load(json_file)
+        except ValueError:
+            log.critical('Failed to parse json file {0}'.format(user_data_config))
+            sys.exit(1)
+
     user = os.getenv('USER')
     host = os.getenv('HOST')
     if 'naf' in host:
@@ -333,8 +339,8 @@ def get_user_data():
         out['artus_workdir'] = settings[host][user]['artus_workdir']
         out['gc_dir'] = settings[host][user]['gc_dir']
     else:
-        out['artus_workdir'] = os.expandvars(settings[host]['default']['artus_workdir'])
-        out['gc_dir'] = os.expandvars(settings[host]['default']['gc_dir'])
+        out['artus_workdir'] = os.path.expandvars(settings[host]['default']['artus_workdir'])
+        out['gc_dir'] = os.path.expandvars(settings[host]['default']['gc_dir'])
 
     return out
 

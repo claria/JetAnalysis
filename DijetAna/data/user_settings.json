@@ -18,5 +18,5 @@
             "artus_workdir" : "/storage/a/${USER}/ARTUS",
             "gc_dir" : "/home/${USER}/grid-control"
         }
-    },
+    }
 }
