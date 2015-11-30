@@ -244,9 +244,9 @@ def expand_glob(l):
             expanded.append(glob.glob(os.path.expandvars(item + '/*.root')))
         elif os.path.isfile(item) and item.endswith('.txt'):
             with open(item) as f:
-                expanded += [x.strip('\n') for filename in f.readlines())
+                expanded.append([filename.strip('\n') for filename in f.readlines()])
         elif os.path.isfile(item) and item.endswith('.root'):
-            expanded.append(item)
+            expanded.append([item])
         else:
             expanded.append(glob.glob(os.path.expandvars(item)))
     # Flatten list of lists and return
