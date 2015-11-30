@@ -149,6 +149,7 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
           eventWeight);
     }
   }
+
   if (product.m_validGenJets.size() > 1) {
     m_h_genptavg->Fill(product.m_gendijet_ptavg, eventWeight);
 
@@ -192,23 +193,26 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
           eventWeight);
     }
     // Dijet flavour
-    if (product.m_matchedPartons.at(0) != nullptr && product.m_matchedPartons.at(1) != nullptr) {
-      // gg
-      if ((product.m_matchedPartons.at(0)->pdgId() == 21) && (product.m_matchedPartons.at(1)->pdgId() == 21))
-      {
-        m_h_dijet_flavour_gg->Fill(product.m_dijet_ptavg);
-      }
-      // qq
-      else if ((std::abs(product.m_matchedPartons.at(0)->pdgId()) < 6) 
-          && (std::abs(product.m_matchedPartons.at(1)->pdgId()) < 6))
-      {
-        m_h_dijet_flavour_qq->Fill(product.m_dijet_ptavg);
-      }
-      // gq case
-      else if (((std::abs(product.m_matchedPartons.at(0)->pdgId()) < 6) && (product.m_matchedPartons.at(1)->pdgId() == 21))
-          || ((std::abs(product.m_matchedPartons.at(1)->pdgId()) < 6) && (product.m_matchedPartons.at(0)->pdgId() == 21)))
-      {
-        m_h_dijet_flavour_qg->Fill(product.m_dijet_ptavg);
+    if (product.m_matchedPartons.size() > 1) 
+    {
+      if (product.m_matchedPartons.at(0) != nullptr && product.m_matchedPartons.at(1) != nullptr) {
+        // gg
+        if ((product.m_matchedPartons.at(0)->pdgId() == 21) && (product.m_matchedPartons.at(1)->pdgId() == 21))
+        {
+          m_h_dijet_flavour_gg->Fill(product.m_dijet_ptavg, eventWeight);
+        }
+        // qq
+        else if ((std::abs(product.m_matchedPartons.at(0)->pdgId()) < 6) 
+            && (std::abs(product.m_matchedPartons.at(1)->pdgId()) < 6))
+        {
+          m_h_dijet_flavour_qq->Fill(product.m_dijet_ptavg, eventWeight);
+        }
+        // gq case
+        else if (((std::abs(product.m_matchedPartons.at(0)->pdgId()) < 6) && (product.m_matchedPartons.at(1)->pdgId() == 21))
+            || ((std::abs(product.m_matchedPartons.at(1)->pdgId()) < 6) && (product.m_matchedPartons.at(0)->pdgId() == 21)))
+        {
+          m_h_dijet_flavour_qg->Fill(product.m_dijet_ptavg, eventWeight);
+        }
       }
     }
   }
