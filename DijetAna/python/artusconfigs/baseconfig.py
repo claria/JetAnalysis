@@ -126,7 +126,7 @@ class BaseConfig(dict):
         self['VertexSummary'] = 'offlinePrimaryVerticesSummary'
         self['Processors'] = [
             'producer:JetCorrectionsProducer',
-            'producer:ValidJetsProducer',
+            'producer:JetValidJetsProducer',
             ]
         self['BasicJets'] = 'ak7PFJetsCHS'
         self['GenParticles'] = 'genParticles'
@@ -158,14 +158,14 @@ class BaseConfig(dict):
         self['GenEventMetadata'] = 'eventInfo'
         self['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup/pileup_weights_S10.root'
         self.add_processor('producer:ValidGenJetsProducer', after='producer:JetCorrectionsProducer')
-        self.add_processor('producer:GenJetMatchingProducer', after='producer:ValidJetsProducer')
-        self.add_processor('producer:GenJetPartonMatchingProducer', after='producer:ValidJetsProducer')
+        self.add_processor('producer:GenJetMatchingProducer', after='producer:JetValidJetsProducer')
+        self.add_processor('producer:GenJetPartonMatchingProducer', after='producer:JetValidJetsProducer')
         self.add_processor('producer:GenJetQuantitiesProducer', after='producer:ValidGenJetsProducer')
-        self.add_processor('producer:JetQuantitiesProducer', after='producer:ValidJetsProducer')
-        self.add_processor('producer:PUWeightProducer', after='producer:ValidJetsProducer')
-        self.add_processor('producer:CrossSectionWeightProducer', after='producer:ValidJetsProducer')
-        self.add_processor('producer:GeneratorWeightProducer', after='producer:ValidJetsProducer')
-        self.add_processor('producer:NumberGeneratedEventsWeightProducer', after='producer:ValidJetsProducer')
+        self.add_processor('producer:JetQuantitiesProducer', after='producer:JetValidJetsProducer')
+        self.add_processor('producer:PUWeightProducer', after='producer:JetValidJetsProducer')
+        self.add_processor('producer:CrossSectionWeightProducer', after='producer:JetValidJetsProducer')
+        self.add_processor('producer:GeneratorWeightProducer', after='producer:JetValidJetsProducer')
+        self.add_processor('producer:NumberGeneratedEventsWeightProducer', after='producer:JetValidJetsProducer')
         self.add_processor('EventWeightProducer', after='producer:GenJetMatchingProducer')
         self['JetEnergyCorrectionParameters'] = ['$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L1FastJet_AK7PFchs.txt',
                                                  '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L2Relative_AK7PFchs.txt',
@@ -215,7 +215,7 @@ class BaseConfig(dict):
         self['TriggerEffThresholds'] = [123., 192., 263., 353., 412., 2500.]
 
         self.add_processor('filter:JsonFilter', idx=0)
-        self.add_processor('producer:JetQuantitiesProducer', after='producer:ValidJetsProducer')
+        self.add_processor('producer:JetQuantitiesProducer', after='producer:JetValidJetsProducer')
         self.add_processor('producer:JetHltProducer')
         self.add_processor('producer:EventWeightProducer', after='producer:JetHltProducer')
         self.add_processor('producer:LuminosityWeightProducer', before='producer:EventWeightProducer')

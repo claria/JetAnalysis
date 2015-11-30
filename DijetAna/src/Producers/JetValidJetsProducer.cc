@@ -8,7 +8,7 @@
 //
 //
 std::string JetValidJetsProducer::GetProducerId() const {
-  return "ValidJetsProducer";
+  return "JetValidJetsProducer";
 }
 
 void JetValidJetsProducer::Init(JetSettings const& settings) {

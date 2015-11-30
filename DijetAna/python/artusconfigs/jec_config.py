@@ -16,7 +16,7 @@ class JECConfig(RunConfig):
                               "producer:JetCorrectionsProducer",]
         default_pipeline['Processors'] = [
                 "producer:JetCorrectionsUncertaintyProducer", 
-                "producer:ValidJetsProducer", 
+                "producer:JetValidJetsProducer", 
                 "producer:LuminosityWeightProducer", 
                 "producer:JetQuantitiesProducer", 
                 "producer:JetHltProducer", 

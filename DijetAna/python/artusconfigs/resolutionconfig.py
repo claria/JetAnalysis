@@ -22,7 +22,7 @@ class ResolutionConfig(BaseConfig):
         self['MinLeadingGenJetPt'] = 0.0
         self['MinLeadingJetPt'] = 0.0
         self['Processors'].remove('producer:GenJetMatchingProducer')
-        self['Processors'].insert(self['Processors'].index('producer:ValidJetsProducer') + 1, 'producer:GenJetMatchingProducer')
+        self['Processors'].insert(self['Processors'].index('producer:JetValidJetsProducer') + 1, 'producer:GenJetMatchingProducer')
         self['Processors'].insert(self['Processors'].index('producer:GenJetMatchingProducer') + 1, 'producer:JERScalingProducer')
         default_pipeline = self.get_default_pipeline()
         default_pipeline['Consumers'] =  [
