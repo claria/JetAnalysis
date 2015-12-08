@@ -112,14 +112,23 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h3_ptavg_ysb->Sumw2();
 
   m_h_neutralHadronFraction = new TH1D("h_neutralHadronFraction", "h_neutralHadronFraction", 50, 0., 2.);
+  m_h_neutralHadronFraction->Sumw2();
   m_h_chargedHadronFraction = new TH1D("h_chargedHadronFraction", "h_chargedHadronFraction", 50, 0., 1.);
+  m_h_chargedHadronFraction->Sumw2();
   m_h_photonFraction = new TH1D("h_photonFraction", "h_photonFraction", 50, 0., 2.);
+  m_h_photonFraction->Sumw2();
   m_h_electronFraction = new TH1D("h_electronFraction", "h_electronFraction", 50, 0., 1.);
+  m_h_electronFraction->Sumw2();
   m_h_muonFraction = new TH1D("h_muonFraction", "h_muonFraction", 50, 0., 1.);
+  m_h_muonFraction->Sumw2();
   m_h_hfHadronFraction = new TH1D("h_hfHadronFraction", "h_hfHadronFraction", 50, 0., 1.);
+  m_h_hfHadronFraction->Sumw2();
   m_h_hfEMFraction = new TH1D("h_hfEMFraction", "h_hfEMFraction", 50, 0., 1.);
+  m_h_hfEMFraction->Sumw2();
   m_h_nConstituents = new TH1D("h_nConstituents", "h_nConstituents", 250, -0.5, 249.5);
+  m_h_nConstituents->Sumw2();
   m_h_nCharged = new TH1D("h_nCharged", "h_nCharged", 250, -0.5, 249.5);
+  m_h_nCharged->Sumw2();
 }
 
 void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& event,
