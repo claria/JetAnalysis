@@ -129,7 +129,6 @@ class BaseConfig(dict):
             'producer:JetValidJetsProducer',
             ]
         self['BasicJets'] = 'ak7PFJetsCHS'
-        self['GenParticles'] = 'genParticles'
         self['PileupDensity'] = 'pileupDensity'
         self['Met'] = 'met'
         # No pipelines
@@ -154,6 +153,7 @@ class BaseConfig(dict):
     def add_mc_settings(self, sample_size=-1, crosssection=-1.):
         """ Global settings to be applied for MC."""
         self['GenJets'] = 'ak7GenJets'
+        self['GenParticles'] = 'genParticles'
         self['GenLumiMetadata'] = 'lumiInfo'
         self['GenEventMetadata'] = 'eventInfo'
         self['PileupWeightFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/pileup/pileup_weights_S10.root'
