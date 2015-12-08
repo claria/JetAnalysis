@@ -14,7 +14,7 @@ class JetProduct : public KappaProduct {
   // matched partons to Reco Jets
   std::vector<KGenParticle*> m_matchedPartons;
 
-  std::vector<KLV*> m_validGenJets;
+  std::vector<KLV> m_validGenJets;
 
   std::vector<double> m_incJetsPt;
   std::vector<double> m_incJetsEta;

@@ -10,6 +10,7 @@
 #include "JetAnalysis/DijetAna/interface/Producers/JetValidJetsProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/ValidGenJetsProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/JetCorrectionsUncertaintyProducer.h"
+#include "JetAnalysis/DijetAna/interface/Producers/GenJetCorrectionsUncertaintyProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/JetCorrectionsProducer.h"
 
 // Filters
@@ -75,6 +76,8 @@ ProducerBaseUntemplated* JetFactory::createProducer(std::string const& id) {
     return new JetCorrectionsProducer();
   else if (JetCorrectionsUncertaintyProducer().GetProducerId() == id)
     return new JetCorrectionsUncertaintyProducer();
+  else if (GenJetCorrectionsUncertaintyProducer().GetProducerId() == id)
+    return new GenJetCorrectionsUncertaintyProducer();
 
   else
     return KappaFactory::createProducer(id);
