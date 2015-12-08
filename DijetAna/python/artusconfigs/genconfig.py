@@ -13,6 +13,7 @@ class GenConfig(BaseConfig):
     def modify_settings(self):
         self['GenLumiMetadata'] = 'lumiInfo'
         self['GenEventMetadata'] = 'eventInfo'
+        self['GenParticles'] = ''
         self['GenJets'] = 'ak7GenJets'
         self['TrackSummary'] = ''
         self['VertexSummary'] = ''
