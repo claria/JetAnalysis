@@ -154,9 +154,8 @@ class GenJECConfig(BaseConfig):
                           'PileUpEnvelope',
                           'Total',
                           ]
-        jec_unc_names = ['Total']
 
-        for i, j in [(0,0), (0, 1), (0, 2), (1, 0), (1, 1), (2, 0)][:1]:
+        for i, j in [(0,0), (0, 1), (0, 2), (1, 0), (1, 1), (2, 0)]:
             yb_lo = self['RapidityAbsBinning'][i]
             yb_hi = self['RapidityAbsBinning'][i+1]
             ys_lo = self['RapidityAbsBinning'][j]
@@ -166,10 +165,10 @@ class GenJECConfig(BaseConfig):
             self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
             self['Pipelines'][pipeline_name]['Processors'].append('filter:GenYBoostFilter')
             self['Pipelines'][pipeline_name]['Processors'].append('filter:GenYStarFilter')
-            self['Pipelines'][pipeline_name]['GenMinYStar'] = ys_lo
-            self['Pipelines'][pipeline_name]['GenMaxYStar'] = ys_hi
-            self['Pipelines'][pipeline_name]['GenMinYBoost'] = yb_lo
-            self['Pipelines'][pipeline_name]['GenMaxYBoost'] = yb_hi
+            self['Pipelines'][pipeline_name]['MinGenYStar'] = ys_lo
+            self['Pipelines'][pipeline_name]['MaxGenYStar'] = ys_hi
+            self['Pipelines'][pipeline_name]['MinGenYBoost'] = yb_lo
+            self['Pipelines'][pipeline_name]['MaxGenYBoost'] = yb_hi
             self['Pipelines'][pipeline_name]['JetEnergyCorrectionUncertaintyShift'] = 0.0
             self['Pipelines'][pipeline_name]['JetEnergyCorrectionUncertaintySource'] = "Total"
 
