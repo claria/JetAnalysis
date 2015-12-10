@@ -32,6 +32,10 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_genptavg = new TH1D("h_genptavg", "h_genptavg", settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
   m_h_genptavg->Sumw2();
 
+  // Gen Match Pt Avg
+  m_h_genmatchptavg = new TH1D("h_genmatchptavg", "h_genmatchptavg", settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
+  m_h_genmatchptavg->Sumw2();
+
   // Jet flavours vs. ptavg
   m_h_dijet_flavour_qq = new TH1D("h_dijet_flavour_qq", "h_dijet_flavour_qq", settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
   m_h_dijet_flavour_qq->Sumw2();
@@ -205,9 +209,10 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
       double genmatch_yboost = 0.5 * std::abs(product.m_matchedRecoJets.at(0)->p4.Rapidity() + product.m_matchedRecoJets.at(1)->p4.Rapidity());
       double genmatch_ystar = 0.5 * std::abs(product.m_matchedRecoJets.at(0)->p4.Rapidity() - product.m_matchedRecoJets.at(1)->p4.Rapidity());
       m_h2_GenVsRecoPtAvg->Fill(genmatch_ptavg / product.m_gendijet_ptavg, product.m_gendijet_ptavg, eventWeight);
-      m_h2_GenVsRecoYboost->Fill(genmatch_yboost / product.m_gendijet_yboost, product.m_gendijet_ptavg, eventWeight);
-      m_h2_GenVsRecoYstar->Fill(genmatch_ystar / product.m_gendijet_ystar, product.m_gendijet_ptavg, eventWeight);
+      m_h2_GenVsRecoYboost->Fill(genmatch_yboost -product.m_gendijet_yboost, product.m_gendijet_ptavg, eventWeight);
+      m_h2_GenVsRecoYstar->Fill(genmatch_ystar - product.m_gendijet_ystar, product.m_gendijet_ptavg, eventWeight);
       m_h2_genreco_ptavg->Fill(genmatch_ptavg, product.m_gendijet_ptavg, eventWeight);
+      m_h_genmatchptavg->Fill(genmatch_ptavg, eventWeight);
     }
     if (product.m_matchedRecoJets.size() > 1 && product.m_matchedRecoJets.at(1) != NULL) {
       m_h_jet2DeltaR->Fill(
@@ -263,6 +268,7 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   m_h_incgenjetpt->Write();
   m_h_genjet12rap->Write();
   m_h_genptavg->Write();
+  m_h_genmatchptavg->Write();
 
   m_h_dijet_flavour_qq->Write();
   m_h_dijet_flavour_qg->Write();
