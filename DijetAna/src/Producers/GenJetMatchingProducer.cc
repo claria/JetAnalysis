@@ -1,5 +1,5 @@
 #include "JetAnalysis/DijetAna/interface/Producers/GenJetMatchingProducer.h"
-#include <KappaTools/RootTools/Matching.h>
+#include <KappaTools/RootTools/interface/Matching.h>
 
 std::string GenJetMatchingProducer::GetProducerId() const {
   return "GenJetMatchingProducer";

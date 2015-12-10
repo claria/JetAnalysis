@@ -6,7 +6,7 @@
 #include "Artus/Consumer/interface/LambdaNtupleConsumer.h"
 
 #include "JetAnalysis/DijetAna/interface/Consumers/TriggerEfficiencyHistogramConsumer.h"
-#include "KappaTools/RootTools/HLTTools.h"
+#include "KappaTools/RootTools/interface/HLTTools.h"
 #include <boost/lexical_cast.hpp>
 
 /**

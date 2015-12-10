@@ -6,7 +6,7 @@
 #include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
 
 #define USE_JEC
-#include "KappaTools/RootTools/JECTools.h"
+#include "KappaTools/RootTools/interface/JECTools.h"
 
 std::string JetCorrectionsUncertaintyProducer::GetProducerId() const {
   return "JetCorrectionsUncertaintyProducer";

@@ -5,7 +5,7 @@
 #include "Artus/Utility/interface/RootFileHelper.h"
 
 #include "JetAnalysis/DijetAna/interface/Consumers/SimpleTriggerEfficiencyConsumer.h"
-#include "KappaTools/RootTools/HLTTools.h"
+#include "KappaTools/RootTools/interface/HLTTools.h"
 
 /**
    \brief Calculate the trigger efficiency by emulating the next trigger.
