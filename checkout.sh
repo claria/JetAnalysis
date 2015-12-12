@@ -34,7 +34,6 @@ make -C Kappa/DataFormats/test/ -j4
 
 # Checkout master of KappaTools
 git clone https://github.com/KappaAnalysis/KappaTools.git KappaTools
-make -C KappaTools -j4
 
 # Checkout master of Artus
 git clone https://github.com/artus-analysis/Artus.git Artus
@@ -56,8 +55,6 @@ make -C RooUnfold -j4
 # These provide the correct lib/include dirs when using cmsenv
 cp JetAnalysis/cmssw_tools/kappa.xml ../config/toolbox/${SCRAM_ARCH}/tools/selected/
 scram setup kappa
-cp JetAnalysis/cmssw_tools/kappatools.xml ../config/toolbox/${SCRAM_ARCH}/tools/selected/
-scram setup kappatools
 cp JetAnalysis/cmssw_tools/roounfold.xml ../config/toolbox/${SCRAM_ARCH}/tools/selected/
 scram setup roounfold
 
