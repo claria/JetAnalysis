@@ -10,5 +10,4 @@ class GenJetMatchingProducer : public JetProducerBase {
 
  private:
   double maxDeltaR;
-  double maxDeltaPtRel;
 };

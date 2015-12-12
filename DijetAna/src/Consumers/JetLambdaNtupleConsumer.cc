@@ -63,7 +63,7 @@ void JetLambdaNtupleConsumer::Init(setting_type const& settings) {
 
   // Number of jets
   LambdaNtupleConsumer<JetTypes>::AddIntQuantity(
-      "njets", [](JetEvent const& event, JetProduct const& product) { return product.m_validJets.size(); });
+      "njets", [](JetEvent const& event, JetProduct const& product) { return product.m_validRecoJets.size(); });
   // inclusive jet pts
   LambdaNtupleConsumer<JetTypes>::AddVDoubleQuantity(
       "incjets_pt", [](JetEvent const& event, JetProduct const& product) { return product.m_incJetsPt; });

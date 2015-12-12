@@ -27,10 +27,10 @@ bool JetHltEfficiencyFilter::DoesEventPass(JetEvent const& event,
   // (LambdaNtupleConsumer<JetTypes>::GetFloatQuantities()[settings.GetTriggerEfficiencyQuantity()])(jetEvent,
   // jetProduct);
   double pass = false;
-  double triggerEffQuantity = product.m_validJets.at(0)->p4.Pt();
+  double triggerEffQuantity = product.m_validRecoJets.at(0).p4.Pt();
   std::cout << "Selected trigger:" << product.m_selectedHltName << " in Range ("
             << triggerEffThresholds.at(product.m_selectedHltName).first << ", "
-            << triggerEffThresholds.at(product.m_selectedHltName).second << "). :" << product.m_validJets.at(0)->p4.Pt()
+            << triggerEffThresholds.at(product.m_selectedHltName).second << "). :" << product.m_validRecoJets.at(0).p4.Pt()
             << std::endl;
   if ((triggerEffQuantity > triggerEffThresholds.at(product.m_selectedHltName).first) &&
       (triggerEffQuantity <= triggerEffThresholds.at(product.m_selectedHltName).second)) {

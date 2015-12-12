@@ -9,12 +9,10 @@ void JERScalingProducer::Init(JetSettings const& settings) {
 }
 
 void JERScalingProducer::Produce(JetEvent const& event, JetProduct& product, JetSettings const& settings) const {
-  for (auto jet = product.m_validJets.begin(); jet != product.m_validJets.end(); jet++) {
-    size_t idx = jet - product.m_validJets.begin();
-    double corr = this->GetScalingFactor( (*jet)->p4.Eta() );
-    // double oldpt = (*jet)->p4.Pt();
-    if (product.m_matchedGenJets.at(idx)) {
-      (*jet)->p4.SetPt(  std::max(0., product.m_matchedGenJets.at(idx)->p4.Pt() + corr * ((*jet)->p4.Pt() - product.m_matchedGenJets.at(idx)->p4.Pt())));
+  for (auto & recojet : product.m_validRecoJets) {
+    double corr = this->GetScalingFactor(recojet.p4.Eta());
+    if (product.m_matchedGenJets.at(&recojet) != nullptr) {
+      recojet.p4.SetPt(std::max(0., product.m_matchedGenJets.at(&recojet)->p4.Pt() + corr * (recojet.p4.Pt() - product.m_matchedGenJets.at(&recojet)->p4.Pt())));
     }
   }
 }

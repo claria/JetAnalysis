@@ -145,14 +145,14 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
   m_h_METSumEtRatio->Fill(event.m_met->p4.Pt() / event.m_met->sumEt, eventWeight);
 
   // 1+ jet quantities
-  if (product.m_validJets.size() > 0) {
+  if (product.m_validRecoJets.size() > 0) {
     m_h_jet1pt->Fill(product.m_jet1Pt, eventWeight);
     m_h_jet1rap->Fill(product.m_jet1Rap, eventWeight);
     m_h_jet1eta->Fill(product.m_jet1Eta, eventWeight);
     m_h_jet1phi->Fill(product.m_jet1Phi, eventWeight);
   }
   // 2+ jet quantities
-  if (product.m_validJets.size() > 1) {
+  if (product.m_validRecoJets.size() > 1) {
     m_h_jet2pt->Fill(product.m_jet2Pt, eventWeight);
     m_h_jet2rap->Fill(product.m_jet2Rap, eventWeight);
     m_h_jet2eta->Fill(product.m_jet2Eta, eventWeight);
@@ -185,18 +185,18 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
     m_h3_ptavg_ysb->Fill(product.m_dijet_yboost, product.m_dijet_ystar, product.m_dijet_ptavg, eventWeight);
   }
 
-  for (auto jet = product.m_validJets.begin(); jet != product.m_validJets.end(); jet++) {
-    m_h_incjetpt->Fill((*jet)->p4.Pt(), eventWeight);
+  for (auto& jet : product.m_validRecoJets) {
+    m_h_incjetpt->Fill(jet.p4.Pt(), eventWeight);
 
-    m_h_neutralHadronFraction->Fill((*jet)->neutralHadronFraction + (*jet)->hfHadronFraction, eventWeight);
-    m_h_chargedHadronFraction->Fill((*jet)->chargedHadronFraction, eventWeight);
-    m_h_photonFraction->Fill((*jet)->photonFraction + (*jet)->hfEMFraction, eventWeight);
-    m_h_electronFraction->Fill((*jet)->electronFraction, eventWeight);
-    m_h_hfHadronFraction->Fill((*jet)->hfHadronFraction, eventWeight);
-    m_h_hfEMFraction->Fill((*jet)->hfEMFraction, eventWeight);
-    m_h_muonFraction->Fill((*jet)->muonFraction, eventWeight);
-    m_h_nConstituents->Fill((*jet)->nConstituents, eventWeight);
-    m_h_nCharged->Fill((*jet)->nCharged, eventWeight);
+    m_h_neutralHadronFraction->Fill(jet.neutralHadronFraction + jet.hfHadronFraction, eventWeight);
+    m_h_chargedHadronFraction->Fill(jet.chargedHadronFraction, eventWeight);
+    m_h_photonFraction->Fill(jet.photonFraction + jet.hfEMFraction, eventWeight);
+    m_h_electronFraction->Fill(jet.electronFraction, eventWeight);
+    m_h_hfHadronFraction->Fill(jet.hfHadronFraction, eventWeight);
+    m_h_hfEMFraction->Fill(jet.hfEMFraction, eventWeight);
+    m_h_muonFraction->Fill(jet.muonFraction, eventWeight);
+    m_h_nConstituents->Fill(jet.nConstituents, eventWeight);
+    m_h_nCharged->Fill(jet.nCharged, eventWeight);
   }
 }
 

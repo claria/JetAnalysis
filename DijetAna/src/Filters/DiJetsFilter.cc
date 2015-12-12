@@ -3,7 +3,7 @@
 bool DiJetsFilter::DoesEventPass(JetEvent const& event, JetProduct const& product, JetSettings const& settings) const {
   bool pass = false;
 
-  if (product.m_validJets.size() >= 2) {
+  if (product.m_validRecoJets.size() >= 2) {
     pass = true;
   }
   return pass;

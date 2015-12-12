@@ -7,27 +7,28 @@ class JetProduct : public KappaProduct {
   std::string m_selectedHltName;
   int m_selectedHltPosition;
 
+  std::vector<KBasicJet> m_corrJets;
+  std::vector<KLV> m_validGenJets;
+  std::vector<KBasicJet> m_validRecoJets;
+  std::vector<KBasicJet> m_invalidRecoJets;
+
   // Jets are always matched from gen --> reco 
   // if there is no match for a genjet a nullptr is returned
-  std::vector<KLV*> m_matchedGenJets;
-  std::vector<KBasicJet*> m_matchedRecoJets;
-  // matched partons to Reco Jets
-  std::vector<KGenParticle*> m_matchedPartons;
 
-  std::vector<KLV> m_validGenJets;
+  std::map<const KLV*, KBasicJet*> m_matchedRecoJets;
+  std::map<const KBasicJet*, KLV*> m_matchedGenJets;
+  std::map<const KBasicJet*, KGenParticle*> m_matchedPartons;
+  // std::vector<KGenParticle*> m_matchedPartons;
+  std::vector<int> m_matchResultGenJets;
+  std::vector<int> m_matchResultRecoJets;
 
+  std::map<const KBasicJet*, bool> m_doPassID;
+
+  // Main observables to be set in the JetQuantities Producer
   std::vector<double> m_incJetsPt;
   std::vector<double> m_incJetsEta;
   std::vector<double> m_incJetsRap;
   std::vector<double> m_incJetsPhi;
-
-  std::vector<int> m_match_result_genjets;
-  std::vector<int> m_match_result_recojets;
-
-  std::map<KBasicJet*, bool> m_doPassID;
-
-  std::vector<KBasicJet> m_corrJets;
-  // Main observables to be set in the JetQuantities Producer
   // Dijet observables
   double m_njets = -99999.;
 

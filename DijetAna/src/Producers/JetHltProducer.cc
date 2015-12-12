@@ -41,7 +41,7 @@ void JetHltProducer::Produce(JetEvent const& event, JetProduct& product, JetSett
   product.m_weights["hltPrescaleWeight"] = 0.;
   product.m_selectedHltPosition = DefaultValues::UndefinedInt;
 
-  if (product.m_validJets.size() == 0)
+  if (product.m_validRecoJets.size() == 0)
     return;
 
   product.m_hltInfo.setLumiInfo(event.m_lumiInfo);
