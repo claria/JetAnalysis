@@ -35,6 +35,8 @@ make -C Kappa/DataFormats/test/ -j4
 # Checkout master of KappaTools
 git clone https://github.com/KappaAnalysis/KappaTools.git KappaTools
 
+scram b -j4
+
 # Checkout master of Artus
 git clone https://github.com/artus-analysis/Artus.git Artus
 
