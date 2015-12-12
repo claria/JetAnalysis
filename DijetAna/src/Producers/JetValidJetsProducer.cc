@@ -86,8 +86,8 @@ void JetValidJetsProducer::Produce(JetEvent const& event, JetProduct& product, J
     if (noJetID)
       validJet = true;
     if (validJet && kinematicCuts)
-      product.m_validJets.push_back(&jet);
+      product.m_validRecoJets.push_back(jet);
     else
-      product.m_invalidJets.push_back(&jet);
+      product.m_invalidRecoJets.push_back(jet);
   }
 }
