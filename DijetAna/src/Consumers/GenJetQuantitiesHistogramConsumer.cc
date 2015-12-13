@@ -217,7 +217,8 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
                             product.m_gendijet_ptavg,
                             eventWeight);
 
-    if (SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(0), static_cast<KBasicJet*>(nullptr)) != nullptr && 
+    if (product.m_validGenJets.size() > 1 &&
+        SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(0), static_cast<KBasicJet*>(nullptr)) != nullptr && 
         SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(1), static_cast<KBasicJet*>(nullptr)) != nullptr) 
     {
       double genmatch_ptavg = 0.5 * (product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Pt() + product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Pt());
@@ -234,13 +235,15 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
       m_h2_genreco_ptavg->Fill(genmatch_ptavg, product.m_gendijet_ptavg, eventWeight);
       m_h_genmatchptavg->Fill(genmatch_ptavg, eventWeight);
     }
-    if (SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(1), static_cast<KBasicJet*>(nullptr)) != nullptr) {
+    if (product.m_validGenJets.size() > 1 &&
+        SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(1), static_cast<KBasicJet*>(nullptr)) != nullptr) {
       m_h_jet2DeltaR->Fill(
           ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4, product.m_validGenJets.at(1).p4),
           eventWeight);
     }
     // Dijet flavour
-    if (SafeMap::GetWithDefault(product.m_matchedPartons, &product.m_validRecoJets.at(0), static_cast<KGenParticle*>(nullptr)) != nullptr && 
+    if (product.m_validRecoJets.size() > 1 &&
+        SafeMap::GetWithDefault(product.m_matchedPartons, &product.m_validRecoJets.at(0), static_cast<KGenParticle*>(nullptr)) != nullptr && 
         SafeMap::GetWithDefault(product.m_matchedPartons, &product.m_validRecoJets.at(1), static_cast<KGenParticle*>(nullptr)) != nullptr) 
     {
       // gg
