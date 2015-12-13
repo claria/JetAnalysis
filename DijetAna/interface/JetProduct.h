@@ -7,19 +7,25 @@ class JetProduct : public KappaProduct {
   std::string m_selectedHltName;
   int m_selectedHltPosition;
 
+  // vector containing all corrected Jets
   std::vector<KBasicJet> m_corrJets;
+  // vector containing all gen jets passing the criteria
   std::vector<KLV> m_validGenJets;
+  // vector containing all reco jets passing the criteria
   std::vector<KBasicJet> m_validRecoJets;
+  // vector containing all reco jets not passing the criteria
   std::vector<KBasicJet> m_invalidRecoJets;
 
-  // Jets are always matched from gen --> reco 
-  // if there is no match for a genjet a nullptr is returned
-
+  // map containing the matched reco jet of a gen jet
   std::map<const KLV*, KBasicJet*> m_matchedRecoJets;
+  // map containing the matched gen jet of a reco jet
   std::map<const KBasicJet*, KLV*> m_matchedGenJets;
+  // map containing the matched gen particle of a reco jet
   std::map<const KBasicJet*, KGenParticle*> m_matchedPartons;
-  // std::vector<KGenParticle*> m_matchedPartons;
+
+  // match result containing the indices of the matched jets
   std::vector<int> m_matchResultGenJets;
+  // match result containing the indices of the matched jets
   std::vector<int> m_matchResultRecoJets;
 
   std::map<const KBasicJet*, bool> m_doPassID;
@@ -29,7 +35,9 @@ class JetProduct : public KappaProduct {
   std::vector<double> m_incJetsEta;
   std::vector<double> m_incJetsRap;
   std::vector<double> m_incJetsPhi;
-  // Dijet observables
+
+
+  // Kinematic jet observables
   double m_njets = -99999.;
 
   double m_jet1Pt = -99999.;
