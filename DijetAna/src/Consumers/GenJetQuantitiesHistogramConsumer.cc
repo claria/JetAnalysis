@@ -1,3 +1,4 @@
+#include "Artus/Utility/interface/SafeMap.h"
 #include "JetAnalysis/DijetAna/interface/Consumers/GenJetQuantitiesHistogramConsumer.h"
 
 void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
@@ -173,7 +174,8 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
     m_h_genjet1rap->Fill(product.m_genjet1Rap, eventWeight);
     m_h_genjet1phi->Fill(product.m_genjet1Phi, eventWeight);
 
-    if (product.m_matchedRecoJets.at(&product.m_validGenJets.at(0)) != nullptr) {
+    if (SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(0), static_cast<KBasicJet*>(nullptr)) != nullptr) 
+    {
       m_h2_GenVsRecoPt->Fill(product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Pt() / product.m_validGenJets.at(0).p4.Pt(),
                              product.m_validGenJets.at(0).p4.Pt(),
                              eventWeight);
@@ -215,8 +217,8 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
                             product.m_gendijet_ptavg,
                             eventWeight);
 
-    if (product.m_matchedRecoJets.at(&product.m_validGenJets.at(0)) != nullptr && 
-        product.m_matchedRecoJets.at(&product.m_validGenJets.at(1)) != nullptr) 
+    if (SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(0), static_cast<KBasicJet*>(nullptr)) != nullptr && 
+        SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(1), static_cast<KBasicJet*>(nullptr)) != nullptr) 
     {
       double genmatch_ptavg = 0.5 * (product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Pt() + product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Pt());
       double genmatch_yboost = 0.5 * std::abs(product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Rapidity() + product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Rapidity());
@@ -232,13 +234,15 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
       m_h2_genreco_ptavg->Fill(genmatch_ptavg, product.m_gendijet_ptavg, eventWeight);
       m_h_genmatchptavg->Fill(genmatch_ptavg, eventWeight);
     }
-    if (product.m_matchedRecoJets.at(&product.m_validGenJets.at(1)) != NULL) {
+    if (SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(1), static_cast<KBasicJet*>(nullptr)) != nullptr) {
       m_h_jet2DeltaR->Fill(
           ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4, product.m_validGenJets.at(1).p4),
           eventWeight);
     }
     // Dijet flavour
-    if (product.m_matchedPartons.at(&product.m_validRecoJets.at(0)) != nullptr && product.m_matchedPartons.at(&product.m_validRecoJets.at(1)) != nullptr) {
+    if (SafeMap::GetWithDefault(product.m_matchedPartons, &product.m_validRecoJets.at(0), static_cast<KGenParticle*>(nullptr)) != nullptr && 
+        SafeMap::GetWithDefault(product.m_matchedPartons, &product.m_validRecoJets.at(1), static_cast<KGenParticle*>(nullptr)) != nullptr) 
+    {
       // gg
       if ((product.m_matchedPartons.at(&product.m_validRecoJets.at(0))->pdgId() == 21) && (product.m_matchedPartons.at(&product.m_validRecoJets.at(1))->pdgId() == 21))
       {
