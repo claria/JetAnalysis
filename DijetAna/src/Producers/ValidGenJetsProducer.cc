@@ -11,6 +11,7 @@ void ValidGenJetsProducer::Init(JetSettings const& settings) {
   maxValidGenJetAbsRap = settings.GetMaxValidGenJetAbsRap();
 }
 void ValidGenJetsProducer::Produce(JetEvent const& event, JetProduct& product, JetSettings const& settings) const {
+  product.m_validGenJets.clear();
   for (auto jet : *(event.m_genJets)) {
     bool validJet = true;
     validJet = validJet
@@ -19,6 +20,10 @@ void ValidGenJetsProducer::Produce(JetEvent const& event, JetProduct& product, J
       && (std::abs(jet.p4.Rapidity()) < maxValidGenJetAbsRap);
     if (validJet) 
       product.m_validGenJets.push_back(jet);
+
+    product.m_matchedRecoJets.clear();
+    product.m_matchedGenJets.clear();
+    product.m_matchedPartons.clear();
   }
 }
 

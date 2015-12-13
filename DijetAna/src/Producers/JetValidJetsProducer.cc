@@ -58,7 +58,11 @@ void JetValidJetsProducer::Init(JetSettings const& settings) {
 
 void JetValidJetsProducer::Produce(JetEvent const& event, JetProduct& product, JetSettings const& settings) const
 {
-  for (auto &jet : product.m_corrJets) {
+  // Clear vectors
+  product.m_validRecoJets.clear();
+  product.m_invalidRecoJets.clear();
+  // Loop over corrected jets and create a copy
+  for (auto jet : product.m_corrJets) {
     bool validJet = true;
     validJet = validJet
       // TODO: Works only with old cmssw version 5.x  because of hfhadronfraction
@@ -89,5 +93,9 @@ void JetValidJetsProducer::Produce(JetEvent const& event, JetProduct& product, J
       product.m_validRecoJets.push_back(jet);
     else
       product.m_invalidRecoJets.push_back(jet);
+    // Invalidate the matching maps since the input quantities changed
+    product.m_matchedRecoJets.clear();
+    product.m_matchedGenJets.clear();
+    product.m_matchedPartons.clear();
   }
 }
