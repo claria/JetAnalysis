@@ -11,14 +11,15 @@ void GenJetMatchingProducer::Init(JetSettings const& settings) {
   LOG(DEBUG) << "Initializing the GenJetMatchingProducer with MaxDeltaR=" << maxDeltaR << std::endl;
 }
 
-void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct& product, JetSettings const& settings) const {
-
-  std::vector<KBasicJet> m_validRecoJets;
+void GenJetMatchingProducer::Produce(JetEvent const& event, JetProduct& product, JetSettings const& settings) const 
+{
+  product.m_matchedRecoJets.clear();
+  product.m_matchedGenJets.clear();
 
   static matchSort_deltaR metric(maxDeltaR);
 
   // Matches a reco jet to a gen jet, size of genjets
-  std::vector<int> matchResultGenJets = matchSort_Matrix<KBasicJet, KLV>(m_validRecoJets, m_validRecoJets.size(), 
+  std::vector<int> matchResultGenJets = matchSort_Matrix<KBasicJet, KLV>(product.m_validRecoJets, product.m_validRecoJets.size(), 
                                                                          product.m_validGenJets, product.m_validGenJets.size(), 
                                                                          metric);
   product.m_matchResultGenJets = matchResultGenJets;
