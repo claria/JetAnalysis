@@ -21,15 +21,29 @@ class ResolutionConfig(BaseConfig):
         self['MinValidJetPt'] = 00.
         self['MinLeadingGenJetPt'] = 0.0
         self['MinLeadingJetPt'] = 0.0
-        self['Processors'].remove('producer:GenJetMatchingProducer')
-        self['Processors'].insert(self['Processors'].index('producer:JetValidJetsProducer') + 1, 'producer:GenJetMatchingProducer')
-        self['Processors'].insert(self['Processors'].index('producer:GenJetMatchingProducer') + 1, 'producer:JERScalingProducer')
+        self['Processors'] = [
+            'producer:JetCorrectionsProducer',
+            'producer:JetValidJetsProducer',
+            'producer:ValidGenJetsProducer',
+            'producer:PUWeightProducer',
+            'producer:CrossSectionWeightProducer',
+            'producer:GeneratorWeightProducer',
+            'producer:NumberGeneratedEventsWeightProducer',
+            'producer:EventWeightProducer',
+                ]
         default_pipeline = self.get_default_pipeline()
+        default_pipeline['Processors'] = [
+                                  'producer:GenJetMatchingProducer',
+                                  'producer:JERScalingProducer',
+                                  'producer:GenJetPartonMatchingProducer',
+                                  'producer:JetQuantitiesProducer',
+                                  'producer:GenJetQuantitiesProducer',
+                ]
         default_pipeline['Consumers'] =  [
                                   'cutflow_histogram',
                                   'GenJetQuantitiesHistogramConsumer',
+                                  'JetQuantitiesHistogramConsumer',
                                   ]
-
 
     def expand_pipelines(self):
         for i, j in [(0,0), (0, 1), (0, 2), (1, 0), (1, 1), (2, 0)]:
@@ -41,8 +55,10 @@ class ResolutionConfig(BaseConfig):
             # reco pipelines
             pipeline_name = 'yb{0}ys{1}'.format(i, j)
             self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
-            self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:GenYStarFilter')
-            self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:GenYBoostFilter')
+            pipeline = self['Pipelines'][pipeline_name]
+            pipeline['Processors'].append('filter:GenYStarFilter')
+            pipeline['Processors'].append('filter:GenYBoostFilter')
+
             self['Pipelines'][pipeline_name]['MinGenYStar'] = ys_lo
             self['Pipelines'][pipeline_name]['MaxGenYStar'] = ys_hi
             self['Pipelines'][pipeline_name]['MinGenYBoost'] = yb_lo
