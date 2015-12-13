@@ -1,7 +1,5 @@
 <Flags CXXFLAGS="-g" />
 <Flags LDFLAGS="-rdynamic" />
-<Flags LDFLAGS="-Lsrc/KappaTools/lib -lKToolbox -lKRootTools" />
-<Flags LDFLAGS="-Lsrc/Kappa/lib -lKappa" />
 <Flags LDFLAGS="-Lsrc/RooUnfold/ -lRooUnfold" />
 
 <use name="root" />
@@ -13,6 +11,8 @@
 <use name="Artus/Filter" />
 <use name="Artus/KappaAnalysis" />
 <use name="Artus/Utility" />
+<use name="KappaTools/Toolbox" />
+<use name="Kappa" />
 
 <flags ADD_SUBDIR="1"/>
 
