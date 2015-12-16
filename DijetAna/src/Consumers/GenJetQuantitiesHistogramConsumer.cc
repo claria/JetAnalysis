@@ -114,13 +114,21 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
 
   m_h2_GenVsRecoY = new TH2D("h2_GenVsRecoY",
                                  "h2_GenVsRecoY",
-                                 50, -5.0, 5.0,
-                                 100, -1.0,1.0
+                                 100, -5.0, 5.0,
+                                 200, -1.0,1.0
                                  );
   m_h2_GenVsRecoY->Sumw2();
+  m_h2_GenVsRecoEta = new TH2D("h2_GenVsRecoEta",
+                               "h2_GenVsRecoEta",
+                               100, -5.0, 5.0,
+                               200, -1.0,1.0
+                               );
+  m_h2_GenVsRecoEta->Sumw2();
+
+
 
   std::vector<double> yBinning = createArray(-5.0, 5.0, 0.1);
-  std::vector<double> resBinning = createArray(-1.0, 1.0, 0.05);
+  std::vector<double> resBinning = createArray(-1.0, 1.0, 0.02);
   m_h3_GenVsRecoY = new TH3D("h3_GenVsRecoY",
                                  "h3_GenVsRecoY",
                                  yBinning.size() - 1,
@@ -133,6 +141,13 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h3_GenVsRecoY->Sumw2();
 
 
+  std::vector<double> tp_genybinning = createArray(-5.0, 5.0, 0.1);
+  m_tp_genyvsrecoy = new TProfile("tp_GenYVsRecoY",
+                                  "tp_GenYVsRecoY",
+                                  tp_genybinning.size() - 1,
+                                  &tp_genybinning[0]);
+
+
   m_h2_GenVsRecoYstar = new TH2D("h2_GenVsRecoYstar",
                                  "h2_GenVsRecoYstar",
                                  50,
@@ -141,6 +156,23 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
                                  settings.GetGenPtBinning().size() - 1,
                                  &settings.GetGenPtBinning()[0]);
   m_h2_GenVsRecoYstar->Sumw2();
+
+  m_h2_GenYstarVsRecoYstar = new TH2D("h2_GenYstarVsRecoYstar",
+                                 "h2_GenYstarVsRecoYstar",
+                               settings.GetRapidityAbsBinning().size() - 1,
+                               &settings.GetRapidityAbsBinning()[0],
+                               settings.GetRapidityAbsBinning().size() - 1,
+                               &settings.GetRapidityAbsBinning()[0]);
+
+  m_h2_GenYstarVsRecoYstar->Sumw2();
+  m_h2_GenYboostVsRecoYboost = new TH2D("h2_GenYboostVsRecoYboost",
+                                 "h2_GenYboostVsRecoYboost",
+                               settings.GetRapidityAbsBinning().size() - 1,
+                               &settings.GetRapidityAbsBinning()[0],
+                               settings.GetRapidityAbsBinning().size() - 1,
+                               &settings.GetRapidityAbsBinning()[0]);
+  m_h2_GenYboostVsRecoYboost->Sumw2();
+
 
   m_h2_genreco_ptavg = new TH2D("h2_genreco_ptavg",
                                 "h2_genreco_ptavg",
@@ -160,6 +192,7 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
                                settings.GetTripleDiffGenPtBinning().size() - 1,
                                &settings.GetTripleDiffGenPtBinning()[0]);
   m_h3_genptavg_ysb->Sumw2();
+
 
   m_h3_genptavg_yio = new TH3D("h3_genptavg_yio",
                                "h3_genptavg_yio",
@@ -235,6 +268,10 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
                             product.m_gendijet_ptavg,
                             eventWeight);
 
+    m_h2_GenYstarVsRecoYstar->Fill(product.m_dijet_ystar, product.m_gendijet_ystar, eventWeight);
+    m_h2_GenYboostVsRecoYboost->Fill(product.m_dijet_yboost, product.m_gendijet_yboost, eventWeight);
+
+
     if (product.m_validGenJets.size() > 1 &&
         SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(0), static_cast<KBasicJet*>(nullptr)) != nullptr && 
         SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(1), static_cast<KBasicJet*>(nullptr)) != nullptr) 
@@ -249,8 +286,14 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
 
       m_h2_GenVsRecoY->Fill(product.m_validGenJets.at(0).p4.Rapidity(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Rapidity() - product.m_validGenJets.at(0).p4.Rapidity(), eventWeight);
       m_h2_GenVsRecoY->Fill(product.m_validGenJets.at(1).p4.Rapidity(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Rapidity() - product.m_validGenJets.at(1).p4.Rapidity(), eventWeight);
+
+      m_h2_GenVsRecoEta->Fill(product.m_validGenJets.at(0).p4.Eta(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Eta() - product.m_validGenJets.at(0).p4.Eta(), eventWeight);
+      m_h2_GenVsRecoEta->Fill(product.m_validGenJets.at(1).p4.Eta(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Eta() - product.m_validGenJets.at(1).p4.Eta(), eventWeight);
+
       m_h3_GenVsRecoY->Fill(product.m_validGenJets.at(0).p4.Rapidity(), product.m_validGenJets.at(0).p4.Pt(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Rapidity() - product.m_validGenJets.at(0).p4.Rapidity(), eventWeight);
       m_h3_GenVsRecoY->Fill(product.m_validGenJets.at(1).p4.Rapidity(), product.m_validGenJets.at(1).p4.Pt(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Rapidity() - product.m_validGenJets.at(1).p4.Rapidity(), eventWeight);
+
+      m_tp_genyvsrecoy->Fill(product.m_validGenJets.at(0).p4.Rapidity(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Rapidity() - product.m_validGenJets.at(0).p4.Rapidity(), eventWeight);
 
       m_h2_genreco_ptavg->Fill(genmatch_ptavg, product.m_gendijet_ptavg, eventWeight);
       m_h_genmatchptavg->Fill(genmatch_ptavg, eventWeight);
@@ -301,7 +344,12 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   m_h2_GenVsRecoYboost->Write();
   m_h2_GenVsRecoYstar->Write();
   m_h2_GenVsRecoY->Write();
-  m_h3_GenVsRecoY->Write();
+  m_h2_GenVsRecoEta->Write();
+
+  m_tp_genyvsrecoy->Write();
+
+  m_h2_GenYstarVsRecoYstar->Write();
+  m_h2_GenYboostVsRecoYboost->Write();
   m_h2_genreco_ptavg->Write();
   m_h_genjet1pt->Write();
   m_h_genjet1rap->Write();

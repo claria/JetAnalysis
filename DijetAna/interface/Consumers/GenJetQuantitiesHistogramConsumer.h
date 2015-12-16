@@ -18,33 +18,38 @@ class GenJetQuantitiesHistogramConsumer : public JetConsumerBase {
 
  private:
   // Gen vs. reco pt for each pt bin
-  TH1D* m_h_genjet1pt = NULL;
-  TH1D* m_h_genjet1rap = NULL;
-  TH1D* m_h_genjet1phi = NULL;
-  TH1D* m_h_genjet2pt = NULL;
-  TH1D* m_h_genjet2rap = NULL;
-  TH1D* m_h_genjet2phi = NULL;
-  TH1D* m_h_incgenjetpt = NULL;
-  TH1D* m_h_genptavg = NULL;
-  TH1D* m_h_genmatchptavg = NULL;
-  TH2D* m_h_genjet12rap = NULL;
-  TH3D* m_h3_genjet12rap = NULL;
-  TH3D* m_h3_genptavg_yio = NULL;
-  TH3D* m_h3_genptavg_ysb = NULL;
-  TH1D* m_h_genjet12dphi = NULL;
-  TH2D* m_h2_genjet12PtRVsPtavg = NULL;
-  TH2D* m_h2_gen_yb_ys = NULL;
-  TH2D* m_h2_genreco_ptavg = NULL;
-  TH2D* m_h2_GenVsRecoPt = NULL;
-  TH2D* m_h2_GenVsRecoPtAvg = NULL;
-  TH2D* m_h2_GenVsRecoYboost = NULL;
-  TH2D* m_h2_GenVsRecoYstar = NULL;
-  TH2D* m_h2_GenVsRecoY = NULL;
-  TH3D* m_h3_GenVsRecoY = NULL;
-  TH1D* m_h_jet1DeltaR = NULL;
-  TH1D* m_h_jet2DeltaR = NULL;
+  TH1D* m_h_genjet1pt = nullptr;
+  TH1D* m_h_genjet1rap = nullptr;
+  TH1D* m_h_genjet1phi = nullptr;
+  TH1D* m_h_genjet2pt = nullptr;
+  TH1D* m_h_genjet2rap = nullptr;
+  TH1D* m_h_genjet2phi = nullptr;
+  TH1D* m_h_incgenjetpt = nullptr;
+  TH1D* m_h_genptavg = nullptr;
+  TH1D* m_h_genmatchptavg = nullptr;
+  TH2D* m_h_genjet12rap = nullptr;
+  TH3D* m_h3_genjet12rap = nullptr;
+  TH3D* m_h3_genptavg_yio = nullptr;
+  TH3D* m_h3_genptavg_ysb = nullptr;
+  TH1D* m_h_genjet12dphi = nullptr;
+  TH2D* m_h2_genjet12PtRVsPtavg = nullptr;
+  TH2D* m_h2_gen_yb_ys = nullptr;
+  TH2D* m_h2_genreco_ptavg = nullptr;
+  TH2D* m_h2_GenVsRecoPt = nullptr;
+  TH2D* m_h2_GenVsRecoPtAvg = nullptr;
+  TH2D* m_h2_GenVsRecoYboost = nullptr;
+  TH2D* m_h2_GenVsRecoYstar = nullptr;
+  TH2D* m_h2_GenVsRecoY = nullptr;
+  TH2D* m_h2_GenVsRecoEta = nullptr;
+  TH3D* m_h3_GenVsRecoY = nullptr;
+  TH2D* m_h2_GenYboostVsRecoYboost = nullptr;
+  TH2D* m_h2_GenYstarVsRecoYstar = nullptr;
+  TH1D* m_h_jet1DeltaR = nullptr;
+  TH1D* m_h_jet2DeltaR = nullptr;
 
-  TH1D* m_h_dijet_flavour_qq = NULL;
-  TH1D* m_h_dijet_flavour_qg = NULL;
-  TH1D* m_h_dijet_flavour_gg = NULL;
+  TProfile* m_tp_genyvsrecoy = nullptr;
+
+  TH1D* m_h_dijet_flavour_qq = nullptr;
+  TH1D* m_h_dijet_flavour_qg = nullptr;
+  TH1D* m_h_dijet_flavour_gg = nullptr;
 };
