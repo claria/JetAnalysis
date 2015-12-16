@@ -7,6 +7,7 @@
 #include "JetAnalysis/DijetAna/interface/Producers/GenJetMatchingProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/GenJetPartonMatchingProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/JERScalingProducer.h"
+#include "JetAnalysis/DijetAna/interface/Producers/RapidityCorrectionProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/JetHltProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/JetValidJetsProducer.h"
 #include "JetAnalysis/DijetAna/interface/Producers/ValidGenJetsProducer.h"
@@ -71,6 +72,8 @@ ProducerBaseUntemplated* JetFactory::createProducer(std::string const& id) {
     return new GenJetPartonMatchingProducer();
   else if (JERScalingProducer().GetProducerId() == id)
     return new JERScalingProducer();
+  else if (RapidityCorrectionProducer().GetProducerId() == id)
+    return new RapidityCorrectionProducer();
   else if (JetValidJetsProducer().GetProducerId() == id)
     return new JetValidJetsProducer();
   else if (ValidGenJetsProducer().GetProducerId() == id)

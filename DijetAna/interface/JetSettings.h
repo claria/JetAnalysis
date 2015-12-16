@@ -8,6 +8,8 @@
 
 class JetSettings : public KappaSettings {
  public:
+
+  IMPL_SETTING(std::string, RapidityCorrectionFile);
   // Cuts for valid jet Producer to validate/invalidate a jet
   IMPL_SETTING_DEFAULT(double, MinValidJetPt, std::numeric_limits<double>::lowest())
   IMPL_SETTING_DEFAULT(double, MinValidJetAbsRap, std::numeric_limits<double>::lowest())
