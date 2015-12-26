@@ -139,6 +139,17 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
                                  &resBinning[0]
                                  );
   m_h3_GenVsRecoY->Sumw2();
+  m_h3_GenVsRecoEta = new TH3D("h3_GenVsRecoEta",
+                                 "h3_GenVsRecoEta",
+                                 yBinning.size() - 1,
+                                 &yBinning[0],
+                                 settings.GetGenPtBinning().size() - 1,
+                                 &settings.GetGenPtBinning()[0],
+                                 resBinning.size() - 1,
+                                 &resBinning[0]
+                                 );
+  m_h3_GenVsRecoEta->Sumw2();
+
 
 
   std::vector<double> tp_genybinning = createArray(-5.0, 5.0, 0.1);
@@ -292,6 +303,8 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
 
       m_h3_GenVsRecoY->Fill(product.m_validGenJets.at(0).p4.Rapidity(), product.m_validGenJets.at(0).p4.Pt(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Rapidity() - product.m_validGenJets.at(0).p4.Rapidity(), eventWeight);
       m_h3_GenVsRecoY->Fill(product.m_validGenJets.at(1).p4.Rapidity(), product.m_validGenJets.at(1).p4.Pt(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Rapidity() - product.m_validGenJets.at(1).p4.Rapidity(), eventWeight);
+      m_h3_GenVsRecoEta->Fill(product.m_validGenJets.at(0).p4.Eta(), product.m_validGenJets.at(0).p4.Pt(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Eta() - product.m_validGenJets.at(0).p4.Eta(), eventWeight);
+      m_h3_GenVsRecoEta->Fill(product.m_validGenJets.at(1).p4.Eta(), product.m_validGenJets.at(1).p4.Pt(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Eta() - product.m_validGenJets.at(1).p4.Eta(), eventWeight);
 
       m_tp_genyvsrecoy->Fill(product.m_validGenJets.at(0).p4.Rapidity(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Rapidity() - product.m_validGenJets.at(0).p4.Rapidity(), eventWeight);
 
@@ -344,6 +357,8 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   m_h2_GenVsRecoYboost->Write();
   m_h2_GenVsRecoYstar->Write();
   m_h2_GenVsRecoY->Write();
+  m_h3_GenVsRecoY->Write();
+  m_h3_GenVsRecoEta->Write();
   m_h2_GenVsRecoEta->Write();
 
   m_tp_genyvsrecoy->Write();
