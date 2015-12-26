@@ -58,13 +58,43 @@ class RunConfig(BaseConfig):
                                   ]
 
         if self.is_data is False:
+            default_pipeline['Processors'] = [
+                                              "filter:GoodPrimaryVertexFilter", 
+                                              "filter:METSumEtFilter", 
+                                              "filter:YBoostFilter", 
+                                              "filter:YStarFilter", 
+                                              "filter:NJetsFilter", 
+                                              "filter:PtAvgFilter", 
+                                              "filter:LeadingJetPtFilter", 
+                                              "filter:DijetsRapFilter", 
+                                          ]
+
+            self['Processors'] = [
+                                  "producer:JetCorrectionsProducer", 
+                                  "producer:RapidityCorrectionProducer"
+                                  "producer:ValidGenJetsProducer", 
+                                  "producer:GenJetQuantitiesProducer", 
+                                  "producer:JetValidJetsProducer", 
+                                  "producer:NumberGeneratedEventsWeightProducer", 
+                                  "producer:GeneratorWeightProducer", 
+                                  "producer:CrossSectionWeightProducer", 
+                                  "producer:PUWeightProducer", 
+                                  "producer:JetQuantitiesProducer", 
+                                  "producer:GenJetPartonMatchingProducer", 
+                                  "producer:GenJetMatchingProducer", 
+                                  "producer:EventWeightProducer", 
+                                 ]
+
             self['Pipelines']['gen_default'] = copy.deepcopy(default_pipeline)
             gen_default_pipeline = self['Pipelines']['gen_default']
-            gen_default_pipeline['Processors'].append('filter:NGenJetsFilter')
-            # gen_default_pipeline['Processors'].append('filter:GenPtAvgFilter')
-            gen_default_pipeline['Processors'].append('filter:LeadingGenJetPtFilter')
-            gen_default_pipeline['Processors'].append('filter:GenDijetsRapFilter')
-            gen_default_pipeline['Consumers'].append('GenJetQuantitiesHistogramConsumer')
+            gendefault_pipeline['Processors'] = [
+                                              "filter:GenYBoostFilter", 
+                                              "filter:GenYStarFilter", 
+                                              "filter:NGenJetsFilter", 
+                                              "filter:LeadingGenJetPtFilter", 
+                                              "filter:GenDijetsRapFilter"
+                                          ]
+
             default_pipeline['Consumers'].append('GenJetQuantitiesHistogramConsumer')
             gen_default_pipeline['Quantities'] += ['genjet1_pt',
                                                    'genjet1_eta',
@@ -85,17 +115,29 @@ class RunConfig(BaseConfig):
                                                    'gendijet_deltaphi',
                                                    'gendijet_ymax',
                                                    ]
-
-        default_pipeline['Processors'].append('filter:NJetsFilter')
-        default_pipeline['Processors'].append('filter:PtAvgFilter')
-        default_pipeline['Processors'].append('filter:LeadingJetPtFilter')
-        default_pipeline['Processors'].append('filter:DijetsRapFilter')
-
-
-        if self.is_data is True:
+        else:
             self['IntLuminosity']  = 19712.
-            default_pipeline['Processors'].append('filter:JetHltFilter')
-
+            self['Processors'] = [
+                                  "filter:JsonFilter", 
+                                  "producer:JetCorrectionsProducer", 
+                                  "producer:RapidityCorrectionProducer", 
+                                  "producer:JetValidJetsProducer", 
+                                  "producer:JetQuantitiesProducer", 
+                                  "producer:JetHltProducer", 
+                                  "producer:LuminosityWeightProducer", 
+                                  "producer:EventWeightProducer"
+                              ]
+            default_pipeline['Processors'] = [
+                                              "filter:GoodPrimaryVertexFilter", 
+                                              "filter:METSumEtFilter", 
+                                              "filter:YBoostFilter", 
+                                              "filter:YStarFilter", 
+                                              "filter:NJetsFilter", 
+                                              "filter:PtAvgFilter", 
+                                              "filter:LeadingJetPtFilter", 
+                                              "filter:DijetsRapFilter", 
+                                              "filter:JetHltFilter"
+                                          ]
  
     def expand_pipelines(self):
 
@@ -108,10 +150,6 @@ class RunConfig(BaseConfig):
             # reco pipelines
             pipeline_name = 'yb{0}ys{1}'.format(i, j)
             self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
-            self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YStarFilter')
-            self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:YBoostFilter')
-            self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:METSumEtFilter')
-            self['Pipelines'][pipeline_name]['Processors'].insert(0,'filter:GoodPrimaryVertexFilter')
             self['Pipelines'][pipeline_name]['MinYStar'] = ys_lo
             self['Pipelines'][pipeline_name]['MaxYStar'] = ys_hi
             self['Pipelines'][pipeline_name]['MinYBoost'] = yb_lo
@@ -120,8 +158,6 @@ class RunConfig(BaseConfig):
             if self.is_data is False:
                 gen_pipeline_name = 'gen_yb{0}ys{1}'.format(i, j)
                 self['Pipelines'][gen_pipeline_name] = copy.deepcopy(self['Pipelines']['gen_default'])
-                self['Pipelines'][gen_pipeline_name]['Processors'].insert(0,'filter:GenYStarFilter')
-                self['Pipelines'][gen_pipeline_name]['Processors'].insert(0,'filter:GenYBoostFilter')
                 self['Pipelines'][gen_pipeline_name]['MinGenYStar'] = ys_lo
                 self['Pipelines'][gen_pipeline_name]['MaxGenYStar'] = ys_hi
                 self['Pipelines'][gen_pipeline_name]['MinGenYBoost'] = yb_lo
