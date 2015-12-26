@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../JetTypes.h"
-#include "TGraphErrors.h"
+#include "TGraph2D.h"
 
 class RapidityCorrectionProducer : public JetProducerBase {
  public:
@@ -9,5 +9,5 @@ class RapidityCorrectionProducer : public JetProducerBase {
   virtual void Produce(JetEvent const& event, JetProduct& product, JetSettings const& settings) const override;
   virtual void Init(JetSettings const& settings) override;
  private:
-  TGraphErrors* m_rapidityCorrectionGraph;
+  TGraph2D* m_rapidityCorrectionGraph;
 };

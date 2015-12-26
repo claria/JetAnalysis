@@ -119,7 +119,7 @@ class BaseConfig(dict):
         self['MinPrimaryVertexFitnDOF'] = 4
 
 
-        self['RapidityCorrectionFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/rapidity_remap.root'
+        self['RapidityCorrectionFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/rapidity_remap_3d.root'
 
         # Event weight
         self['EventWeight'] = 'EventWeight'
