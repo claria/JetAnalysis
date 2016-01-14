@@ -76,7 +76,7 @@ class RapidityConfig(ResolutionConfig):
         super(RapidityConfig, self).modify_settings()
         self['Processors'] = [
             'producer:JetCorrectionsProducer',
-            # 'producer:RapidityCorrectionProducer',
+            'producer:RapidityCorrectionProducer',
             'producer:JetValidJetsProducer',
             'producer:ValidGenJetsProducer',
             'producer:PUWeightProducer',
