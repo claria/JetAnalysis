@@ -25,7 +25,7 @@ class GenConfig(BaseConfig):
         self['MinValidGenJetPt'] = 50.
         self['MaxValidGenJetAbsRap'] = 3.
         self['MinValidGenJets'] = 2
-        self['MinLeadingGenJetPt'] = 74.
+        # self['MinLeadingGenJetPt'] = 74.
 
         self['MaxDeltaR'] = 0.3
         self['GenPtBinning'] = [34, 42, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
@@ -39,8 +39,6 @@ class GenConfig(BaseConfig):
             'producer:NumberGeneratedEventsWeightProducer',
             'producer:EventWeightProducer',
             'filter:NGenJetsFilter',
-            'filter:LeadingGenJetPtFilter'
-
         ]
 
         default_pipeline = self.get_default_pipeline()
