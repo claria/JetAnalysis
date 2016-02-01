@@ -6,6 +6,8 @@ std::string JERScalingProducer::GetProducerId() const {
 
 void JERScalingProducer::Init(JetSettings const& settings) {
   JetProducerBase::Init(settings);
+  m_jerScalingFactors = settings.GetJERScalingFactors();
+  assert(m_jerScalingFactors.size() == 7);
 }
 
 void JERScalingProducer::Produce(JetEvent const& event, JetProduct& product, JetSettings const& settings) const {
@@ -17,29 +19,28 @@ void JERScalingProducer::Produce(JetEvent const& event, JetProduct& product, Jet
   }
 }
 
-// These are the JER MC--> Data Scaling factors for th 2012 run
 double JERScalingProducer::GetScalingFactor(double eta) const {
   double abseta = std::abs(eta);
   if (abseta > 0.0 && abseta <= 0.5) {
-    return 1.079;
+    return m_jerScalingFactors.at(0);
   }
   else if (abseta > 0.5 && abseta <= 1.1) {
-    return 1.099;
+    return m_jerScalingFactors.at(1);
   }
   else if (abseta > 1.1 && abseta <= 1.7) {
-    return 1.121;
+    return m_jerScalingFactors.at(2);
   }
   else if (abseta > 1.7 && abseta <= 2.3) {
-    return 1.208;
+    return m_jerScalingFactors.at(3);
   }
   else if (abseta > 2.3 && abseta <= 2.8) {
-    return 1.254;
+    return m_jerScalingFactors.at(4);
   }
   else if (abseta > 2.8 && abseta <= 3.2) {
-    return 1.395;
+    return m_jerScalingFactors.at(5);
   }
   else if (abseta > 3.2 && abseta <= 5.0) {
-    return 1.056;
+    return m_jerScalingFactors.at(6);
   }
   else {
     LOG(FATAL) << "WARNING. Jet outside |eta| < 5" << std::endl;

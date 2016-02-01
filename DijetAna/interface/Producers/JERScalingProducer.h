@@ -9,4 +9,5 @@ class JERScalingProducer : public JetProducerBase {
   virtual void Init(JetSettings const& settings) override;
   double GetScalingFactor(double eta) const;
  private:
+  std::vector<double> m_jerScalingFactors;
 };

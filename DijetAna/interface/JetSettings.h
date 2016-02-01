@@ -75,6 +75,9 @@ class JetSettings : public KappaSettings {
   IMPL_SETTING_DOUBLELIST(TriggerEffThresholds);
   IMPL_SETTING_STRINGLIST(HltPathsBlacklist);
 
+  //JER Scaling Factors
+  IMPL_SETTING_DOUBLELIST(JERScalingFactors);
+
   // IMPL_SETTING_STRINGLIST(L1FilterNames);
   // IMPL_SETTING_STRINGLIST(HltFilterNames);
   IMPL_SETTING_DOUBLELIST(L1FilterThresholds);
