@@ -30,6 +30,11 @@ class ResolutionConfig(BaseConfig):
             'producer:NumberGeneratedEventsWeightProducer',
             'producer:EventWeightProducer',
                 ]
+
+        self['JERScalingFactors'] = [1.079, 1.099, 1.121, 1.208, 1.254, 1.395, 1.056]
+        # self['JERScalingFactors'] = [1.053, 1.071, 1.092, 1.162, 1.192, 1.332, 0.865]
+        # self['JERScalingFactors'] = [1.105, 1.127, 1.150, 1.254, 1.316, 1.458, 1.247]
+
         default_pipeline = self.get_default_pipeline()
         default_pipeline['Processors'] = [
                                   'producer:GenJetMatchingProducer',
