@@ -13,10 +13,6 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 def main():
 
 
-    # ./fnlo2root2.py ~/dust/FNLO/TRIPLEDIFF_YSB_PTAVG/triplediff.tab CT10nlo XSNLO_CT10.root
-    # table = '/nfs/dust/cms/user/gsieber/FNLO/TRIPLEDIFF_YSB_PTAVG/triplediff.tab'
-    # table = '/nfs/dust/cms/user/gsieber/dijetana/nlo/PTAVGEXPYS_YBYS_NLO_FINALBINS.tab'
-    # output_file = 'PTAVGEXPYS_YBYS_NLO.root'
     table = sys.argv[1]
     output_file = sys.argv[2]
 
