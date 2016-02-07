@@ -84,7 +84,7 @@ def main():
     pt_binning_gen = [34, 42, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
     pt_binning_reco = [34, 42, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
 
-    f = ROOT.TFile('response_fastNLO_unc_def.root', 'RECREATE')
+    f = ROOT.TFile('response_fastNLO.root', 'RECREATE')
 
     fit_start_params = {
             'yb0ys0' : [1.56951e-04, 4.72895e+00, 1.25370e+01, 4.41885e+03],
@@ -149,16 +149,19 @@ def main():
             w = nlo_fcn.Eval(pt_truth)
             if (w <= 0.) or math.isnan(w):
                 continue
+
+            h_genptavg.Fill(pt_truth, w)
             if pt_smeared >= 133.:
                 h_recoptavg.Fill(pt_smeared, w)
-            if pt_truth > 133.:
-                h_genptavg.Fill(pt_truth, w)
-            if pt_smeared >= 133.:
                 h2_genvsreco.Fill(pt_smeared, pt_truth, w)
+            # if pt_truth > 133.:
+            # if pt_smeared >= 133.:
 
         h_recoptavg.Write()
         h_genptavg.Write()
         response_ptavg = ROOT.RooUnfoldResponse(h_recoptavg, h_genptavg, h2_genvsreco)
+        h2_response = response_ptavg.Hresponse()
+        h2_response.Write('h2_res_matrix_ptavg')
         response_ptavg.Write('res_matrix_ptavg')
 
     f.Close()
