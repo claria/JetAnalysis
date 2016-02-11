@@ -94,12 +94,11 @@ class RapidityConfig(ResolutionConfig):
         default_pipeline = self.get_default_pipeline()
         default_pipeline['Processors'] += [
                                               "filter:NGenJetsFilter", 
-                                              "filter:LeadingGenJetPtFilter", 
                                           ]
 
-        self['MinValidJetPt'] = 100.
-        self['MinLeadingGenJetPt'] = 100.
-        self['MinValidGenJetPt'] = 80.
+        default_pipeline['Processors'].remove('producer:JERScalingProducer')
+        self['MinValidJetPt'] = 50.
+        self['MinValidGenJetPt'] = 50.
         self['MaxValidJetAbsRap'] = 4.0
         self['MaxValidGenJetAbsRap'] = 4.0
 
