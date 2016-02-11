@@ -18,11 +18,11 @@ cmsenv
 
 # Need git credentials for cms package chekout
 # therefore setting dummy ones if noting set.
-if [ -z "$(git config --get user.name)" ]; then
-  git config user.name "${USER}"
-  git config user.email "${USER}@cern.ch"
-  git config user.github "${USER}"
-fi
+# if [ -z "$(git config --get user.name)" ]; then
+git config user.name "${USER}"
+git config user.email "${USER}@cern.ch"
+git config user.github "${USER}"
+# fi
 
 git-cms-addpkg CondFormats/JetMETObjects
 git-cms-addpkg RecoLuminosity
@@ -41,6 +41,7 @@ scram b -j4
 
 # Checkout master of Artus
 git clone https://github.com/artus-analysis/Artus.git Artus
+(cd Artus && git checkout tags/8TeVFinal)
 
 # Checkout master of DijetAna
 if [ "$TRAVIS" = true ] ; then
