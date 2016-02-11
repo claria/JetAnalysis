@@ -18,11 +18,11 @@ cmsenv
 
 # Need git credentials for cms package chekout
 # therefore setting dummy ones if noting set.
-# if [ -z "$(git config --get user.name)" ]; then
-git config user.name "${USER}"
-git config user.email "${USER}@cern.ch"
-git config user.github "${USER}"
-# fi
+if [ -z "$(git config --get user.name)" ]; then
+  git config --global user.name "${USER}"
+  git config --global user.email "${USER}@cern.ch"
+  git config --global user.github "${USER}"
+fi
 
 git-cms-addpkg CondFormats/JetMETObjects
 git-cms-addpkg RecoLuminosity
