@@ -29,7 +29,9 @@ git-cms-addpkg RecoLuminosity
 
 # Checkout development branch of Kappa
 # git clone -b development https://github.com/KappaAnalysis/Kappa.git Kappa
-git clone -b development https://github.com/KappaAnalysis/Kappa.git Kappa
+git clone https://github.com/KappaAnalysis/Kappa.git Kappa
+(cd Kappa && git checkout tags/8TeVFinal)
+
 make -C Kappa/DataFormats/test/ -j4
 
 # Checkout master of KappaTools
