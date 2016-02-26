@@ -111,20 +111,16 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
                             &settings.GetTripleDiffPtBinning()[0]);
   m_h3_ptavg_ysb->Sumw2();
 
-  m_h_neutralHadronFraction = new TH1D("h_neutralHadronFraction", "h_neutralHadronFraction", 50, 0., 2.);
+  m_h_neutralHadronFraction = new TH1D("h_neutralHadronFraction", "h_neutralHadronFraction", 50, 0., 1.);
   m_h_neutralHadronFraction->Sumw2();
   m_h_chargedHadronFraction = new TH1D("h_chargedHadronFraction", "h_chargedHadronFraction", 50, 0., 1.);
   m_h_chargedHadronFraction->Sumw2();
-  m_h_photonFraction = new TH1D("h_photonFraction", "h_photonFraction", 50, 0., 2.);
-  m_h_photonFraction->Sumw2();
+  m_h_neutralEMFraction = new TH1D("h_neutralEMFraction", "h_neutralEMFraction", 50, 0., 1.);
+  m_h_neutralEMFraction->Sumw2();
   m_h_electronFraction = new TH1D("h_electronFraction", "h_electronFraction", 50, 0., 1.);
   m_h_electronFraction->Sumw2();
   m_h_muonFraction = new TH1D("h_muonFraction", "h_muonFraction", 50, 0., 1.);
   m_h_muonFraction->Sumw2();
-  m_h_hfHadronFraction = new TH1D("h_hfHadronFraction", "h_hfHadronFraction", 50, 0., 1.);
-  m_h_hfHadronFraction->Sumw2();
-  m_h_hfEMFraction = new TH1D("h_hfEMFraction", "h_hfEMFraction", 50, 0., 1.);
-  m_h_hfEMFraction->Sumw2();
   m_h_nConstituents = new TH1D("h_nConstituents", "h_nConstituents", 250, -0.5, 249.5);
   m_h_nConstituents->Sumw2();
   m_h_nCharged = new TH1D("h_nCharged", "h_nCharged", 250, -0.5, 249.5);
@@ -187,17 +183,23 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
 
   for (auto& jet : product.m_validRecoJets) {
     m_h_incjetpt->Fill(jet.p4.Pt(), eventWeight);
-
     m_h_neutralHadronFraction->Fill(jet.neutralHadronFraction + jet.hfHadronFraction, eventWeight);
     m_h_chargedHadronFraction->Fill(jet.chargedHadronFraction, eventWeight);
-    m_h_photonFraction->Fill(jet.photonFraction + jet.hfEMFraction, eventWeight);
+    m_h_neutralEMFraction->Fill(jet.photonFraction + jet.hfEMFraction, eventWeight);
     m_h_electronFraction->Fill(jet.electronFraction, eventWeight);
-    m_h_hfHadronFraction->Fill(jet.hfHadronFraction, eventWeight);
-    m_h_hfEMFraction->Fill(jet.hfEMFraction, eventWeight);
     m_h_muonFraction->Fill(jet.muonFraction, eventWeight);
     m_h_nConstituents->Fill(jet.nConstituents, eventWeight);
     m_h_nCharged->Fill(jet.nCharged, eventWeight);
   }
+
+  if (product.m_dijet_ptavg > myDijet_ptavg) {
+    myRun = event.m_eventInfo->nRun;
+    myLumi = event.m_eventInfo->nLumi;
+    myEvent = event.m_eventInfo->nEvent;
+    myDijet_ptavg = product.m_dijet_ptavg;
+  }
+
+
 }
 
 void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
@@ -251,11 +253,11 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   // Jet property distributions
   m_h_neutralHadronFraction->Write();
   m_h_chargedHadronFraction->Write();
-  m_h_photonFraction->Write();
+  m_h_neutralEMFraction->Write();
   m_h_electronFraction->Write();
-  m_h_hfHadronFraction->Write();
-  m_h_hfEMFraction->Write();
   m_h_muonFraction->Write();
   m_h_nConstituents->Write();
   m_h_nCharged->Write();
+
+  LOG(INFO) << "My favourite dijet event is: ptavg=" << myDijet_ptavg << " run=" << myRun << " lumi=" << myLumi << " event=" << myEvent << std::endl;
 }

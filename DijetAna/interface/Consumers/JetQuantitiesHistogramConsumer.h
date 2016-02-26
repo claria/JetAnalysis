@@ -42,12 +42,15 @@ class JetQuantitiesHistogramConsumer : public JetConsumerBase {
 
   TH1D* m_h_neutralHadronFraction = NULL;
   TH1D* m_h_chargedHadronFraction = NULL;
-  TH1D* m_h_photonFraction = NULL;
+  TH1D* m_h_neutralEMFraction = NULL;
   TH1D* m_h_electronFraction = NULL;
   TH1D* m_h_muonFraction = NULL;
   TH1D* m_h_nConstituents = NULL;
   TH1D* m_h_nCharged = NULL;
-  TH1D* m_h_hfHadronFraction = NULL;
-  TH1D* m_h_hfEMFraction = NULL;
   TH1D* m_h_area = NULL;
+
+  double myRun = 0;
+  double myLumi = 0;
+  double myEvent = 0;
+  double myDijet_ptavg=0.;
 };
