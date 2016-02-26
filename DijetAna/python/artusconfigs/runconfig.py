@@ -71,7 +71,7 @@ class RunConfig(BaseConfig):
 
             self['Processors'] = [
                                   "producer:JetCorrectionsProducer", 
-                                  "producer:RapidityCorrectionProducer"
+                                  # "producer:RapidityCorrectionProducer"
                                   "producer:ValidGenJetsProducer", 
                                   "producer:GenJetQuantitiesProducer", 
                                   "producer:JetValidJetsProducer", 
@@ -87,7 +87,7 @@ class RunConfig(BaseConfig):
 
             self['Pipelines']['gen_default'] = copy.deepcopy(default_pipeline)
             gen_default_pipeline = self['Pipelines']['gen_default']
-            gendefault_pipeline['Processors'] = [
+            gen_default_pipeline['Processors'] = [
                                               "filter:GenYBoostFilter", 
                                               "filter:GenYStarFilter", 
                                               "filter:NGenJetsFilter", 
@@ -120,7 +120,7 @@ class RunConfig(BaseConfig):
             self['Processors'] = [
                                   "filter:JsonFilter", 
                                   "producer:JetCorrectionsProducer", 
-                                  "producer:RapidityCorrectionProducer", 
+                                  # "producer:RapidityCorrectionProducer", 
                                   "producer:JetValidJetsProducer", 
                                   "producer:JetQuantitiesProducer", 
                                   "producer:JetHltProducer", 
