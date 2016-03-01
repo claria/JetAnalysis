@@ -20,7 +20,7 @@ from JetAnalysis.DijetAna.tools import *
 
 ROOT.gSystem.Load('/afs/desy.de/user/g/gsieber/dijetana/ana/CMSSW_7_2_3/src/RooUnfold/libRooUnfold.so')
 
-import RooUnfold
+# import RooUnfold
 
 def main():
 
@@ -33,7 +33,7 @@ def main():
     parser.add_argument('--response-matrix-histo-measured', help='Path to root file with the response matrix as histo')
     parser.add_argument('--response-matrix-histo-response', help='Path to root file with the response matrix as histo')
     parser.add_argument('--normalize-binwidth', action='store_true',  help='Normalize input histogram by binwidth')
-    parser.add_argument('--algo', default='iterative', choices=['iterative', 'binbybin', 'svd'], 
+    parser.add_argument('--algo', default='iterative', choices=['iterative', 'binbybin', 'svd', 'invert'], 
                         help='Unfolding alogrithm.')
     parser.add_argument('--reg-parameter', type=int, default=4, help='Number of iterations in Bayes Unfolding.')
     parser.add_argument('--ntoys', type=int, default=1, help='Number of toys in cov determination.')
@@ -52,7 +52,7 @@ def main():
         truth = get_root_object(args['response_matrix_histo_truth'])
         measured = get_root_object(args['response_matrix_histo_measured'])
         response = get_root_object(args['response_matrix_histo_response'])
-        response_matrix = ROOT.RooUnfoldResponse(measured, truth, response, 'res_matrix', 'res_matrix'))
+        response_matrix = ROOT.RooUnfoldResponse(measured, truth, response, 'res_matrix', 'res_matrix')
 
     if args['algo'] == 'iterative':
         unfold = ROOT.RooUnfoldBayes(response_matrix, measured_histo, args['reg_parameter'])
@@ -124,9 +124,9 @@ def main():
     recotruth_histo_binedges = array.array("d", [recotruth_histo.GetBinLowEdge(i+1) for i in xrange(recotruth_histo.GetNbinsX() +1)])
     recotruth_histo_rebinned = recotruth_histo.Rebin(len(recotruth_histo_binedges)-1, "{0}_rebinned".format(measured_histo.GetName()), recotruth_histo_binedges)
     recotruth_histo_rebinned.Write()
-    response_matrix.Hmeasured().Write()
-    response_matrix.Htruth().Write()
-    response_matrix.Hresponse().Write()
+    # response_matrix.Hmeasured().Write()
+    # response_matrix.Htruth().Write()
+    # response_matrix.Hresponse().Write()
     cov_matrix.Write('cov_{0}'.format(measured_histo.GetName()))
     corr_matrix.Write('corr_{0}'.format(measured_histo.GetName()))
 

@@ -96,6 +96,7 @@ class RunConfig(BaseConfig):
                                           ]
 
             default_pipeline['Consumers'].append('GenJetQuantitiesHistogramConsumer')
+            gen_default_pipeline['Consumers'].append('GenJetQuantitiesHistogramConsumer')
             gen_default_pipeline['Quantities'] += ['genjet1_pt',
                                                    'genjet1_eta',
                                                    'genjet1_rap',

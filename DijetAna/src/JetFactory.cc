@@ -26,6 +26,7 @@
 #include "JetAnalysis/DijetAna/interface/Filters/LeadingJetPtFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/PtAvgFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/GenPtAvgFilter.h"
+#include "JetAnalysis/DijetAna/interface/Filters/GenMatchPtAvgFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/LeadingGenJetPtFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/LeadingJetRapFilter.h"
 #include "JetAnalysis/DijetAna/interface/Filters/YStarFilter.h"
@@ -129,6 +130,8 @@ FilterBaseUntemplated* JetFactory::createFilter(std::string const& id) {
     return new PtAvgFilter();
   else if (GenPtAvgFilter().GetFilterId() == id)
     return new GenPtAvgFilter();
+  else if (GenMatchPtAvgFilter().GetFilterId() == id)
+    return new GenMatchPtAvgFilter();
   else if (LeadingJetRapFilter().GetFilterId() == id)
     return new LeadingJetRapFilter();
   else if (YStarFilter().GetFilterId() == id)

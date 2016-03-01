@@ -46,7 +46,7 @@ class UnfoldingResponseConfig(BaseConfig):
                 "producer:EventWeightProducer"
         ] 
 
-        self['TaggingFilters'] = ['YStarFilter', 'YBoostFilter','GenYStarFilter', 'GenYBoostFilter', 'NGenJetsFilter', 'LeadingGenJetPtFilter', 'NJetsFilter', 'LeadingJetPtFilter']
+        # self['TaggingFilters'] = ['YStarFilter', 'YBoostFilter','GenYStarFilter', 'GenYBoostFilter', 'NGenJetsFilter', 'LeadingGenJetPtFilter', 'NJetsFilter', 'LeadingJetPtFilter']
 
         self.producer_before_filter()
         # Define global cuts
@@ -82,7 +82,7 @@ class UnfoldingResponseConfig(BaseConfig):
             ys_hi = self['RapidityAbsBinning'][j+1]
             pipeline_name = 'yb{0}ys{1}'.format(i, j)
             self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
-            self['Pipelines'][pipeline_name]['TaggingFilters'] = ['YStarFilter', 'YBoostFilter','GenYStarFilter', 'GenYBoostFilter', 'NGenJetsFilter', 'GenPtAvgFilter', 'NJetsFilter', 'PtAvgFilter']
+            # self['Pipelines'][pipeline_name]['TaggingFilters'] = ['YStarFilter', 'YBoostFilter','GenYStarFilter', 'GenYBoostFilter', 'NGenJetsFilter', 'GenPtAvgFilter', 'NJetsFilter', 'PtAvgFilter']
             self['Pipelines'][pipeline_name]['MinYStar'] = ys_lo
             self['Pipelines'][pipeline_name]['MaxYStar'] = ys_hi
             self['Pipelines'][pipeline_name]['MinYBoost'] = yb_lo
