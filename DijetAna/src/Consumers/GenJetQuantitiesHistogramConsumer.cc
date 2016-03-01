@@ -41,6 +41,18 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_genptavg = new TH1D("h_genptavg", "h_genptavg", settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
   m_h_genptavg->Sumw2();
 
+  m_h_genidx = new TH1D("h_genidx", "h_genidx", (settings.GetPtBinning().size() - 1)*6,-0.5, -0.5+ (settings.GetPtBinning().size() - 1)*6);
+  m_h_genidx->Sumw2();
+
+  m_h2_genrecoidx = new TH2D("h2_genrecoidx", "h2_genrecoidx", (settings.GetPtBinning().size() - 1)*6,-0.5, -0.5+ (settings.GetPtBinning().size() - 1)*6,
+                                                               (settings.GetPtBinning().size() - 1)*6,-0.5, -0.5+ (settings.GetPtBinning().size() - 1)*6);
+  m_h2_genrecoidx->Sumw2();
+  m_h2_genrecoptavg = new TH2D("h2_genrecoptavg", "h2_genrecoptavg", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0],
+                                                                     settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
+  m_h2_genrecoptavg->Sumw2();
+
+
+
   // Gen Match Pt Avg
   m_h_genmatchptavg = new TH1D("h_genmatchptavg", "h_genmatchptavg", settings.GetGenPtBinning().size() - 1, &settings.GetGenPtBinning()[0]);
   m_h_genmatchptavg->Sumw2();
@@ -238,7 +250,7 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
 
     if (SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(0), static_cast<KBasicJet*>(nullptr)) != nullptr) 
     {
-      m_h2_GenVsRecoPt->Fill(product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Pt() / product.m_validGenJets.at(0).p4.Pt(),
+      m_h2_GenVsRecoPt->Fill(product.m_genmatchjet1Pt / product.m_validGenJets.at(0).p4.Pt(),
                              product.m_validGenJets.at(0).p4.Pt(),
                              eventWeight);
       m_h_jet1DeltaR->Fill(
@@ -249,7 +261,7 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
 
   if (product.m_validGenJets.size() > 1) {
     m_h_genptavg->Fill(product.m_gendijet_ptavg, eventWeight);
-
+    m_h_genidx->Fill(product.m_gendijet_idx, eventWeight);
     m_h_genjet2pt->Fill(product.m_validGenJets.at(1).p4.Pt(), eventWeight);
     m_h_genjet2rap->Fill(product.m_validGenJets.at(1).p4.Rapidity(), eventWeight);
     m_h_genjet2phi->Fill(product.m_validGenJets.at(1).p4.Phi(), eventWeight);
@@ -283,65 +295,58 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
     m_h2_GenYboostVsRecoYboost->Fill(product.m_dijet_yboost, product.m_gendijet_yboost, eventWeight);
 
 
-    if (product.m_validGenJets.size() > 1 &&
-        SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(0), static_cast<KBasicJet*>(nullptr)) != nullptr && 
-        SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(1), static_cast<KBasicJet*>(nullptr)) != nullptr) 
+    m_h2_genrecoidx->Fill(product.m_genmatchdijet_idx, product.m_gendijet_idx, eventWeight);
+    m_h2_genrecoptavg->Fill(product.m_genmatchdijet_ptavg, product.m_gendijet_ptavg, eventWeight);
+
+    m_h2_GenVsRecoPtAvg->Fill(product.m_genmatchdijet_ptavg / product.m_gendijet_ptavg, product.m_gendijet_ptavg, eventWeight);
+    m_h2_GenVsRecoYboost->Fill(product.m_genmatchdijet_yboost -product.m_gendijet_yboost, product.m_gendijet_ptavg, eventWeight);
+    m_h2_GenVsRecoYstar->Fill(product.m_genmatchdijet_ystar - product.m_gendijet_ystar, product.m_gendijet_ptavg, eventWeight);
+
+    m_h2_GenVsRecoY->Fill(product.m_validGenJets.at(0).p4.Rapidity(), product.m_genmatchjet1Rap - product.m_validGenJets.at(0).p4.Rapidity(), eventWeight);
+    m_h2_GenVsRecoY->Fill(product.m_validGenJets.at(1).p4.Rapidity(), product.m_genmatchjet2Rap - product.m_validGenJets.at(1).p4.Rapidity(), eventWeight);
+
+    m_h2_GenVsRecoEta->Fill(product.m_validGenJets.at(0).p4.Eta(), product.m_genmatchjet1Eta - product.m_validGenJets.at(0).p4.Eta(), eventWeight);
+    m_h2_GenVsRecoEta->Fill(product.m_validGenJets.at(1).p4.Eta(), product.m_genmatchjet2Eta - product.m_validGenJets.at(1).p4.Eta(), eventWeight);
+
+    m_h3_GenVsRecoY->Fill(product.m_validGenJets.at(0).p4.Rapidity(), product.m_validGenJets.at(0).p4.Pt(), product.m_genmatchjet1Rap - product.m_validGenJets.at(0).p4.Rapidity(), eventWeight);
+    m_h3_GenVsRecoY->Fill(product.m_validGenJets.at(1).p4.Rapidity(), product.m_validGenJets.at(1).p4.Pt(), product.m_genmatchjet2Rap - product.m_validGenJets.at(1).p4.Rapidity(), eventWeight);
+    m_h3_GenVsRecoEta->Fill(product.m_genmatchjet1Eta, product.m_genmatchjet1Pt, product.m_genmatchjet1Eta - product.m_validGenJets.at(0).p4.Eta(), eventWeight);
+    m_h3_GenVsRecoEta->Fill(product.m_genmatchjet1Eta, product.m_genmatchjet2Pt, product.m_genmatchjet2Eta - product.m_validGenJets.at(1).p4.Eta(), eventWeight);
+
+    m_tp_genyvsrecoy->Fill(product.m_validGenJets.at(0).p4.Rapidity(), product.m_genmatchjet1Rap - product.m_validGenJets.at(0).p4.Rapidity(), eventWeight);
+
+    m_h2_genreco_ptavg->Fill(product.m_genmatchdijet_ptavg, product.m_gendijet_ptavg, eventWeight);
+    m_h_genmatchptavg->Fill(product.m_genmatchdijet_ptavg, eventWeight);
+  }
+  if (product.m_validGenJets.size() > 1 &&
+      SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(1), static_cast<KBasicJet*>(nullptr)) != nullptr) {
+    m_h_jet2DeltaR->Fill(
+        ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4, product.m_validGenJets.at(1).p4),
+        eventWeight);
+  }
+  // Dijet flavour
+  if (product.m_validRecoJets.size() > 1 &&
+      SafeMap::GetWithDefault(product.m_matchedPartons, &product.m_validRecoJets.at(0), static_cast<KGenParticle*>(nullptr)) != nullptr && 
+      SafeMap::GetWithDefault(product.m_matchedPartons, &product.m_validRecoJets.at(1), static_cast<KGenParticle*>(nullptr)) != nullptr) 
+  {
+    // gg
+    if ((product.m_matchedPartons.at(&product.m_validRecoJets.at(0))->pdgId() == 21) && (product.m_matchedPartons.at(&product.m_validRecoJets.at(1))->pdgId() == 21))
     {
-      double genmatch_ptavg = 0.5 * (product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Pt() + product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Pt());
-      double genmatch_yboost = 0.5 * std::abs(product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Rapidity() + product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Rapidity());
-      double genmatch_ystar = 0.5 * std::abs(product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Rapidity() - product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Rapidity());
-
-      m_h2_GenVsRecoPtAvg->Fill(genmatch_ptavg / product.m_gendijet_ptavg, product.m_gendijet_ptavg, eventWeight);
-      m_h2_GenVsRecoYboost->Fill(genmatch_yboost -product.m_gendijet_yboost, product.m_gendijet_ptavg, eventWeight);
-      m_h2_GenVsRecoYstar->Fill(genmatch_ystar - product.m_gendijet_ystar, product.m_gendijet_ptavg, eventWeight);
-
-      m_h2_GenVsRecoY->Fill(product.m_validGenJets.at(0).p4.Rapidity(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Rapidity() - product.m_validGenJets.at(0).p4.Rapidity(), eventWeight);
-      m_h2_GenVsRecoY->Fill(product.m_validGenJets.at(1).p4.Rapidity(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Rapidity() - product.m_validGenJets.at(1).p4.Rapidity(), eventWeight);
-
-      m_h2_GenVsRecoEta->Fill(product.m_validGenJets.at(0).p4.Eta(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Eta() - product.m_validGenJets.at(0).p4.Eta(), eventWeight);
-      m_h2_GenVsRecoEta->Fill(product.m_validGenJets.at(1).p4.Eta(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Eta() - product.m_validGenJets.at(1).p4.Eta(), eventWeight);
-
-      m_h3_GenVsRecoY->Fill(product.m_validGenJets.at(0).p4.Rapidity(), product.m_validGenJets.at(0).p4.Pt(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Rapidity() - product.m_validGenJets.at(0).p4.Rapidity(), eventWeight);
-      m_h3_GenVsRecoY->Fill(product.m_validGenJets.at(1).p4.Rapidity(), product.m_validGenJets.at(1).p4.Pt(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Rapidity() - product.m_validGenJets.at(1).p4.Rapidity(), eventWeight);
-      m_h3_GenVsRecoEta->Fill(product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Eta(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Pt(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Eta() - product.m_validGenJets.at(0).p4.Eta(), eventWeight);
-      m_h3_GenVsRecoEta->Fill(product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Eta(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Pt(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Eta() - product.m_validGenJets.at(1).p4.Eta(), eventWeight);
-
-      m_tp_genyvsrecoy->Fill(product.m_validGenJets.at(0).p4.Rapidity(), product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Rapidity() - product.m_validGenJets.at(0).p4.Rapidity(), eventWeight);
-
-      m_h2_genreco_ptavg->Fill(genmatch_ptavg, product.m_gendijet_ptavg, eventWeight);
-      m_h_genmatchptavg->Fill(genmatch_ptavg, eventWeight);
+      m_h_dijet_flavour_gg->Fill(product.m_dijet_ptavg, eventWeight);
     }
-    if (product.m_validGenJets.size() > 1 &&
-        SafeMap::GetWithDefault(product.m_matchedRecoJets, &product.m_validGenJets.at(1), static_cast<KBasicJet*>(nullptr)) != nullptr) {
-      m_h_jet2DeltaR->Fill(
-          ROOT::Math::VectorUtil::DeltaR(product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4, product.m_validGenJets.at(1).p4),
-          eventWeight);
-    }
-    // Dijet flavour
-    if (product.m_validRecoJets.size() > 1 &&
-        SafeMap::GetWithDefault(product.m_matchedPartons, &product.m_validRecoJets.at(0), static_cast<KGenParticle*>(nullptr)) != nullptr && 
-        SafeMap::GetWithDefault(product.m_matchedPartons, &product.m_validRecoJets.at(1), static_cast<KGenParticle*>(nullptr)) != nullptr) 
+    // qq
+    else if ((std::abs(product.m_matchedPartons.at(&product.m_validRecoJets.at(0))->pdgId()) < 6) 
+        && (std::abs(product.m_matchedPartons.at(&product.m_validRecoJets.at(1))->pdgId()) < 6))
     {
-      // gg
-      if ((product.m_matchedPartons.at(&product.m_validRecoJets.at(0))->pdgId() == 21) && (product.m_matchedPartons.at(&product.m_validRecoJets.at(1))->pdgId() == 21))
-      {
-        m_h_dijet_flavour_gg->Fill(product.m_dijet_ptavg, eventWeight);
-      }
-      // qq
-      else if ((std::abs(product.m_matchedPartons.at(&product.m_validRecoJets.at(0))->pdgId()) < 6) 
-          && (std::abs(product.m_matchedPartons.at(&product.m_validRecoJets.at(1))->pdgId()) < 6))
-      {
-        m_h_dijet_flavour_qq->Fill(product.m_dijet_ptavg, eventWeight);
-      }
-      // gq case
-      else if (((std::abs(product.m_matchedPartons.at(&product.m_validRecoJets.at(0))->pdgId()) < 6) && (product.m_matchedPartons.at(&product.m_validRecoJets.at(1))->pdgId() == 21))
-          || ((std::abs(product.m_matchedPartons.at(&product.m_validRecoJets.at(1))->pdgId()) < 6) && (product.m_matchedPartons.at(&product.m_validRecoJets.at(0))->pdgId() == 21)))
-      {
-        m_h_dijet_flavour_qg->Fill(product.m_dijet_ptavg, eventWeight);
-      }
+      m_h_dijet_flavour_qq->Fill(product.m_dijet_ptavg, eventWeight);
+    }
+    // gq case
+    else if (((std::abs(product.m_matchedPartons.at(&product.m_validRecoJets.at(0))->pdgId()) < 6) && (product.m_matchedPartons.at(&product.m_validRecoJets.at(1))->pdgId() == 21))
+        || ((std::abs(product.m_matchedPartons.at(&product.m_validRecoJets.at(1))->pdgId()) < 6) && (product.m_matchedPartons.at(&product.m_validRecoJets.at(0))->pdgId() == 21)))
+    {
+      m_h_dijet_flavour_qg->Fill(product.m_dijet_ptavg, eventWeight);
     }
   }
-
   for (auto & jet : product.m_validGenJets) {
     m_h_incgenjetpt->Fill(jet.p4.Pt(), eventWeight);
   }
@@ -375,6 +380,9 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   m_h_incgenjetpt->Write();
   m_h_genjet12rap->Write();
   m_h_genptavg->Write();
+  m_h_genidx->Write();
+  m_h2_genrecoidx->Write();
+  m_h2_genrecoptavg->Write();
   m_h_genmatchptavg->Write();
 
   m_h_dijet_flavour_qq->Write();

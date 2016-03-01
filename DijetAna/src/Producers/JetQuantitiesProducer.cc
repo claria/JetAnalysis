@@ -4,6 +4,13 @@ std::string JetQuantitiesProducer::GetProducerId() const {
   return "JetQuantitiesProducer";
 }
 
+void JetQuantitiesProducer::Init(setting_type const& settings) {
+  ProducerBase<JetTypes>::Init(settings);
+  // dummy histogram used to find bin index
+  m_h_ptavg = new TH1D("h_ptavg", "h_ptavg", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
+  m_h_ptavg->Sumw2();
+}
+
 void JetQuantitiesProducer::Produce(JetEvent const& event, JetProduct& product, JetSettings const& settings) const {
 
   // Inclusive Jets
@@ -69,4 +76,12 @@ void JetQuantitiesProducer::Produce(JetEvent const& event, JetProduct& product, 
       (product.m_validRecoJets.size() > 1)
           ? exp(std::abs(product.m_validRecoJets.at(0).p4.Rapidity() - product.m_validRecoJets.at(1).p4.Rapidity()))
           : -999.;
+
+  size_t i = (size_t)product.m_dijet_yboost;
+  size_t j = (size_t)product.m_dijet_ystar;
+  // index of histogram to be filled
+  // yb0ys0 --> 0 yb0ys1 --> 1 ...
+  product.m_dijet_ysbidx = j + 3*i - i*(i-1)/2;
+  product.m_dijet_ptavgidx = m_h_ptavg->FindBin(product.m_dijet_ptavg)-1;
+  product.m_dijet_idx = (m_h_ptavg->GetNbinsX() * product.m_dijet_ysbidx) + m_h_ptavg->FindBin(product.m_dijet_ptavg)-1; 
 }

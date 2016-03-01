@@ -43,6 +43,10 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   // Pt Avg
   m_h_ptavg = new TH1D("h_ptavg", "h_ptavg", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   m_h_ptavg->Sumw2();
+
+  m_h_idx = new TH1D("h_idx", "h_idx", (settings.GetPtBinning().size() - 1)*6,-0.5, -0.5+ (settings.GetPtBinning().size() - 1)*6);
+  m_h_idx->Sumw2();
+
   // Dijet delta Phi
   m_h_jet12dphi = new TH1D("h_jet12dphi", "h_jet12dphi", 63, 0., 6.3);
   m_h_jet12dphi->Sumw2();
@@ -155,6 +159,9 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
     m_h_jet2phi->Fill(product.m_jet2Phi, eventWeight);
 
     m_h_ptavg->Fill(product.m_dijet_ptavg, eventWeight);
+    m_h_idx->Fill(product.m_dijet_idx, eventWeight);
+    // std::cout << "ptavg " << product.m_dijet_ptavg << " ybb " << product.m_dijet_yboost << " ys " << product.m_dijet_ystar <<  std::endl;
+    // std::cout << "ysbidx " << product.m_dijet_ysbidx << " ptavgidx " << product.m_dijet_ptavgidx << " idx " << product.m_dijet_idx << std::endl;
 
     m_h2_yb_ys->Fill(product.m_dijet_yboost, product.m_dijet_ystar, eventWeight);
     m_h2_y12->Fill(product.m_jet1Rap, product.m_jet2Rap, eventWeight);
@@ -222,6 +229,7 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   m_h_incjetpt->Write();
 
   m_h_ptavg->Write();
+  m_h_idx->Write();
   m_h_jet12dphi->Write();
   m_h2_jet12Pt->Write();
   m_h2_jet12PtRVsPtavg->Write();
@@ -259,5 +267,5 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   m_h_nConstituents->Write();
   m_h_nCharged->Write();
 
-  LOG(INFO) << "My favourite dijet event is: ptavg=" << myDijet_ptavg << " run=" << myRun << " lumi=" << myLumi << " event=" << myEvent << std::endl;
+  LOG(INFO) << "My favourite dijet event is: " << settings.GetRootFileFolder() << " ptavg=" << myDijet_ptavg << " run=" << myRun << " lumi=" << myLumi << " event=" << myEvent << std::endl;
 }

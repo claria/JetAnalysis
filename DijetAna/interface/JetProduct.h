@@ -60,6 +60,9 @@ class JetProduct : public KappaProduct {
   double m_dijet_yboost = -99999.;
   double m_dijet_ystar = -99999.;
   double m_dijet_chi = -99999.;
+  double m_dijet_ysbidx = -99999.;
+  double m_dijet_ptavgidx = -99999.;
+  double m_dijet_idx = -99999.;
 
   double m_genjet1Pt = -99999.;
   double m_genjet1Eta = -99999.;
@@ -81,4 +84,29 @@ class JetProduct : public KappaProduct {
   double m_gendijet_yboost = -99999.;
   double m_gendijet_ystar = -99999.;
   double m_gendijet_chi = -99999.;
+  double m_gendijet_ysbidx = -99999.;
+  double m_gendijet_ptavgidx = -99999.;
+  double m_gendijet_idx = -99999.;
+
+
+  double m_genmatchjet1Pt = -99999.;
+  double m_genmatchjet1Eta = -99999.;
+  double m_genmatchjet1Rap = -99999.;
+  double m_genmatchjet1Phi = -99999.;
+  double m_genmatchjet2Pt = -99999.;
+  double m_genmatchjet2Eta = -99999.;
+  double m_genmatchjet2Rap = -99999.;
+  double m_genmatchjet2Phi = -99999.;
+
+
+  double m_genmatchdijet_ptavg = -99999.;
+  double m_genmatchdijet_yboost = -99999.;
+  double m_genmatchdijet_ystar = -99999.;
+
+  double m_genmatchdijet_ysbidx = -99999.;
+  double m_genmatchdijet_ptavgidx = -99999.;
+  double m_genmatchdijet_idx = -99999.;
+
+
+
 };

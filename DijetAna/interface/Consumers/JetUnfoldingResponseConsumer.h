@@ -19,6 +19,8 @@ class JetUnfoldingResponseConsumer : public JetConsumerBase {
   virtual void Finish(setting_type const& settings) override;
 
  private:
-  RooUnfoldResponse* m_unfoldResponse_ptavg_ysb = NULL;
-  RooUnfoldResponse* m_unfoldResponse_ptavg = NULL;
+  RooUnfoldResponse* m_unfoldResponse_ptavg_ysb = nullptr;
+  RooUnfoldResponse* m_unfoldResponse_ptavg = nullptr;
+  TH2D* m_h2_response_idx = nullptr;
+  RooUnfoldResponse* m_unfoldResponse_idx = nullptr;
 };
