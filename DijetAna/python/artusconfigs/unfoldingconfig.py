@@ -25,8 +25,8 @@ class UnfoldingResponseConfig(BaseConfig):
         self['TripleDiffGenPtBinning'] = [30, 40, 50,60,74, 114, 196, 300, 468, 790, 3000]
         self['RapidityAbsBinning'] = [0.0, 1.0, 2.0, 3.0]
         self['MinValidJetPt'] = 50.
-        self['MinLeadingJetPt'] = 74.
-        self['MinLeadingGenJetPt'] = 74.0
+        self['MinPtAvg'] = 133.
+        self['MinGenPtAvg'] = 50.
         self['MinValidGenJetPt'] = 50.
         self['MaxValidGenJetAbsRap'] = 3.0
 
@@ -39,11 +39,12 @@ class UnfoldingResponseConfig(BaseConfig):
         # Define global cuts
 
         default_pipeline = self.get_default_pipeline()
+        self['JERScalingFactors'] = [1.079, 1.099, 1.121, 1.208, 1.254, 1.395, 1.056]
 
         default_pipeline['Processors'].append('filter:NGenJetsFilter')
-        default_pipeline['Processors'].append('filter:LeadingGenJetPtFilter')
+        default_pipeline['Processors'].append('filter:GenPtAvgFilter')
         default_pipeline['Processors'].append('filter:NJetsFilter')
-        default_pipeline['Processors'].append('filter:LeadingJetPtFilter')
+        default_pipeline['Processors'].append('filter:PtAvgFilter')
         default_pipeline['Processors'].append('filter:YStarFilter')
         default_pipeline['Processors'].append('filter:YBoostFilter')
         default_pipeline['Processors'].append('filter:GenYStarFilter')
@@ -59,24 +60,24 @@ class UnfoldingResponseConfig(BaseConfig):
 
 
     def expand_pipelines(self):
-        for i in range(0, len(self['RapidityAbsBinning']) -1):
-            for j in range(0, len(self['RapidityAbsBinning']) -1):
 
-                yb_lo = self['RapidityAbsBinning'][i]
-                yb_hi = self['RapidityAbsBinning'][i+1]
-                ys_lo = self['RapidityAbsBinning'][j]
-                ys_hi = self['RapidityAbsBinning'][j+1]
-                pipeline_name = 'yb{0}ys{1}'.format(i, j)
-                self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
-                self['Pipelines'][pipeline_name]['TaggingFilters'] = ['YStarFilter', 'YBoostFilter','GenYStarFilter', 'GenYBoostFilter', 'NGenJetsFilter', 'LeadingGenJetPtFilter', 'NJetsFilter', 'LeadingJetPtFilter']
-                self['Pipelines'][pipeline_name]['MinYStar'] = ys_lo
-                self['Pipelines'][pipeline_name]['MaxYStar'] = ys_hi
-                self['Pipelines'][pipeline_name]['MinYBoost'] = yb_lo
-                self['Pipelines'][pipeline_name]['MaxYBoost'] = yb_hi
-                self['Pipelines'][pipeline_name]['MinGenYStar'] = ys_lo
-                self['Pipelines'][pipeline_name]['MaxGenYStar'] = ys_hi
-                self['Pipelines'][pipeline_name]['MinGenYBoost'] = yb_lo
-                self['Pipelines'][pipeline_name]['MaxGenYBoost'] = yb_hi
+        for i, j in [(0,0), (0, 1), (0, 2), (1, 0), (1, 1), (2, 0)]:
+        # for i, j in [(1, 1)]:
+            yb_lo = self['RapidityAbsBinning'][i]
+            yb_hi = self['RapidityAbsBinning'][i+1]
+            ys_lo = self['RapidityAbsBinning'][j]
+            ys_hi = self['RapidityAbsBinning'][j+1]
+            pipeline_name = 'yb{0}ys{1}'.format(i, j)
+            self['Pipelines'][pipeline_name] = copy.deepcopy(self['Pipelines']['default'])
+            self['Pipelines'][pipeline_name]['TaggingFilters'] = ['YStarFilter', 'YBoostFilter','GenYStarFilter', 'GenYBoostFilter', 'NGenJetsFilter', 'GenPtAvgFilter', 'NJetsFilter', 'PtAvgFilter']
+            self['Pipelines'][pipeline_name]['MinYStar'] = ys_lo
+            self['Pipelines'][pipeline_name]['MaxYStar'] = ys_hi
+            self['Pipelines'][pipeline_name]['MinYBoost'] = yb_lo
+            self['Pipelines'][pipeline_name]['MaxYBoost'] = yb_hi
+            self['Pipelines'][pipeline_name]['MinGenYStar'] = ys_lo
+            self['Pipelines'][pipeline_name]['MaxGenYStar'] = ys_hi
+            self['Pipelines'][pipeline_name]['MinGenYBoost'] = yb_lo
+            self['Pipelines'][pipeline_name]['MaxGenYBoost'] = yb_hi
 
 
 #                 gen_pipeline_name = 'genptavg_yb_{0}_{1}_ys_{2}_{3}'.format(yb_lo, yb_hi, ys_lo, ys_hi).replace('.','')
