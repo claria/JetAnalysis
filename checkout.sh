@@ -30,18 +30,19 @@ git-cms-addpkg RecoLuminosity
 # Checkout development branch of Kappa
 # git clone -b development https://github.com/KappaAnalysis/Kappa.git Kappa
 git clone https://github.com/KappaAnalysis/Kappa.git Kappa
-(cd Kappa && git checkout tags/8TeVFinal)
+(cd Kappa && git checkout tags/DijetFinal)
 
 make -C Kappa/DataFormats/test/ -j4
 
 # Checkout master of KappaTools
 git clone https://github.com/KappaAnalysis/KappaTools.git KappaTools
+(cd KappaTools && git checkout tags/DijetFinal)
 
 scram b -j4
 
 # Checkout master of Artus
 git clone https://github.com/artus-analysis/Artus.git Artus
-(cd Artus && git checkout tags/8TeVFinal)
+(cd Artus && git checkout tags/DijetFinal)
 
 # Checkout master of DijetAna
 if [ "$TRAVIS" = true ] ; then
