@@ -89,6 +89,13 @@ void GenJetQuantitiesProducer::Produce(JetEvent const& event, JetProduct& produc
     product.m_genmatchdijet_yboost = 0.5 * std::abs(product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Rapidity() + product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Rapidity());
     product.m_genmatchdijet_ystar = 0.5 * std::abs(product.m_matchedRecoJets.at(&product.m_validGenJets.at(0))->p4.Rapidity() - product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Rapidity());
 
+    i = (size_t)product.m_genmatchdijet_yboost;
+    j = (size_t)product.m_genmatchdijet_ystar;
+    // index of histogram to be filled
+    // yb0ys0 --> 0 yb0ys1 --> 1 ...
+    product.m_genmatchdijet_ysbidx = j + 3*i - i*(i-1)/2;
+    product.m_genmatchdijet_ptavgidx = m_h_ptavg->FindBin(product.m_genmatchdijet_ptavg)-1;
+    product.m_genmatchdijet_idx = (m_h_ptavg->GetNbinsX() * product.m_genmatchdijet_ysbidx) + product.m_genmatchdijet_ptavgidx; 
   }
   if (product.m_validGenJets.size() > 0 && product.m_matchedRecoJets.count(&product.m_validGenJets.at(0)) && product.m_matchedRecoJets.find(&product.m_validGenJets.at(0))->second)
   {
@@ -105,11 +112,4 @@ void GenJetQuantitiesProducer::Produce(JetEvent const& event, JetProduct& produc
     product.m_genmatchjet2Phi = product.m_matchedRecoJets.at(&product.m_validGenJets.at(1))->p4.Phi();
   }
 
-  i = (size_t)product.m_genmatchdijet_yboost;
-  j = (size_t)product.m_genmatchdijet_ystar;
-  // index of histogram to be filled
-  // yb0ys0 --> 0 yb0ys1 --> 1 ...
-  product.m_genmatchdijet_ysbidx = j + 3*i - i*(i-1)/2;
-  product.m_genmatchdijet_ptavgidx = m_h_ptavg->FindBin(product.m_genmatchdijet_ptavg)-1;
-  product.m_genmatchdijet_idx = (m_h_ptavg->GetNbinsX() * product.m_genmatchdijet_ysbidx) + product.m_genmatchdijet_ptavgidx; 
 }
