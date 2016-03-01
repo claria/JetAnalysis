@@ -18,14 +18,20 @@ from math import sqrt
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 from JetAnalysis.DijetAna.tools import *
 
+ROOT.gSystem.Load('/afs/desy.de/user/g/gsieber/dijetana/ana/CMSSW_7_2_3/src/RooUnfold/libRooUnfold.so')
+
+import RooUnfold
+
 def main():
 
-    ROOT.gSystem.Load('/afs/desy.de/user/g/gsieber/dijetana/ana/CMSSW_7_2_3/src/RooUnfold/libRooUnfold.so')
 
     parser = argparse.ArgumentParser(description='Unfold distribution with a given response matrix')
 
     parser.add_argument('--measured-histo', help='Path to root file with the distribution.')
     parser.add_argument('--response-matrix', help='Path to root file with the response matrix')
+    parser.add_argument('--response-matrix-histo-truth', help='Path to root file with the response matrix as histo')
+    parser.add_argument('--response-matrix-histo-measured', help='Path to root file with the response matrix as histo')
+    parser.add_argument('--response-matrix-histo-response', help='Path to root file with the response matrix as histo')
     parser.add_argument('--normalize-binwidth', action='store_true',  help='Normalize input histogram by binwidth')
     parser.add_argument('--algo', default='iterative', choices=['iterative', 'binbybin', 'svd'], 
                         help='Unfolding alogrithm.')
@@ -40,7 +46,13 @@ def main():
     if args['normalize_binwidth']:
         measured_histo.Scale(1.0, "width")
 
-    response_matrix = get_root_object(args['response_matrix'])
+    if args['response_matrix']:
+        response_matrix = get_root_object(args['response_matrix'])
+    else:
+        truth = get_root_object(args['response_matrix_histo_truth'])
+        measured = get_root_object(args['response_matrix_histo_measured'])
+        response = get_root_object(args['response_matrix_histo_response'])
+        response_matrix = ROOT.RooUnfoldResponse(measured, truth, response, 'res_matrix', 'res_matrix'))
 
     if args['algo'] == 'iterative':
         unfold = ROOT.RooUnfoldBayes(response_matrix, measured_histo, args['reg_parameter'])
@@ -48,6 +60,8 @@ def main():
         unfold = ROOT.RooUnfoldSvd(response_matrix, measured_histo, args['reg_parameter'])
     elif args['algo'] == 'binbybin':
         unfold = ROOT.RooUnfoldBinByBin(response_matrix, measured_histo)
+    elif args['algo'] == 'invert':
+        unfold = ROOT.RooUnfoldInvert(response_matrix, measured_histo)
     else:
         raise ValueError()
 
