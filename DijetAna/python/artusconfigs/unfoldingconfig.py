@@ -30,8 +30,21 @@ class UnfoldingResponseConfig(BaseConfig):
         self['MinValidGenJetPt'] = 50.
         self['MaxValidGenJetAbsRap'] = 3.0
 
-        self.add_processor('producer:GenJetMatchingProducer', after='producer:JetValidJetsProducer')
-        self.add_processor('producer:JERScalingProducer', after='producer:GenJetMatchingProducer')
+        self["Processors"] = [
+                "producer:JetCorrectionsProducer", 
+                "producer:ValidGenJetsProducer", 
+                "producer:JetValidJetsProducer", 
+                "producer:GenJetMatchingProducer", 
+                "producer:JERScalingProducer", 
+                "producer:GenJetQuantitiesProducer", 
+                "producer:NumberGeneratedEventsWeightProducer", 
+                "producer:GeneratorWeightProducer", 
+                "producer:CrossSectionWeightProducer", 
+                "producer:PUWeightProducer", 
+                "producer:JetQuantitiesProducer", 
+                "producer:GenJetPartonMatchingProducer", 
+                "producer:EventWeightProducer"
+        ] 
 
         self['TaggingFilters'] = ['YStarFilter', 'YBoostFilter','GenYStarFilter', 'GenYBoostFilter', 'NGenJetsFilter', 'LeadingGenJetPtFilter', 'NJetsFilter', 'LeadingJetPtFilter']
 
