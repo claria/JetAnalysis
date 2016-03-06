@@ -25,7 +25,7 @@ class UnfoldingResponseConfig(BaseConfig):
         self['TripleDiffGenPtBinning'] = [30, 40, 50,60,74, 114, 196, 300, 468, 790, 3000]
         self['RapidityAbsBinning'] = [0.0, 1.0, 2.0, 3.0]
         self['MinValidJetPt'] = 50.
-        self['MinPtAvg'] = 133.
+        self['MinPtAvg'] = 100.
         self['MinGenPtAvg'] = 50.
         self['MinValidGenJetPt'] = 50.
         self['MaxValidGenJetAbsRap'] = 3.0
@@ -56,10 +56,10 @@ class UnfoldingResponseConfig(BaseConfig):
 
         default_pipeline['Processors'].append('filter:NGenJetsFilter')
         default_pipeline['Processors'].append('filter:GenPtAvgFilter')
-        default_pipeline['Processors'].append('filter:NJetsFilter')
-        default_pipeline['Processors'].append('filter:PtAvgFilter')
-        default_pipeline['Processors'].append('filter:YStarFilter')
-        default_pipeline['Processors'].append('filter:YBoostFilter')
+        # default_pipeline['Processors'].append('filter:NJetsFilter')
+        # default_pipeline['Processors'].append('filter:PtAvgFilter')
+        # default_pipeline['Processors'].append('filter:YStarFilter')
+        # default_pipeline['Processors'].append('filter:YBoostFilter')
         default_pipeline['Processors'].append('filter:GenYStarFilter')
         default_pipeline['Processors'].append('filter:GenYBoostFilter')
 
