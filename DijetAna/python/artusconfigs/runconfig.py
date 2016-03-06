@@ -73,15 +73,15 @@ class RunConfig(BaseConfig):
                                   "producer:JetCorrectionsProducer", 
                                   # "producer:RapidityCorrectionProducer"
                                   "producer:ValidGenJetsProducer", 
-                                  "producer:GenJetQuantitiesProducer", 
                                   "producer:JetValidJetsProducer", 
+                                  "producer:GenJetMatchingProducer", 
+                                  "producer:GenJetPartonMatchingProducer", 
+                                  "producer:GenJetQuantitiesProducer", 
                                   "producer:NumberGeneratedEventsWeightProducer", 
                                   "producer:GeneratorWeightProducer", 
                                   "producer:CrossSectionWeightProducer", 
                                   "producer:PUWeightProducer", 
                                   "producer:JetQuantitiesProducer", 
-                                  "producer:GenJetPartonMatchingProducer", 
-                                  "producer:GenJetMatchingProducer", 
                                   "producer:EventWeightProducer", 
                                  ]
 
