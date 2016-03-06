@@ -1,4 +1,6 @@
 #include "JetAnalysis/DijetAna/interface/Consumers/JetQuantitiesHistogramConsumer.h"
+#include "JetAnalysis/DijetAna/interface/Helpers.h"
+// #include "Artus/Utility/interface/Utility.h"
 // #include "Artus/Utility/interface/Utility.h"
 #include <boost/math/special_functions/sign.hpp>
 
@@ -47,9 +49,35 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
   m_h_idx = new TH1D("h_idx", "h_idx", (settings.GetPtBinning().size() - 1)*6,-0.5, -0.5+ (settings.GetPtBinning().size() - 1)*6);
   m_h_idx->Sumw2();
 
-  // Dijet delta Phi
-  m_h_jet12dphi = new TH1D("h_jet12dphi", "h_jet12dphi", 63, 0., 6.3);
-  m_h_jet12dphi->Sumw2();
+  // dijet delta Phi
+  std::vector<double> dijet_deltaphi_binning = linspace(0.0, 6.3, 50.0);
+  m_h_dijet_deltaphi = new TH1D("h_dijet_deltaphi", "h_dijet_deltaphi", dijet_deltaphi_binning.size() -1, &dijet_deltaphi_binning[0]);
+  m_h_dijet_deltaphi->Sumw2();
+  // dijet costhetastar
+  std::vector<double> dijet_costhetastar_binning = linspace(-1.0, 1.0, 50.0);
+  m_h_dijet_costhetastar = new TH1D("h_dijet_costhetastar", "h_dijet_costhetastar", dijet_costhetastar_binning.size() -1, &dijet_costhetastar_binning[0]);
+  m_h_dijet_costhetastar->Sumw2();
+  // dijet delta DeltaR
+  std::vector<double> dijet_deltar_binning = linspace(0.0, 6.3, 50.0);
+  m_h_dijet_deltar = new TH1D("h_dijet_deltar", "h_dijet_deltar", dijet_deltar_binning.size() -1, &dijet_deltar_binning[0]);
+  m_h_dijet_deltar->Sumw2();
+  // dijet ystar
+  std::vector<double> dijet_ystar_binning = linspace(-5.0, 5.0, 100);
+  m_h_dijet_ystar = new TH1D("h_dijet_ystar", "h_dijet_ystar", dijet_ystar_binning.size() -1, &dijet_ystar_binning[0]);
+  m_h_dijet_ystar->Sumw2();
+  // dijet yboost
+  std::vector<double> dijet_yboost_binning = linspace(-5.0, 5.0, 100);
+  m_h_dijet_yboost = new TH1D("h_dijet_yboost", "h_dijet_yboost", dijet_yboost_binning.size() -1, &dijet_yboost_binning[0]);
+  m_h_dijet_yboost->Sumw2();
+  // dijet yboost
+  std::vector<double> dijet_chi_binning = logspace(1.0, 50.0, 50);
+  m_h_dijet_chi = new TH1D("h_dijet_chi", "h_dijet_chi", dijet_chi_binning.size() -1, &dijet_chi_binning[0]);
+  m_h_dijet_chi->Sumw2();
+  // dijet mass
+  std::vector<double> dijet_mass_binning = logspace(50.0, 8000.0, 100);
+  m_h_dijet_mass = new TH1D("h_dijet_mass", "h_dijet_mass", dijet_mass_binning.size() -1, &dijet_mass_binning[0]);
+  m_h_dijet_mass->Sumw2();
+
   // Jet12 Pt
   m_h2_jet12Pt = new TH2D("h2_jet12pt", "h2_jet12pt",
                         settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0],
@@ -75,7 +103,7 @@ void JetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
                         settings.GetRapidityAbsBinning().size() - 1,
                         &settings.GetRapidityAbsBinning()[0]);
   m_h2_yb_ys->Sumw2();
-  // Dijet rapidity distribution for two leading jets
+  // dijet rapidity distribution for two leading jets
   m_h2_y12 = new TH2D("h2_y12",
                       "h2_y12",
                       settings.GetFineRapidityBinning().size() - 1,
@@ -160,13 +188,20 @@ void JetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& even
 
     m_h_ptavg->Fill(product.m_dijet_ptavg, eventWeight);
     m_h_idx->Fill(product.m_dijet_idx, eventWeight);
-    // std::cout << "ptavg " << product.m_dijet_ptavg << " ybb " << product.m_dijet_yboost << " ys " << product.m_dijet_ystar <<  std::endl;
-    // std::cout << "ysbidx " << product.m_dijet_ysbidx << " ptavgidx " << product.m_dijet_ptavgidx << " idx " << product.m_dijet_idx << std::endl;
+
+
+    m_h_dijet_deltaphi->Fill(product.m_dijet_deltaPhi, eventWeight);
+    m_h_dijet_deltar->Fill(product.m_dijet_deltaR, eventWeight);
+    m_h_dijet_costhetastar->Fill(product.m_dijet_cosThetaStar, eventWeight);
+    m_h_dijet_ystar->Fill(product.m_dijet_ystar, eventWeight);
+    m_h_dijet_yboost->Fill(product.m_dijet_yboost, eventWeight);
+    m_h_dijet_chi->Fill(product.m_dijet_chi, eventWeight);
+    m_h_dijet_mass->Fill(product.m_dijet_mass, eventWeight);
 
     m_h2_yb_ys->Fill(product.m_dijet_yboost, product.m_dijet_ystar, eventWeight);
     m_h2_y12->Fill(product.m_jet1Rap, product.m_jet2Rap, eventWeight);
 
-    m_h_jet12dphi->Fill(product.m_dijet_deltaPhi, eventWeight);
+    m_h_dijet_deltaphi->Fill(product.m_dijet_deltaPhi, eventWeight);
     m_h2_jet12PtRVsPtavg->Fill(product.m_dijet_ptavg, product.m_dijet_jet12PtRatio, eventWeight);
     m_h2_jet1PtVsPtavg->Fill(product.m_dijet_ptavg, product.m_jet1Pt, eventWeight);
     m_h2_jet12Pt->Fill(product.m_jet1Pt, product.m_jet2Pt, eventWeight);
@@ -230,7 +265,15 @@ void JetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
 
   m_h_ptavg->Write();
   m_h_idx->Write();
-  m_h_jet12dphi->Write();
+
+  m_h_dijet_deltaphi->Write();
+  m_h_dijet_deltar->Write();
+  m_h_dijet_costhetastar->Write();
+  m_h_dijet_ystar->Write();
+  m_h_dijet_yboost->Write();
+  m_h_dijet_chi->Write();
+  m_h_dijet_mass->Write();
+
   m_h2_jet12Pt->Write();
   m_h2_jet12PtRVsPtavg->Write();
   m_h2_jet1PtVsPtavg->Write();

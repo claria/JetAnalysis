@@ -56,6 +56,10 @@ void JetQuantitiesProducer::Produce(JetEvent const& event, JetProduct& product, 
       (product.m_validRecoJets.size() > 1)
           ? std::abs(product.m_validRecoJets.at(0).p4.Phi() - product.m_validRecoJets.at(1).p4.Phi())
           : -999.;
+  product.m_dijet_deltaR =
+      (product.m_validRecoJets.size() > 1)
+          ? ROOT::Math::VectorUtil::DeltaR(product.m_validRecoJets.at(0).p4, product.m_validRecoJets.at(1).p4)
+          : -999.;
   product.m_dijet_jet12PtRatio =
       (product.m_validRecoJets.size() > 1)
           ? product.m_validRecoJets.at(1).p4.Pt()/product.m_validRecoJets.at(0).p4.Pt()

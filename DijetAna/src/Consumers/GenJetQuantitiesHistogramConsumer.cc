@@ -291,9 +291,8 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
                             product.m_gendijet_ptavg,
                             eventWeight);
 
-    m_h2_GenYstarVsRecoYstar->Fill(product.m_dijet_ystar, product.m_gendijet_ystar, eventWeight);
-    m_h2_GenYboostVsRecoYboost->Fill(product.m_dijet_yboost, product.m_gendijet_yboost, eventWeight);
-
+    m_h2_GenYstarVsRecoYstar->Fill(product.m_genmatchdijet_ystar, product.m_gendijet_ystar, eventWeight);
+    m_h2_GenYboostVsRecoYboost->Fill(product.m_genmatchdijet_yboost, product.m_gendijet_yboost, eventWeight);
 
     m_h2_genrecoidx->Fill(product.m_genmatchdijet_idx, product.m_gendijet_idx, eventWeight);
     m_h2_genrecoptavg->Fill(product.m_genmatchdijet_ptavg, product.m_gendijet_ptavg, eventWeight);
