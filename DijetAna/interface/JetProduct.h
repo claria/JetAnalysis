@@ -59,7 +59,9 @@ class JetProduct : public KappaProduct {
   double m_dijet_deltaR = -99999.;
   double m_dijet_cosThetaStar = -99999.;
   double m_dijet_yboost = -99999.;
+  double m_dijet_yboostnoabs = -99999.;
   double m_dijet_ystar = -99999.;
+  double m_dijet_ystarnoabs = -99999.;
   double m_dijet_chi = -99999.;
   double m_dijet_ysbidx = -99999.;
   double m_dijet_ptavgidx = -99999.;

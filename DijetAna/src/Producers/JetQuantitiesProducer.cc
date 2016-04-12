@@ -72,9 +72,17 @@ void JetQuantitiesProducer::Produce(JetEvent const& event, JetProduct& product, 
       (product.m_validRecoJets.size() > 1)
           ? 0.5 * std::abs(product.m_validRecoJets.at(0).p4.Rapidity() + product.m_validRecoJets.at(1).p4.Rapidity())
           : -999.;
+  product.m_dijet_yboostnoabs =
+      (product.m_validRecoJets.size() > 1)
+          ? 0.5 * (product.m_validRecoJets.at(0).p4.Rapidity() + product.m_validRecoJets.at(1).p4.Rapidity())
+          : -999.;
   product.m_dijet_ystar =
       (product.m_validRecoJets.size() > 1)
           ? 0.5 * std::abs(product.m_validRecoJets.at(0).p4.Rapidity() - product.m_validRecoJets.at(1).p4.Rapidity())
+          : -999.;
+  product.m_dijet_ystarnoabs =
+      (product.m_validRecoJets.size() > 1)
+          ? 0.5 * (product.m_validRecoJets.at(0).p4.Rapidity() - product.m_validRecoJets.at(1).p4.Rapidity())
           : -999.;
   product.m_dijet_chi =
       (product.m_validRecoJets.size() > 1)

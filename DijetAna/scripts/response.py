@@ -157,6 +157,10 @@ def main():
             # if pt_truth > 133.:
             # if pt_smeared >= 133.:
 
+        h_recoptavg.Scale(1./n_evts)
+        h_genptavg.Scale(1./n_evts)
+        h2_genvsreco.Scale(1./n_evts)
+
         h_recoptavg.Write()
         h_genptavg.Write()
         response_ptavg = ROOT.RooUnfoldResponse(h_recoptavg, h_genptavg, h2_genvsreco)
