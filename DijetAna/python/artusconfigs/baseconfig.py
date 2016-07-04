@@ -176,6 +176,7 @@ class BaseConfig(dict):
                                                  '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L2Relative_AK7PFchs.txt',
                                                  '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/jec/START53_V27_L3Absolute_AK7PFchs.txt'
                                                 ]
+        self['JetEnergyCorrectionUncertaintyParameters'] = '/nfs/dust/cms/user/gsieber/dijetana/ana/CMSSW_7_2_3/src/JetAnalysis/DijetAna/data/jec/START53_V27_Uncertainty_AK7PFchs.txt'
         # For HLT trigger studies in MC
         self['HltPaths'] = ['HLT_PFJET80', 'HLT_PFJET140', 'HLT_PFJET200', 'HLT_PFJET260', 'HLT_PFJET320']
         self['NumberGeneratedEvents'] = sample_size
