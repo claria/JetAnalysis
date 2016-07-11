@@ -94,6 +94,13 @@ def main():
             'yb1ys1' : [1.62403e-01, 3.89047e+00, 1.73026e+01, 1.40653e+03],
             'yb2ys0' : [2.39237e-02, 4.39508e+00, 1.41838e+01, 1.16487e+03],
             }
+    data_lim_max = { 'yb0ys0' : 1784.,
+                     'yb0ys1' : 1248.,
+                     'yb0ys2' : 548.,
+                     'yb1ys0' : 1032.,
+                     'yb1ys1' : 686.,
+                     'yb2ys0' : 430.,
+                   }
 
     for rap_bin in rap_bins:
         print rap_bin
@@ -144,7 +151,7 @@ def main():
 
         n_evts = 100000000
         for i in xrange(n_evts):
-            pt_truth = ROOT.gRandom.Uniform(74.,2500)
+            pt_truth = ROOT.gRandom.Uniform(74.,data_lim_max[rap_bin]*1.2)
             pt_smeared = smear_pt(rap_bin, pt_truth)
             w = nlo_fcn.Eval(pt_truth)
             if (w <= 0.) or math.isnan(w):
