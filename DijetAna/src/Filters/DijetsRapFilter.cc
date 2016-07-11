@@ -4,7 +4,7 @@ void DijetsRapFilter::Init(JetSettings const& settings) {
   JetFilterBase::Init(settings);
   minDijetsAbsRap = settings.GetMinDijetsAbsRap();
   maxDijetsAbsRap = settings.GetMaxDijetsAbsRap();
-  LOG(INFO) << "DijetsRapFilter: Accepting events with jet 1 and jet2 absolute rapidity between " << minDijetsAbsRap << " and " << maxDijetsAbsRap;
+  LOG(INFO) << "DijetsRapFilter: Selecting events with j1 &&j2 fulfill " << minDijetsAbsRap << " <= |y| < " << maxDijetsAbsRap;
 }
 
 bool DijetsRapFilter::DoesEventPass(JetEvent const& event,
