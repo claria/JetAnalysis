@@ -12,7 +12,7 @@ class RunConfig(BaseConfig):
         # Same leading jet Pt cut in MC as induced by first HLT path
         default_pipeline = self.get_default_pipeline()
         default_pipeline['Consumers'] =  [
-                                  # 'KappaLambdaNtupleConsumer',
+                                  # 'JetLambdaNtupleConsumer',
                                   'cutflow_histogram',
                                   'JetQuantitiesHistogramConsumer',
                                   ]
@@ -21,13 +21,8 @@ class RunConfig(BaseConfig):
                                   'lumi',
                                   'event',
                                   'npv',
-                                  # 'npu',
                                   'weight',
                                   'njets',
-                                  # 'incjets_pt',
-                                  # 'incjets_eta',
-                                  # 'incjets_rap',
-                                  # 'incjets_phi',
                                   'jet1_pt',
                                   'jet1_eta',
                                   'jet1_rap',
@@ -48,7 +43,6 @@ class RunConfig(BaseConfig):
                                   'dijet_ymax',
                                   'trigweight',
                                   'puweight',
-                                  # 'pathindex',
                                   'xsweight',
                                   'ngeneventsweight',
                                   'luminosityWeight',
