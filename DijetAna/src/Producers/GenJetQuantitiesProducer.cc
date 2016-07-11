@@ -8,7 +8,7 @@ std::string GenJetQuantitiesProducer::GetProducerId() const {
 void GenJetQuantitiesProducer::Init(setting_type const& settings) {
   ProducerBase<JetTypes>::Init(settings);
   // dummy histogram used to find bin index
-  m_h_ptavg = new TH1D("h_ptavg", "h_ptavg", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
+  m_h_ptavg = new TH1D("h_ptavg_dummy", "h_ptavg_dummy", settings.GetPtBinning().size() - 1, &settings.GetPtBinning()[0]);
   m_h_ptavg->Sumw2();
 }
 
