@@ -40,9 +40,7 @@ void JetHltProducer::Produce(JetEvent const& event, JetProduct& product, JetSett
   product.m_selectedHltName = "";
   product.m_weights["hltPrescaleWeight"] = 0.;
   product.m_selectedHltPosition = DefaultValues::UndefinedInt;
-
-  if (product.m_validRecoJets.size() == 0)
-    return;
+  product.m_triggerDecisions.clear();
 
   product.m_hltInfo.setLumiInfo(event.m_lumiInfo);
   double triggerEffQuantity = product.m_dijet_ptavg;
@@ -53,8 +51,12 @@ void JetHltProducer::Produce(JetEvent const& event, JetProduct& product, JetSett
     std::string hltName = product.m_hltInfo.getHLTName(*hltPath);
 
     if (!hltName.empty()) {
+      product.m_triggerDecisions.push_back(event.m_eventInfo->hltFired(hltName, event.m_lumiInfo));
       if (event.m_eventInfo->hltFired(hltName, event.m_lumiInfo)) {
         LOG(DEBUG) << "Trigger " << *hltPath << " fired." << std::endl;
+
+        if (product.m_validRecoJets.size() == 0)
+          return;
         if ((triggerEffQuantity >= triggerEffThresholds.at(*hltPath).first) &&
             (triggerEffQuantity < triggerEffThresholds.at(*hltPath).second)) {
           LOG(DEBUG) << "Trigger: " << *hltPath << " Jet 1 pT: " << triggerEffQuantity << " is in range ("
