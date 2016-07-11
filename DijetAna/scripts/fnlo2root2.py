@@ -1,6 +1,6 @@
-#! /usr/bin/env python2
+#! /usr/bin/env python
 import sys
-from fnlo_uncerts import fastNLOUncertainties
+from JetAnalysis.DijetAna.fnlo_uncerts import fastNLOUncertainties
 import code
 
 import array
@@ -18,6 +18,8 @@ def main():
 
     pdfsets = {'CT10nlo' : 'CT10nlo', 'CT14nlo' : 'CT14nlo',
                'NNPDF30_nlo_as_0118' : 'NNPDF30', 
+               'NNPDF30_nlo_as_0117' : 'NNPDF30_as117', 
+               'NNPDF30_nlo_as_0119' : 'NNPDF30_as119', 
                'MMHT2014nlo68cl' : 'MMHT2014',
                'abm11_5n_nlo' :'ABM11NLO',
                'abm12lhc_5_nnlo' : 'ABM12NNLO',
