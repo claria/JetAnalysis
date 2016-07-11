@@ -6,6 +6,7 @@ class JetProduct : public KappaProduct {
  public:
   std::string m_selectedHltName;
   int m_selectedHltPosition;
+  std::vector<int> m_triggerDecisions;
 
   // vector containing all corrected Jets
   std::vector<KBasicJet> m_corrJets;
