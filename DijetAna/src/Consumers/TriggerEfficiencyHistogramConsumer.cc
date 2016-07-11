@@ -112,6 +112,9 @@ void TriggerEfficiencyHistogramConsumer::ProcessFilteredEvent(event_type const& 
         m_triggerEmulatedHists[i]->Fill(triggerEffQuantity);
       }
     }
+  else {
+      LOG(DEBUG) << "Trigger " << hltName << "did not fire." << std::endl;
+  }
   }
 }
 
