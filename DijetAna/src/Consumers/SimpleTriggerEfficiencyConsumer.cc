@@ -39,7 +39,7 @@ void SimpleTriggerEfficiencyConsumer::ProcessFilteredEvent(JetEvent const& event
     // size_t hltPosition = product.m_hltInfo.getHLTPosition(m_hltPaths[i]);
     m_allTriggerHists[i]->Fill(triggerEffQuantity);
 
-    if (event.m_eventInfo->hltFired(hltName, event.m_lumiInfo)) {
+    if (event.m_eventInfo->hltFired(hltName, event.m_lumiInfo) && event.m_eventInfo->hltFired(product.m_hltInfo.getHLTName("HLT_Mu17_Mu8"), event.m_lumiInfo)) {
       LOG(DEBUG) << "Trigger " << hltName << "fired." << std::endl;
       m_passTriggerHists[i]->Fill(triggerEffQuantity);
     }
