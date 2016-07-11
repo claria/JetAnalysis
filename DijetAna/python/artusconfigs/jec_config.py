@@ -18,7 +18,7 @@ class JECConfig(RunConfig):
         default_pipeline['Processors'] = [
                 "producer:JetCorrectionsUncertaintyProducer", 
                 "producer:JetValidJetsProducer", 
-                "producer:LuminosityWeightProducer", 
+                # "producer:LuminosityWeightProducer", 
                 "producer:JetQuantitiesProducer", 
                 "producer:JetHltProducer", 
                 "producer:EventWeightProducer", 
@@ -27,6 +27,12 @@ class JECConfig(RunConfig):
                 "filter:JetHltFilter",
                 "filter:NJetsFilter", 
                 ]
+
+        if not self.is_data:
+            default_pipeline['Processors'].remove("producer:JetHltProducer")
+            default_pipeline['Processors'].remove("filter:JetHltFilter")
+            self['Processors'].remove("filter:JsonFilter")
+
 
 
     def expand_pipelines(self):
