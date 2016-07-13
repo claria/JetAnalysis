@@ -115,6 +115,16 @@ void GenJetQuantitiesHistogramConsumer::Init(setting_type const& settings) {
                                  &settings.GetGenPtBinning()[0]);
   m_h2_GenVsRecoPtAvg->Sumw2();
 
+
+  m_tp_GenVsRecoPtAvg = new TProfile("tp_GenVsRecoPtAvg",
+                                     "tp_GenVsRecoPtAvg",
+                                     settings.GetGenPtBinning().size() - 1,
+                                     &settings.GetGenPtBinning()[0],
+                                     0.0,
+                                     10.0);
+  m_tp_GenVsRecoPtAvg->Sumw2();
+
+
   m_h2_GenVsRecoYboost = new TH2D("h2_GenVsRecoYboost",
                                  "h2_GenVsRecoYboost",
                                  50,
@@ -298,6 +308,8 @@ void GenJetQuantitiesHistogramConsumer::ProcessFilteredEvent(event_type const& e
     m_h2_genrecoptavg->Fill(product.m_genmatchdijet_ptavg, product.m_gendijet_ptavg, eventWeight);
 
     m_h2_GenVsRecoPtAvg->Fill(product.m_genmatchdijet_ptavg / product.m_gendijet_ptavg, product.m_gendijet_ptavg, eventWeight);
+    m_tp_GenVsRecoPtAvg->Fill(product.m_gendijet_ptavg, product.m_genmatchdijet_ptavg / product.m_gendijet_ptavg, eventWeight);
+
     m_h2_GenVsRecoYboost->Fill(product.m_genmatchdijet_yboost -product.m_gendijet_yboost, product.m_gendijet_ptavg, eventWeight);
     m_h2_GenVsRecoYstar->Fill(product.m_genmatchdijet_ystar - product.m_gendijet_ystar, product.m_gendijet_ptavg, eventWeight);
 
@@ -358,6 +370,7 @@ void GenJetQuantitiesHistogramConsumer::Finish(setting_type const& settings) {
   m_h2_genjet12PtRVsPtavg->Write();
   m_h2_GenVsRecoPt->Write();
   m_h2_GenVsRecoPtAvg->Write();
+  m_tp_GenVsRecoPtAvg->Write();
   m_h2_GenVsRecoYboost->Write();
   m_h2_GenVsRecoYstar->Write();
   m_h2_GenVsRecoY->Write();
