@@ -56,12 +56,18 @@ def smear_pt(rap_bin, pt_truth):
         # return np.sqrt((N/x)**2 + (S**2)/x + C**2)
 
     res_pars = {
-                    'yb0ys2' : [-0.018678593510861676, 1.9869339904761814, -0.018150844203989405, -0.3561449639303097],
-                    'yb2ys0' : [3.9621774436007855, 1.226872807345649, -9.953582373476196e-07, -0.17825393862986405],
-                    'yb0ys1' : [-7.996156808607226, 5.81239213954197, 0.036218558561974055, -0.7255831535576661],
-                    'yb0ys0' : [-2.6835062466895137, 1.4339556210745454, 0.03210681271611586, -0.2619257672117121],
-                    'yb1ys0' : [-8.129397037628276, 5.9615751818553235, 0.035701552716092336, -0.7303736246616257],
-                    'yb1ys1' : [2.84759347024343, 1.1560187974736167, 0.023025604138762628, -0.1735034105669628],
+                    # 'yb0ys2' : [-0.018678593510861676, 1.9869339904761814, -0.018150844203989405, -0.3561449639303097],
+                    # 'yb2ys0' : [3.9621774436007855, 1.226872807345649, -9.953582373476196e-07, -0.17825393862986405],
+                    # 'yb0ys1' : [-7.996156808607226, 5.81239213954197, 0.036218558561974055, -0.7255831535576661],
+                    # 'yb0ys0' : [-2.6835062466895137, 1.4339556210745454, 0.03210681271611586, -0.2619257672117121],
+                    # 'yb1ys0' : [-8.129397037628276, 5.9615751818553235, 0.035701552716092336, -0.7303736246616257],
+                    # 'yb1ys1' : [2.84759347024343, 1.1560187974736167, 0.023025604138762628, -0.1735034105669628],
+                    'yb0ys2' : [2.53450074326517, 1.512726234918121, -0.012960331674590026, -0.2507470665739348],
+                    'yb2ys0' : [1.0034073062869877, 2.001118933329301, 0.010277082814847464, -0.34754304144127995],
+                    'yb0ys1' : [-7.1763640892030285, 5.058461041981086, 0.03601031234158235, -0.6889828710489163],
+                    'yb0ys0' : [-2.508236452459071, 1.3772644194460917, 0.031954839958387805, -0.24757803564702663],
+                    'yb1ys0' : [-7.768261067012024, 5.640059673056719, 0.035643255400083874, -0.7168036057832109],
+                    'yb1ys1' : [3.018154949618402, 1.0987378573859294, 0.022645007168221317, -0.15499878110515514],
             }
     res = nsc_formula(pt_truth, res_pars[rap_bin][0], res_pars[rap_bin][1], res_pars[rap_bin][2], res_pars[rap_bin][3])
 
@@ -84,7 +90,7 @@ def main():
     pt_binning_gen = [34, 42, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
     pt_binning_reco = [34, 42, 50, 58, 66, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468, 507, 548, 592, 638, 686, 737, 790, 846, 905, 967, 1032, 1101, 1172, 1248, 1327, 1410, 1497, 1588, 1784, 2116, 2500, 3000]
 
-    f = ROOT.TFile('response_fastNLO.root', 'RECREATE')
+    f = ROOT.TFile('response_fastNLO_test.root', 'RECREATE')
 
     fit_start_params = {
             'yb0ys0' : [1.56951e-04, 4.72895e+00, 1.25370e+01, 4.41885e+03],
@@ -105,6 +111,7 @@ def main():
     for rap_bin in rap_bins:
         print rap_bin
         xsnlo = get_root_object("/nfs/dust/cms/user/gsieber/dijetana/ana/CMSSW_7_2_3/PTAVG_YBYS_NLO.root?{0}/CT14nlo_xs".format(rap_bin))
+        # xsnlo = get_root_object("/nfs/dust/cms/user/gsieber/dijetana/ana/CMSSW_7_2_3/QCDMGP6.root?{0}/CT14nlo_xs".format(rap_bin))
         np_corr = get_root_object('~/dust/dijetana/plot/plots/np_factors_calc_{0}.root?res_np_factor'.format(rap_bin))
         f.cd()
         xsnlo = multiply(xsnlo, np_corr)
@@ -149,7 +156,7 @@ def main():
 
         nlo_fcn.SetRange(50., 3000.)
 
-        n_evts = 100000000
+        n_evts = 1000000
         for i in xrange(n_evts):
             pt_truth = ROOT.gRandom.Uniform(74.,data_lim_max[rap_bin]*1.2)
             pt_smeared = smear_pt(rap_bin, pt_truth)
@@ -157,16 +164,35 @@ def main():
             if (w <= 0.) or math.isnan(w):
                 continue
 
-            h_genptavg.Fill(pt_truth, w)
+            if pt_truth >=133.:
+                h_genptavg.Fill(pt_truth, w)
             if pt_smeared >= 133.:
                 h_recoptavg.Fill(pt_smeared, w)
+            if pt_smeared >=133. and pt_truth >= 133.:
                 h2_genvsreco.Fill(pt_smeared, pt_truth, w)
             # if pt_truth > 133.:
             # if pt_smeared >= 133.:
 
-        h_recoptavg.Scale(1./n_evts)
-        h_genptavg.Scale(1./n_evts)
-        h2_genvsreco.Scale(1./n_evts)
+        # h_recoptavg.Scale(1./n_evts)
+        # h_genptavg.Scale(1./n_evts)
+        # h2_genvsreco.Scale(1./n_evts)
+
+        # Scale with fakes/miss hits
+        mgp6_fakes = get_root_object("~/dust/dijetana/ana/CMSSW_7_2_3/response_study_lowptextended_QCDMGP6.root?{0}/h_unf_fake_ptavg".format(rap_bin))
+        mgp6_reco = get_root_object("~/dust/dijetana/ana/CMSSW_7_2_3/response_study_lowptextended_QCDMGP6.root?{0}/h_unf_reco_ptavg".format(rap_bin))
+        mgp6_miss = get_root_object("~/dust/dijetana/ana/CMSSW_7_2_3/response_study_lowptextended_QCDMGP6.root?{0}/h_unf_miss_ptavg".format(rap_bin))
+        mgp6_gen = get_root_object("~/dust/dijetana/ana/CMSSW_7_2_3/response_study_lowptextended_QCDMGP6.root?{0}/h_unf_gen_ptavg".format(rap_bin))
+
+        f.cd()
+        f.Cd("/" + rap_bin)
+
+        mgp6_fakes.Divide(mgp6_reco)
+        mgp6_miss.Divide(mgp6_gen)
+
+        for i in xrange(1, h_recoptavg.GetNbinsX() + 1):
+            pass
+            h_recoptavg.SetBinContent(i, h_recoptavg.GetBinContent(i)* (1+ mgp6_fakes.GetBinContent(i)))
+            # h_genptavg.SetBinContent(i, h_genptavg.GetBinContent(i)* (1+ mgp6_miss.GetBinContent(i)))
 
         h_recoptavg.Write()
         h_genptavg.Write()
