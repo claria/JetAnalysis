@@ -26,6 +26,9 @@ class GenJetQuantitiesHistogramConsumer : public JetConsumerBase {
   TH1D* m_h_genjet2phi = nullptr;
   TH1D* m_h_incgenjetpt = nullptr;
   TH1D* m_h_genptavg = nullptr;
+  
+  TH1D* m_h_pure_ptavg = nullptr;
+
   TH1D* m_h_genidx = nullptr;
   TH1D* m_h_genmatchptavg = nullptr;
   TH2D* m_h_genjet12rap = nullptr;
@@ -40,6 +43,9 @@ class GenJetQuantitiesHistogramConsumer : public JetConsumerBase {
   TH2D* m_h2_genreco_ptavg = nullptr;
   TH2D* m_h2_GenVsRecoPt = nullptr;
   TH2D* m_h2_GenVsRecoPtAvg = nullptr;
+  TProfile* m_tp_GenVsRecoPtAvg = nullptr;
+  TProfile* m_tp_GenPtAvg = nullptr;
+  TProfile* m_tp_RecoPtAvg = nullptr;
   TH2D* m_h2_GenVsRecoYboost = nullptr;
   TH2D* m_h2_GenVsRecoYstar = nullptr;
   TH2D* m_h2_GenVsRecoY = nullptr;
