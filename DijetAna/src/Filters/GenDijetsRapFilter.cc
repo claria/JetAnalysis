@@ -9,12 +9,18 @@ void GenDijetsRapFilter::Init(JetSettings const& settings) {
 bool GenDijetsRapFilter::DoesEventPass(JetEvent const& event,
                                     JetProduct const& product,
                                     JetSettings const& settings) const {
-  bool pass = false;
+  if (product.m_validGenJets.size() < 2) 
+    return false;
+
   if ((std::abs(product.m_validGenJets.at(0).p4.Rapidity()) >= minGenDijetsAbsRap) &&
       (std::abs(product.m_validGenJets.at(0).p4.Rapidity()) < maxGenDijetsAbsRap) &&
       (std::abs(product.m_validGenJets.at(1).p4.Rapidity()) >= minGenDijetsAbsRap) &&
-      (std::abs(product.m_validGenJets.at(1).p4.Rapidity()) < maxGenDijetsAbsRap)) {
-    pass = true;
+      (std::abs(product.m_validGenJets.at(1).p4.Rapidity()) < maxGenDijetsAbsRap)) 
+  {
+    return true;
   }
-  return pass;
+  else
+  {
+    return false;
+  }
 }
