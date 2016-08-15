@@ -59,7 +59,6 @@ class RunConfig(BaseConfig):
                                               "filter:YStarFilter", 
                                               "filter:NJetsFilter", 
                                               "filter:PtAvgFilter", 
-                                              "filter:LeadingJetPtFilter", 
                                               "filter:DijetsRapFilter", 
                                           ]
 
@@ -85,7 +84,7 @@ class RunConfig(BaseConfig):
                                               "filter:GenYBoostFilter", 
                                               "filter:GenYStarFilter", 
                                               "filter:NGenJetsFilter", 
-                                              "filter:LeadingGenJetPtFilter", 
+                                              "filter:GenPtAvgFilter", 
                                               "filter:GenDijetsRapFilter"
                                           ]
 
@@ -129,7 +128,6 @@ class RunConfig(BaseConfig):
                                               "filter:YStarFilter", 
                                               "filter:NJetsFilter", 
                                               "filter:PtAvgFilter", 
-                                              "filter:LeadingJetPtFilter", 
                                               "filter:DijetsRapFilter", 
                                               "filter:JetHltFilter"
                                           ]
