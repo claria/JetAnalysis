@@ -104,12 +104,12 @@ class BaseConfig(dict):
         # Rapidity cuts on leading two jets
         self['MinDijetsAbsRap'] = '0.0'
         self['MaxDijetsAbsRap'] = '3.0'
-        self['MinGenDijetsAbsRap'] = '3.0'
+        self['MinGenDijetsAbsRap'] = '0.0'
         self['MaxGenDijetsAbsRap'] = '3.0'
         self['MinLeadingJetPt'] = '74.'
         self['MinLeadingGenJetPt'] = '74.'
         self['MinPtAvg'] = '133.'
-        self['MinGentPtAvg'] = '133.'
+        self['MinGenPtAvg'] = '133.'
         # Gen Jet Matching
         self['MaxDeltaR'] = 0.3
         self['MaxDeltaPtRel'] = 1E9
