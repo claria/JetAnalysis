@@ -24,11 +24,15 @@ class UnfoldingResponseConfig(BaseConfig):
         self['TripleDiffPtBinning'] = [30, 40, 50,60,74, 114, 196, 300, 468, 790, 3000]
         self['TripleDiffGenPtBinning'] = [30, 40, 50,60,74, 114, 196, 300, 468, 790, 3000]
         self['RapidityAbsBinning'] = [0.0, 1.0, 2.0, 3.0]
+
         self['MinValidJetPt'] = 50.
-        self['MinPtAvg'] = 100.
-        self['MinGenPtAvg'] = 50.
+        self['MinPtAvg'] = 133.
+
         self['MinValidGenJetPt'] = 50.
+        self['MinGenPtAvg'] = 133.
+
         self['MaxValidGenJetAbsRap'] = 3.0
+        self['MaxValidJetAbsRap'] = 3.0
 
         self["Processors"] = [
                 "producer:JetCorrectionsProducer", 
@@ -42,11 +46,10 @@ class UnfoldingResponseConfig(BaseConfig):
                 "producer:CrossSectionWeightProducer", 
                 "producer:PUWeightProducer", 
                 "producer:JetQuantitiesProducer", 
-                "producer:GenJetPartonMatchingProducer", 
-                "producer:EventWeightProducer"
+                # "producer:GenJetPartonMatchingProducer", 
+                "producer:EventWeightProducer",
         ] 
 
-        # self['TaggingFilters'] = ['YStarFilter', 'YBoostFilter','GenYStarFilter', 'GenYBoostFilter', 'NGenJetsFilter', 'LeadingGenJetPtFilter', 'NJetsFilter', 'LeadingJetPtFilter']
 
         self.producer_before_filter()
         # Define global cuts
@@ -54,14 +57,37 @@ class UnfoldingResponseConfig(BaseConfig):
         default_pipeline = self.get_default_pipeline()
         self['JERScalingFactors'] = [1.079, 1.099, 1.121, 1.208, 1.254, 1.395, 1.056]
 
+        default_pipeline['TaggingFilters'] = ['YStarFilter', 'YBoostFilter',
+                                              'GenYStarFilter', 'GenYBoostFilter', 
+                                              'NGenJetsFilter', 'LeadingGenJetPtFilter', 
+                                              'NJetsFilter', 'LeadingJetPtFilter',
+                                              'GenPtAvgFilter', 'PtAvgFilter',
+                                              'DijetsRapFilter', 'GenDijetsRapFilter',
+                                              'GoodPrimaryVertexFilter', 'METSumEtFilter',
+                                              ]
+        default_pipeline['Processors'].append('producer:GenJetMatchingProducer')
+
+        default_pipeline['Processors'].append('filter:GoodPrimaryVertexFilter')
+        default_pipeline['Processors'].append('filter:METSumEtFilter')
         default_pipeline['Processors'].append('filter:NGenJetsFilter')
         default_pipeline['Processors'].append('filter:GenPtAvgFilter')
-        # default_pipeline['Processors'].append('filter:NJetsFilter')
-        # default_pipeline['Processors'].append('filter:PtAvgFilter')
-        # default_pipeline['Processors'].append('filter:YStarFilter')
-        # default_pipeline['Processors'].append('filter:YBoostFilter')
+        default_pipeline['Processors'].append('filter:NJetsFilter')
+        default_pipeline['Processors'].append('filter:PtAvgFilter')
+        default_pipeline['Processors'].append('filter:YStarFilter')
+        default_pipeline['Processors'].append('filter:YBoostFilter')
         default_pipeline['Processors'].append('filter:GenYStarFilter')
         default_pipeline['Processors'].append('filter:GenYBoostFilter')
+        default_pipeline['Processors'].append('filter:DijetsRapFilter')
+        default_pipeline['Processors'].append('filter:GenDijetsRapFilter')
+
+        default_pipeline['MinYStar'] = 0.0
+        default_pipeline['MaxYStar'] = 3.0
+        default_pipeline['MinYBoost'] = 0.0
+        default_pipeline['MaxYBoost'] = 3.0
+        default_pipeline['MinGenYStar'] = 0.0
+        default_pipeline['MaxGenYStar'] = 3.0
+        default_pipeline['MinGenYBoost'] = 0.0
+        default_pipeline['MaxGenYBoost'] = 3.0
 
  
         default_pipeline['Consumers'] =  [
