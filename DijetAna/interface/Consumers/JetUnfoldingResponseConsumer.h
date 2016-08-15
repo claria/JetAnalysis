@@ -25,6 +25,8 @@ class JetUnfoldingResponseConsumer : public JetConsumerBase {
   RooUnfoldResponse* m_unfoldResponse_idx = nullptr;
 
   TH1D* m_h1_unf_gen_ptavg = nullptr;
+  TH1D* m_h1_unf_miss_ptavg = nullptr;
+  TH1D* m_h1_unf_fake_ptavg = nullptr;
   TH1D* m_h1_unf_reco_ptavg = nullptr;
   TH2D* m_h2_unf_response_ptavg = nullptr;
 
