@@ -17,6 +17,11 @@ void JERScalingProducer::Produce(JetEvent const& event, JetProduct& product, Jet
       recojet.p4.SetPt(std::max(0., product.m_matchedGenJets.at(&recojet)->p4.Pt() + corr * (recojet.p4.Pt() - product.m_matchedGenJets.at(&recojet)->p4.Pt())));
     }
   }
+  std::sort(product.m_validRecoJets.begin(),
+            product.m_validRecoJets.end(),
+            [](KBasicJet jet1, KBasicJet jet2)
+                -> bool { return jet1.p4.Pt() > jet2.p4.Pt(); });
+
 }
 
 double JERScalingProducer::GetScalingFactor(double eta) const {
