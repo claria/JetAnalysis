@@ -48,6 +48,9 @@ def main():
 
     if args['response_matrix']:
         response_matrix = get_root_object(args['response_matrix'])
+    if args['response_matrix_histo_measured'] is None or args['response_matrix_histo_truth'] is None:
+        response = get_root_object(args['response_matrix_histo_response'])
+        response_matrix = ROOT.RooUnfoldResponse(0, 0, response, 'res_matrix', 'res_matrix')
     else:
         truth = get_root_object(args['response_matrix_histo_truth'])
         measured = get_root_object(args['response_matrix_histo_measured'])
