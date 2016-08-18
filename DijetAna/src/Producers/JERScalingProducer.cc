@@ -26,7 +26,7 @@ void JERScalingProducer::Produce(JetEvent const& event, JetProduct& product, Jet
 
 double JERScalingProducer::GetScalingFactor(double eta) const {
   double abseta = std::abs(eta);
-  if (abseta > 0.0 && abseta <= 0.5) {
+  if (abseta >= 0.0 && abseta <= 0.5) {
     return m_jerScalingFactors.at(0);
   }
   else if (abseta > 0.5 && abseta <= 1.1) {
@@ -49,6 +49,6 @@ double JERScalingProducer::GetScalingFactor(double eta) const {
   }
   else {
     LOG(FATAL) << "WARNING. Jet outside |eta| < 5" << std::endl;
-    return 0.0;
+    return 1.0;
   }
 }
