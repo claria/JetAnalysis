@@ -28,6 +28,14 @@ void JetUnfoldingResponseConsumer::Init(setting_type const& settings) {
                       (settings.GetPtBinning().size() - 1)*6,-0.5, -0.5+ (settings.GetPtBinning().size() - 1)*6,
                       (settings.GetPtBinning().size() - 1)*6,-0.5, -0.5+ (settings.GetPtBinning().size() - 1)*6);
   m_h2_unf_response_idx->Sumw2();
+  m_h2_unf_genvsreco_ptavg = new TH2D("h2_unf_genvsreco_ptavg",
+                                      "h2_genvsreco_ptavg",
+                                      50,
+                                      0.5,
+                                      1.5,
+                                      settings.GetGenPtBinning().size() - 1,
+                                      &settings.GetGenPtBinning()[0]);
+  m_h2_unf_genvsreco_ptavg->Sumw2();
 
 }
 
@@ -76,6 +84,7 @@ void JetUnfoldingResponseConsumer::ProcessFilteredEvent(event_type const& event,
     m_h1_unf_fake_ptavg->Fill(product.m_dijet_ptavg, eventWeight);
   }
   if (validRecoEvent && validGenEvent) {
+    m_h2_unf_genvsreco_ptavg->Fill(product.m_dijet_ptavg/product.m_gendijet_ptavg, product.m_gendijet_ptavg, eventWeight);
     m_h2_unf_response_ptavg->Fill(product.m_dijet_ptavg, product.m_gendijet_ptavg, eventWeight);
     m_h2_unf_response_idx->Fill(product.m_dijet_idx, product.m_gendijet_idx, eventWeight);
   }
@@ -95,6 +104,7 @@ void JetUnfoldingResponseConsumer::Finish(setting_type const& settings) {
   m_h1_unf_gen_idx->Write();
   m_h1_unf_reco_idx->Write();
   m_h2_unf_response_idx->Write();
+  m_h2_unf_genvsreco_ptavg->Write();
   // m_unfoldResponse_idx->Write();
 
   // m_unfoldResponse_ptavg_ysb->Write(m_unfoldResponse_ptavg_ysb->GetName());
