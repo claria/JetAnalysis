@@ -291,7 +291,7 @@ def prepare_gc_input(filelist, config, work_directory, files_per_job=10):
     gc_config_path = os.path.join(project_directory, 'jetana.conf') 
     # Create work directory for gc
     os.mkdir(os.path.join(project_directory, 'work.{0}'.format('jetana')))
-    shutil.copy(os.path.join(jetana_directory, 'data/gc_template_user.conf'), gc_config_path)
+    shutil.copy(os.path.join(jetana_directory, 'data/gc_template.conf'), gc_config_path)
     log.debug('Copied gc template file to work directory.')
 
 
