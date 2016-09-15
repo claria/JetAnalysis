@@ -11,5 +11,5 @@ class RapidityCorrectionProducer : public JetProducerBase {
   virtual void Produce(JetEvent const& event, JetProduct& product, JetSettings const& settings) const override;
   virtual void Init(JetSettings const& settings) override;
  private:
-  mutable TProfile2D m_rapidityCorrection;
+  TProfile2D* m_rapidityCorrection;
 };
