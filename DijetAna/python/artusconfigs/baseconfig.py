@@ -96,8 +96,8 @@ class BaseConfig(dict):
         # Valid Jet Selection
         self['MinValidJetPt'] = '50.'
         self['MinValidGenJetPt'] = '50.'
-        self['MaxValidJetAbsRap'] = '3.0'
-        self['MaxValidGenJetAbsRap'] = '3.0'
+        self['MaxValidJetAbsRap'] = '5.0'
+        self['MaxValidGenJetAbsRap'] = '5.0'
         # Global Cuts
         self['MinValidJets'] = '2'
         self['MinValidGenJets'] = '2'
@@ -121,7 +121,7 @@ class BaseConfig(dict):
         self['MinPrimaryVertexFitnDOF'] = 4
 
 
-        self['RapidityCorrectionFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/rapidity_remap_3d.root'
+        self['RapidityCorrectionFile'] = '$CMSSW_BASE/src/JetAnalysis/DijetAna/data/rapidity_QCDMGP6.root'
 
         # Event weight
         self['EventWeight'] = 'EventWeight'
