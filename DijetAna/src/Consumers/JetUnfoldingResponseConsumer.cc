@@ -31,8 +31,8 @@ void JetUnfoldingResponseConsumer::Init(setting_type const& settings) {
   m_h2_unf_genvsreco_ptavg = new TH2D("h2_unf_genvsreco_ptavg",
                                       "h2_genvsreco_ptavg",
                                       50,
-                                      0.5,
-                                      1.5,
+                                      0.2,
+                                      2.0,
                                       settings.GetGenPtBinning().size() - 1,
                                       &settings.GetGenPtBinning()[0]);
   m_h2_unf_genvsreco_ptavg->Sumw2();
