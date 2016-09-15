@@ -31,15 +31,16 @@ class UnfoldingResponseConfig(BaseConfig):
         self['MinValidGenJetPt'] = 50.
         self['MinGenPtAvg'] = 133.
 
-        self['MaxValidGenJetAbsRap'] = 3.0
-        self['MaxValidJetAbsRap'] = 3.0
+        self['MaxValidGenJetAbsRap'] = 5.0
+        self['MaxValidJetAbsRap'] = 5.0
 
         self["Processors"] = [
                 "producer:JetCorrectionsProducer", 
+                "producer:RapidityCorrectionProducer",
+                "producer:JERSmearingProducer", 
                 "producer:ValidGenJetsProducer", 
                 "producer:JetValidJetsProducer", 
                 "producer:GenJetMatchingProducer", 
-                "producer:JERScalingProducer", 
                 "producer:GenJetQuantitiesProducer", 
                 "producer:NumberGeneratedEventsWeightProducer", 
                 "producer:GeneratorWeightProducer", 
