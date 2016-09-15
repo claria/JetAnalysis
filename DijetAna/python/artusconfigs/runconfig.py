@@ -62,13 +62,14 @@ class RunConfig(BaseConfig):
                                               "filter:DijetsRapFilter", 
                                           ]
 
+            self['JERScalingFactors'] = [1.079, 1.099, 1.121, 1.208, 1.254, 1.395, 1.056]
             self['Processors'] = [
                                   "producer:JetCorrectionsProducer", 
-                                  # "producer:RapidityCorrectionProducer"
+                                  "producer:RapidityCorrectionProducer",
+                                  "producer:JERSmearingProducer", 
                                   "producer:ValidGenJetsProducer", 
                                   "producer:JetValidJetsProducer", 
                                   "producer:GenJetMatchingProducer", 
-                                  "producer:GenJetPartonMatchingProducer", 
                                   "producer:GenJetQuantitiesProducer", 
                                   "producer:NumberGeneratedEventsWeightProducer", 
                                   "producer:GeneratorWeightProducer", 
@@ -114,7 +115,7 @@ class RunConfig(BaseConfig):
             self['Processors'] = [
                                   "filter:JsonFilter", 
                                   "producer:JetCorrectionsProducer", 
-                                  # "producer:RapidityCorrectionProducer", 
+                                  # "producer:RapidityCorrectionProducer",
                                   "producer:JetValidJetsProducer", 
                                   "producer:JetQuantitiesProducer", 
                                   "producer:JetHltProducer", 
